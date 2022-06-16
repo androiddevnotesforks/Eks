@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import ir.fallahpoor.eks.data.Constants
-import ir.fallahpoor.eks.data.NightMode
 import ir.fallahpoor.eks.data.SortOrder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -22,10 +21,7 @@ class LocalStorage @Inject constructor(
     companion object {
         const val KEY_SORT_ORDER = "sort_order"
         const val KEY_REFRESH_DATE = "refresh_date"
-        const val KEY_NIGHT_MODE = "night_mode"
     }
-
-    private val defaultNightMode = NightMode.AUTO
 
     override suspend fun setSortOrder(sortOrder: SortOrder) {
         putString(KEY_SORT_ORDER, sortOrder.name)
@@ -57,26 +53,6 @@ class LocalStorage @Inject constructor(
             .map { preferences ->
                 preferences[prefKey] ?: Constants.NOT_AVAILABLE
             }
-    }
-
-    override fun getNightModeAsFlow(): Flow<NightMode> {
-        val prefKey = stringPreferencesKey(KEY_NIGHT_MODE)
-        return dataStore.data
-            .map { preferences ->
-                NightMode.valueOf(preferences[prefKey] ?: defaultNightMode.name)
-            }
-    }
-
-    override fun getNightMode(): NightMode {
-        var nightModeStr: String?
-        runBlocking {
-            nightModeStr = getString(KEY_NIGHT_MODE)
-        }
-        return NightMode.valueOf(nightModeStr ?: defaultNightMode.name)
-    }
-
-    override suspend fun setNightMode(nightMode: NightMode) {
-        putString(KEY_NIGHT_MODE, nightMode.name)
     }
 
     private suspend fun putString(key: String, value: String) {

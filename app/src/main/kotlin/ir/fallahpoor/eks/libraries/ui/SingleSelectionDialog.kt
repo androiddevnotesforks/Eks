@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.eks.data.BaseEnum
-import ir.fallahpoor.eks.data.NightMode
+import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
 
 @Composable
@@ -87,8 +87,8 @@ private fun DialogPreview() {
         Surface {
             SingleSelectionDialog(
                 title = "Some title",
-                items = NightMode.values(),
-                currentlySelectedItem = NightMode.OFF,
+                items = SortOrder.values(),
+                currentlySelectedItem = SortOrder.PINNED_FIRST,
                 onItemSelect = {},
                 onDismiss = {}
             )

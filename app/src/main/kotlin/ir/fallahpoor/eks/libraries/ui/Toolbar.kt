@@ -5,17 +5,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.eks.R
-import ir.fallahpoor.eks.data.NightMode
 import ir.fallahpoor.eks.data.SortOrder
 
 private enum class ToolbarMode {
@@ -28,9 +29,6 @@ fun Toolbar(
     modifier: Modifier = Modifier,
     sortOrder: SortOrder,
     onSortOrderChange: (SortOrder) -> Unit,
-    isNightModeSupported: Boolean,
-    nightMode: NightMode,
-    onNightModeChange: (NightMode) -> Unit,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     onSearchQuerySubmit: (String) -> Unit
@@ -52,12 +50,6 @@ fun Toolbar(
                     onSortOrderChange = onSortOrderChange
                 )
                 SearchButton(onClick = { toolbarMode = ToolbarMode.Search })
-                if (isNightModeSupported) {
-                    NightModeButton(
-                        currentNightMode = nightMode,
-                        onNightModeChange = onNightModeChange
-                    )
-                }
             }
             androidx.compose.animation.AnimatedVisibility(visible = toolbarMode == ToolbarMode.Search) {
                 SearchBar(
@@ -114,57 +106,12 @@ private fun SearchButton(onClick: () -> Unit) {
     }
 }
 
-@Composable
-private fun NightModeButton(
-    currentNightMode: NightMode,
-    onNightModeChange: (NightMode) -> Unit
-) {
-    var showDropdownMenu by remember { mutableStateOf(false) }
-    var showNightModeDialog by rememberSaveable { mutableStateOf(false) }
-    Box {
-        IconButton(onClick = { showDropdownMenu = !showDropdownMenu }) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(R.string.more_options)
-            )
-        }
-        DropdownMenu(
-            expanded = showDropdownMenu,
-            onDismissRequest = { showDropdownMenu = false })
-        {
-            DropdownMenuItem(
-                onClick = {
-                    showDropdownMenu = false
-                    showNightModeDialog = true
-                }
-            ) {
-                Text(text = stringResource(R.string.night_mode))
-            }
-        }
-    }
-    if (showNightModeDialog) {
-        SingleSelectionDialog(
-            title = stringResource(R.string.select_night_mode),
-            currentlySelectedItem = currentNightMode,
-            items = NightMode.values(),
-            onItemSelect = { nightMode: NightMode ->
-                showNightModeDialog = false
-                onNightModeChange(nightMode)
-            },
-            onDismiss = { showNightModeDialog = false }
-        )
-    }
-}
-
 @Preview
 @Composable
 private fun ToolbarPreview() {
     Toolbar(
         sortOrder = SortOrder.A_TO_Z,
         onSortOrderChange = {},
-        isNightModeSupported = true,
-        nightMode = NightMode.AUTO,
-        onNightModeChange = {},
         searchQuery = "",
         onSearchQueryChange = {},
         onSearchQuerySubmit = {}

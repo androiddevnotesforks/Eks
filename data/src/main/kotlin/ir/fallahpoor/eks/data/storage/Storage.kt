@@ -1,6 +1,5 @@
 package ir.fallahpoor.eks.data.storage
 
-import ir.fallahpoor.eks.data.NightMode
 import ir.fallahpoor.eks.data.SortOrder
 import kotlinx.coroutines.flow.Flow
 
@@ -17,11 +16,5 @@ interface Storage {
     suspend fun setRefreshDate(date: String)
 
     fun getRefreshDateAsFlow(): Flow<String>
-
-    suspend fun setNightMode(nightMode: NightMode)
-
-    fun getNightMode(): NightMode
-
-    fun getNightModeAsFlow(): Flow<NightMode>
 
 }

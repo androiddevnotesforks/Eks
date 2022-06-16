@@ -1,6 +1,5 @@
 package ir.fallahpoor.eks.libraries.ui
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
@@ -11,12 +10,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ir.fallahpoor.eks.data.NightMode
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.entity.Version
 import ir.fallahpoor.eks.libraries.viewmodel.LibrariesViewModel
-import ir.fallahpoor.eks.libraries.viewmodel.NightModeViewModel
 import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
 
 object LibrariesScreenTags {
@@ -28,16 +25,9 @@ object LibrariesScreenTags {
 @Composable
 fun LibrariesScreen(
     librariesViewModel: LibrariesViewModel = viewModel(),
-    nightModeViewModel: NightModeViewModel = viewModel(),
     onLibraryClick: (Library) -> Unit,
     onLibraryVersionClick: (Version) -> Unit
 ) {
-    val nightMode: NightMode by nightModeViewModel.nightModeFlow.collectAsState()
-    val isNightModeOn = when (nightMode) {
-        NightMode.OFF -> false
-        NightMode.ON -> true
-        else -> isSystemInDarkTheme()
-    }
     val uiState: LibrariesScreenState by librariesViewModel.librariesScreenState
         .collectAsState()
 
@@ -45,7 +35,7 @@ fun LibrariesScreen(
         librariesViewModel.handleEvent(LibrariesViewModel.Event.GetLibraries)
     }
 
-    ReleaseTrackerTheme(darkTheme = isNightModeOn) {
+    ReleaseTrackerTheme {
         Scaffold(
             modifier = Modifier.testTag(LibrariesScreenTags.SCREEN),
             topBar = {
@@ -55,13 +45,6 @@ fun LibrariesScreen(
                     onSortOrderChange = { sortOrder: SortOrder ->
                         librariesViewModel.handleEvent(
                             LibrariesViewModel.Event.ChangeSortOrder(sortOrder)
-                        )
-                    },
-                    isNightModeSupported = nightModeViewModel.isNightModeSupported,
-                    nightMode = nightMode,
-                    onNightModeChange = { nightMode: NightMode ->
-                        nightModeViewModel.handleEvent(
-                            NightModeViewModel.Event.ChangeNightMode(nightMode)
                         )
                     },
                     searchQuery = uiState.searchQuery,

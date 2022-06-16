@@ -9,9 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
-import ir.fallahpoor.eks.data.NightMode
 import ir.fallahpoor.eks.data.SortOrder
-import ir.fallahpoor.eks.data.storage.LocalStorage.Companion.KEY_NIGHT_MODE
 import ir.fallahpoor.eks.data.storage.LocalStorage.Companion.KEY_REFRESH_DATE
 import ir.fallahpoor.eks.data.storage.LocalStorage.Companion.KEY_SORT_ORDER
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +27,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-// TODO add tests for getSortOrderAsFlow(), getRefreshDateAsFlow(), and getNightModeAsFlow()
+// TODO add tests for getSortOrderAsFlow() and getRefreshDateAsFlow()
 
 @Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)
@@ -57,49 +55,6 @@ class LocalStorageTest {
     @After
     fun runAfterEachTest() {
         Dispatchers.resetMain()
-    }
-
-    @Test
-    fun `saved night mode is returned`() = runTest {
-
-        // Given
-        val expectedNightMode = NightMode.OFF
-        putString(KEY_NIGHT_MODE, expectedNightMode.name)
-
-        // When
-        val actualNightMode: NightMode = localStorage.getNightMode()
-
-        // Then
-        Truth.assertThat(actualNightMode).isEqualTo(expectedNightMode)
-
-    }
-
-    @Test
-    fun `default night mode is returned when there is no saved night mode`() {
-
-        // Given there is no saved night mode
-
-        // When
-        val actualNightMode: NightMode = localStorage.getNightMode()
-
-        // Then
-        Truth.assertThat(actualNightMode).isEqualTo(NightMode.AUTO)
-
-    }
-
-    @Test
-    fun `night mode is saved`() = runTest {
-
-        // Given
-        val expectedNightMode = NightMode.ON
-
-        // When
-        localStorage.setNightMode(expectedNightMode)
-
-        // Then
-        val actualNightMode = NightMode.valueOf(getString(KEY_NIGHT_MODE) ?: "")
-        Truth.assertThat(actualNightMode).isEqualTo(expectedNightMode)
-
     }
 
     @Test

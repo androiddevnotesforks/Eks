@@ -12,14 +12,11 @@
     <string name="select_sort_order">Select sort order</string>
     <string name="last_update_check_date">Last check: %s</string>
     <string name="no_library">There is no library</string>
-    <string name="night_mode">Night mode…</string>
-    <string name="select_night_mode">Select night mode</string>
     <string name="content_description_search">Search for libraries</string>
     <string name="search">Search</string>
     <string name="hint_search">Search libraries</string>
     <string name="pin_library">Pin library</string>
     <string name="unpin_library">Unpin library</string>
-    <string name="more_options">More options</string>
     <string name="try_again">Try again</string>
     <string name="clear_search_bar">Clear search bar</string>
     <string name="close_search_bar">Close search bar</string>
