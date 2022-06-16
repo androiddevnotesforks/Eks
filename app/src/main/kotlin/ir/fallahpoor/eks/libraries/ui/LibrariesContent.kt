@@ -20,7 +20,7 @@ import ir.fallahpoor.eks.theme.spacing
 object LibrariesContentTags {
     const val PROGRESS_INDICATOR = "librariesContentProgressIndicator"
     const val LIBRARIES_LIST = "librariesContentLibrariesList"
-    const val LAST_UPDATE_CHECK_DATE = "librariesContentLastUpdateCheckDate"
+    const val REFRESH_DATE = "librariesContentRefreshDate"
     const val TRY_AGAIN = "librariesContentTryAgain"
 }
 
@@ -81,7 +81,7 @@ private fun RefreshDate(refreshDate: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(MaterialTheme.spacing.normal)
-            .testTag(LibrariesContentTags.LAST_UPDATE_CHECK_DATE),
+            .testTag(LibrariesContentTags.REFRESH_DATE),
         text = stringResource(R.string.refresh_date, refreshDate)
     )
 }

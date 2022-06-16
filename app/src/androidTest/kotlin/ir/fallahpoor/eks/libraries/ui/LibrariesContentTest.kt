@@ -26,7 +26,7 @@ class LibrariesContentTest {
 
         // Then
         with(composeRule) {
-            composeRule.onNodeWithTag(LibrariesContentTags.LAST_UPDATE_CHECK_DATE)
+            composeRule.onNodeWithTag(LibrariesContentTags.REFRESH_DATE)
                 .assertIsDisplayed()
             onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
                 .assertIsDisplayed()
@@ -48,7 +48,7 @@ class LibrariesContentTest {
 
         // Then
         with(composeRule) {
-            onNodeWithTag(LibrariesContentTags.LAST_UPDATE_CHECK_DATE)
+            onNodeWithTag(LibrariesContentTags.REFRESH_DATE)
                 .assertIsDisplayed()
             onNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
                 .assertIsDisplayed()
