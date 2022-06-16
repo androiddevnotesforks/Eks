@@ -31,7 +31,7 @@ fun LibrariesContent(
     lastUpdateCheckDate: String,
     onLibraryClick: (Library) -> Unit,
     onLibraryVersionClick: (Version) -> Unit,
-    onPinLibraryClick: (Library, Boolean) -> Unit,
+    onLibraryPinClick: (Library, Boolean) -> Unit,
     onTryAgainClick: () -> Unit
 ) {
     Column(
@@ -50,7 +50,7 @@ fun LibrariesContent(
                     libraries = librariesState.libraries,
                     onLibraryClick = onLibraryClick,
                     onLibraryVersionClick = onLibraryVersionClick,
-                    onLibraryPinClick = onPinLibraryClick
+                    onLibraryPinClick = onLibraryPinClick
                 )
             }
             is LibrariesState.Error -> {
@@ -131,7 +131,7 @@ private fun LibrariesListContentPreview() {
                 lastUpdateCheckDate = "N/A",
                 onLibraryClick = {},
                 onLibraryVersionClick = {},
-                onPinLibraryClick = { _, _ -> },
+                onLibraryPinClick = { _, _ -> },
                 onTryAgainClick = {}
             )
         }

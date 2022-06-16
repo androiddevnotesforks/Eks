@@ -86,7 +86,7 @@ fun LibrariesScreen(
                 lastUpdateCheckDate = uiState.refreshDate,
                 onLibraryClick = onLibraryClick,
                 onLibraryVersionClick = onLibraryVersionClick,
-                onPinLibraryClick = { library: Library, pin: Boolean ->
+                onLibraryPinClick = { library: Library, pin: Boolean ->
                     librariesViewModel.handleEvent(
                         LibrariesViewModel.Event.PinLibrary(library, pin)
                     )

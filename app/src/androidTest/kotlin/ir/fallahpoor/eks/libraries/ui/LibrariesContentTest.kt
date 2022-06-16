@@ -171,7 +171,7 @@ class LibrariesContentTest {
                 lastUpdateCheckDate = refreshDate,
                 onLibraryClick = onLibraryClick,
                 onLibraryVersionClick = onLibraryVersionClick,
-                onPinLibraryClick = onPinLibraryClick,
+                onLibraryPinClick = onPinLibraryClick,
                 onTryAgainClick = onTryAgainClick
             )
         }
