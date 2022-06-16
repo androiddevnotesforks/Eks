@@ -26,11 +26,12 @@ private enum class ToolbarMode {
 @Composable
 fun Toolbar(
     modifier: Modifier = Modifier,
-    currentSortOrder: SortOrder,
+    sortOrder: SortOrder,
     onSortOrderChange: (SortOrder) -> Unit,
     isNightModeSupported: Boolean,
-    currentNightMode: NightMode,
+    nightMode: NightMode,
     onNightModeChange: (NightMode) -> Unit,
+    searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     onSearchQuerySubmit: (String) -> Unit
 ) {
@@ -47,35 +48,31 @@ fun Toolbar(
                     style = MaterialTheme.typography.h6
                 )
                 SortOrderButton(
-                    currentSortOrder = currentSortOrder,
+                    currentSortOrder = sortOrder,
                     onSortOrderChange = onSortOrderChange
                 )
                 SearchButton(onClick = { toolbarMode = ToolbarMode.Search })
                 if (isNightModeSupported) {
                     NightModeButton(
-                        currentNightMode = currentNightMode,
+                        currentNightMode = nightMode,
                         onNightModeChange = onNightModeChange
                     )
                 }
             }
             androidx.compose.animation.AnimatedVisibility(visible = toolbarMode == ToolbarMode.Search) {
-                var searchQuery by rememberSaveable { mutableStateOf("") }
                 SearchBar(
                     modifier = Modifier.fillMaxWidth(),
                     hint = stringResource(R.string.search),
                     query = searchQuery,
                     onQueryChange = {
-                        searchQuery = it
                         onSearchQueryChange(it)
                     },
                     onQuerySubmit = onSearchQuerySubmit,
                     onClearClick = {
-                        searchQuery = ""
                         onSearchQueryChange("")
                     },
                     onCloseClick = {
                         toolbarMode = ToolbarMode.Normal
-                        searchQuery = ""
                         onSearchQueryChange("")
                     }
                 )
@@ -163,11 +160,12 @@ private fun NightModeButton(
 @Composable
 private fun ToolbarPreview() {
     Toolbar(
-        currentSortOrder = SortOrder.A_TO_Z,
+        sortOrder = SortOrder.A_TO_Z,
         onSortOrderChange = {},
         isNightModeSupported = true,
-        currentNightMode = NightMode.AUTO,
+        nightMode = NightMode.AUTO,
         onNightModeChange = {},
+        searchQuery = "",
         onSearchQueryChange = {},
         onSearchQuerySubmit = {}
     )

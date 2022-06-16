@@ -300,15 +300,17 @@ class ToolbarTest {
         isNightModeSupported: Boolean = true,
         currentNightMode: NightMode = NightMode.ON,
         onNightModeChange: (NightMode) -> Unit = {},
+        searchQuery: String = "",
         onSearchQueryChange: (String) -> Unit = {},
         onSearchQuerySubmit: (String) -> Unit = {}
     ) {
         composeTestRule.setContent {
             Toolbar(
-                currentSortOrder = currentSortOrder,
+                sortOrder = currentSortOrder,
                 onSortOrderChange = onSortOrderChange,
                 isNightModeSupported = isNightModeSupported,
-                currentNightMode = currentNightMode,
+                nightMode = currentNightMode,
+                searchQuery = searchQuery,
                 onNightModeChange = onNightModeChange,
                 onSearchQueryChange = onSearchQueryChange,
                 onSearchQuerySubmit = onSearchQuerySubmit

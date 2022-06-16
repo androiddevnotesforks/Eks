@@ -51,19 +51,20 @@ fun LibrariesScreen(
             topBar = {
                 Toolbar(
                     modifier = Modifier.testTag(LibrariesScreenTags.TOOLBAR),
-                    currentSortOrder = uiState.sortOrder,
+                    sortOrder = uiState.sortOrder,
                     onSortOrderChange = { sortOrder: SortOrder ->
                         librariesViewModel.handleEvent(
                             LibrariesViewModel.Event.ChangeSortOrder(sortOrder)
                         )
                     },
                     isNightModeSupported = nightModeViewModel.isNightModeSupported,
-                    currentNightMode = nightMode,
+                    nightMode = nightMode,
                     onNightModeChange = { nightMode: NightMode ->
                         nightModeViewModel.handleEvent(
                             NightModeViewModel.Event.ChangeNightMode(nightMode)
                         )
                     },
+                    searchQuery = uiState.searchQuery,
                     onSearchQueryChange = { searchQuery: String ->
                         librariesViewModel.handleEvent(
                             LibrariesViewModel.Event.ChangeSearchQuery(searchQuery)
