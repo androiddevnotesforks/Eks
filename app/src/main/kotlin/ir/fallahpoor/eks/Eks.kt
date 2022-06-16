@@ -32,7 +32,7 @@ private fun openWebPage(context: Context, url: String) {
     } catch (e: ActivityNotFoundException) {
         Toast.makeText(
             context,
-            context.getString(R.string.no_browser_found_message),
+            context.getString(R.string.no_browser_found),
             Toast.LENGTH_SHORT
         ).show()
     }
