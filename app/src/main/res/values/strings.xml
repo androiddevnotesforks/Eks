@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Eks</string>
+    <string name="version_stable">Stable: %s</string>
+    <string name="version_rc">RC: %s</string>
+    <string name="version_beta">Beta: %s</string>
+    <string name="version_alpha">Alpha: %s</string>
+    <string name="new_libraries">[NEW]</string>
+    <string name="removed_libraries">[REMOVED]</string>
+    <string name="updated_libraries">[UPDATED]</string>
+    <string name="worker_tag">REFRESH_LIBRARIES_WORKER</string>
+    <string name="sort">Sort</string>
+    <string name="select_sort_order">Select sort order</string>
+    <string name="last_update_check_date">Last check: %s</string>
+    <string name="no_library">There is no library</string>
+    <string name="night_mode">Night mode…</string>
+    <string name="select_night_mode">Select night mode</string>
+    <string name="content_description_search">Search for libraries</string>
+    <string name="search">Search</string>
+    <string name="hint_search">Search libraries</string>
+    <string name="pin_library">Pin library</string>
+    <string name="unpin_library">Unpin library</string>
+    <string name="more_options">More options</string>
+    <string name="try_again">Try again</string>
+    <string name="clear_search_bar">Clear search bar</string>
+    <string name="close_search_bar">Close search bar</string>
+    <string name="notification_channel_name">General</string>
+    <string name="notification_channel_description">All notifications of the app</string>
+    <string name="notification_title">Updates Available</string>
+    <string name="no_browser_found_message">No browser found to open the URL</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="internet_not_connected">Internet not connected.</string>
+    <string name="something_went_wrong">Something went wrong.</string>
+    <string name="sort_order_a_to_z">A to Z</string>
+    <string name="sort_order_z_to_a">Z to A</string>
+    <string name="sort_order_pinned_first">Pinned first</string>
+    <string name="night_mode_on">On</string>
+    <string name="night_mode_off">Off</string>
+    <string name="night_mode_auto">Auto</string>
+</resources>

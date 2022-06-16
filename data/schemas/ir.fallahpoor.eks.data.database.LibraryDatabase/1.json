@@ -1,0 +1,106 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "12d14b078e714abb56addedc22cfd1fe",
+    "entities": [
+      {
+        "tableName": "library",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL COLLATE NOCASE, `description` TEXT NOT NULL, `url` TEXT NOT NULL, `release_date` TEXT NOT NULL, `pinned` INTEGER NOT NULL, `stable_version_version_name` TEXT NOT NULL, `stable_version_release_notes_url` TEXT NOT NULL, `rc_version_version_name` TEXT NOT NULL, `rc_version_release_notes_url` TEXT NOT NULL, `beta_version_version_name` TEXT NOT NULL, `beta_version_release_notes_url` TEXT NOT NULL, `alpha_version_version_name` TEXT NOT NULL, `alpha_version_release_notes_url` TEXT NOT NULL, PRIMARY KEY(`name`))",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "releaseDate",
+            "columnName": "release_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pinned",
+            "columnName": "pinned",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stableVersion.name",
+            "columnName": "stable_version_version_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stableVersion.releaseNotesUrl",
+            "columnName": "stable_version_release_notes_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rcVersion.name",
+            "columnName": "rc_version_version_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rcVersion.releaseNotesUrl",
+            "columnName": "rc_version_release_notes_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "betaVersion.name",
+            "columnName": "beta_version_version_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "betaVersion.releaseNotesUrl",
+            "columnName": "beta_version_release_notes_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "alphaVersion.name",
+            "columnName": "alpha_version_version_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "alphaVersion.releaseNotesUrl",
+            "columnName": "alpha_version_release_notes_url",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "name"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '12d14b078e714abb56addedc22cfd1fe')"
+    ]
+  }
+}
