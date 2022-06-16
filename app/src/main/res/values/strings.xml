@@ -10,7 +10,7 @@
     <string name="worker_tag">REFRESH_LIBRARIES_WORKER</string>
     <string name="sort">Sort</string>
     <string name="select_sort_order">Select sort order</string>
-    <string name="last_update_check_date">Last check: %s</string>
+    <string name="refresh_date">Refresh date: %s</string>
     <string name="no_library">There is no library</string>
     <string name="content_description_search">Search for libraries</string>
     <string name="search">Search</string>

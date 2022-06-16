@@ -168,7 +168,7 @@ class LibrariesContentTest {
         composeRule.setContent {
             LibrariesContent(
                 librariesState = librariesState,
-                lastUpdateCheckDate = refreshDate,
+                refreshDate = refreshDate,
                 onLibraryClick = onLibraryClick,
                 onLibraryVersionClick = onLibraryVersionClick,
                 onLibraryPinClick = onPinLibraryClick,

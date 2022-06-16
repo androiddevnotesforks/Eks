@@ -28,7 +28,7 @@ object LibrariesContentTags {
 fun LibrariesContent(
     modifier: Modifier = Modifier,
     librariesState: LibrariesState,
-    lastUpdateCheckDate: String,
+    refreshDate: String,
     onLibraryClick: (Library) -> Unit,
     onLibraryVersionClick: (Version) -> Unit,
     onLibraryPinClick: (Library, Boolean) -> Unit,
@@ -41,7 +41,7 @@ fun LibrariesContent(
         when (librariesState) {
             is LibrariesState.Loading -> ProgressIndicator()
             is LibrariesState.Success -> {
-                LastUpdateCheckDate(lastUpdateCheckDate)
+                RefreshDate(refreshDate)
                 Divider()
                 LibrariesList(
                     modifier = Modifier
@@ -76,13 +76,13 @@ private fun ProgressIndicator() {
 }
 
 @Composable
-private fun LastUpdateCheckDate(lastUpdateCheckDate: String) {
+private fun RefreshDate(refreshDate: String) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(MaterialTheme.spacing.normal)
             .testTag(LibrariesContentTags.LAST_UPDATE_CHECK_DATE),
-        text = stringResource(R.string.last_update_check_date, lastUpdateCheckDate)
+        text = stringResource(R.string.refresh_date, refreshDate)
     )
 }
 
@@ -128,7 +128,7 @@ private fun LibrariesListContentPreview() {
         Surface {
             LibrariesContent(
                 librariesState = LibrariesState.Error("An error has occurred."),
-                lastUpdateCheckDate = "N/A",
+                refreshDate = "N/A",
                 onLibraryClick = {},
                 onLibraryVersionClick = {},
                 onLibraryPinClick = { _, _ -> },

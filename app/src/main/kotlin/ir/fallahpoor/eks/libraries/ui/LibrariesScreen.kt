@@ -67,7 +67,7 @@ fun LibrariesScreen(
                     .fillMaxSize()
                     .testTag(LibrariesScreenTags.CONTENT),
                 librariesState = uiState.librariesState,
-                lastUpdateCheckDate = uiState.refreshDate,
+                refreshDate = uiState.refreshDate,
                 onLibraryClick = onLibraryClick,
                 onLibraryVersionClick = onLibraryVersionClick,
                 onLibraryPinClick = { library: Library, pin: Boolean ->
