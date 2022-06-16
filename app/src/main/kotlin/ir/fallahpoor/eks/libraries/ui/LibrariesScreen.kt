@@ -17,7 +17,6 @@ import ir.fallahpoor.eks.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
 
 object LibrariesScreenTags {
-    const val SCREEN = "librariesScreen"
     const val TOOLBAR = "librariesScreenToolbar"
     const val CONTENT = "librariesScreenContent"
 }
@@ -37,7 +36,6 @@ fun LibrariesScreen(
 
     ReleaseTrackerTheme {
         Scaffold(
-            modifier = Modifier.testTag(LibrariesScreenTags.SCREEN),
             topBar = {
                 Toolbar(
                     modifier = Modifier.testTag(LibrariesScreenTags.TOOLBAR),
