@@ -123,7 +123,7 @@ private fun TryAgain(errorMessage: String, onTryAgainClick: () -> Unit) {
 
 @Composable
 @Preview
-private fun LibrariesListContentPreview() {
+private fun Preview() {
     ReleaseTrackerTheme {
         Surface {
             LibrariesContent(
