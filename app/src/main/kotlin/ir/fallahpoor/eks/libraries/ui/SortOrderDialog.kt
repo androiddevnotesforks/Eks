@@ -14,28 +14,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import ir.fallahpoor.eks.data.BaseEnum
+import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
 
 @Composable
-fun <T : BaseEnum> SingleSelectionDialog(
-    title: String,
-    items: Array<T>,
-    currentlySelectedItem: T,
-    onItemSelect: (T) -> Unit,
+fun SortOrderDialog(
+    sortOrder: SortOrder,
+    onSortOrderClick: (SortOrder) -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = title)
+            Text(text = stringResource(R.string.select_sort_order))
         },
         text = {
-            SingleSelectionDialogContent(
-                currentlySelectedItem = currentlySelectedItem,
-                onItemSelect = onItemSelect,
-                items = items
+            SortOrderDialogContent(
+                sortOrder = sortOrder,
+                onSortOrderClick = onSortOrderClick
             )
         },
         confirmButton = {}
@@ -43,24 +40,23 @@ fun <T : BaseEnum> SingleSelectionDialog(
 }
 
 @Composable
-private fun <T : BaseEnum> SingleSelectionDialogContent(
-    currentlySelectedItem: T,
-    onItemSelect: (T) -> Unit,
-    items: Array<T>
+private fun SortOrderDialogContent(
+    sortOrder: SortOrder,
+    onSortOrderClick: (SortOrder) -> Unit
 ) {
     Column {
-        items.forEach { item: T ->
-            Item(
-                text = stringResource(item.stringResId),
-                onClick = { onItemSelect(item) },
-                isSelected = currentlySelectedItem == item
+        SortOrder.values().forEach {
+            SortOrderItem(
+                text = stringResource(it.stringResId),
+                onClick = { onSortOrderClick(it) },
+                isSelected = sortOrder == it
             )
         }
     }
 }
 
 @Composable
-private fun Item(
+private fun SortOrderItem(
     text: String,
     onClick: () -> Unit,
     isSelected: Boolean
@@ -85,11 +81,9 @@ private fun Item(
 private fun DialogPreview() {
     ReleaseTrackerTheme(darkTheme = false) {
         Surface {
-            SingleSelectionDialog(
-                title = "Some title",
-                items = SortOrder.values(),
-                currentlySelectedItem = SortOrder.PINNED_FIRST,
-                onItemSelect = {},
+            SortOrderDialog(
+                sortOrder = SortOrder.PINNED_FIRST,
+                onSortOrderClick = {},
                 onDismiss = {}
             )
         }

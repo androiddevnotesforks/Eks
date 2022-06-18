@@ -83,11 +83,9 @@ private fun SortOrderButton(currentSortOrder: SortOrder, onSortOrderChange: (Sor
         )
     }
     if (showSortOrderDialog) {
-        SingleSelectionDialog(
-            title = stringResource(R.string.select_sort_order),
-            items = SortOrder.values(),
-            currentlySelectedItem = currentSortOrder,
-            onItemSelect = { sortOrder: SortOrder ->
+        SortOrderDialog(
+            sortOrder = currentSortOrder,
+            onSortOrderClick = { sortOrder: SortOrder ->
                 showSortOrderDialog = false
                 onSortOrderChange(sortOrder)
             },
