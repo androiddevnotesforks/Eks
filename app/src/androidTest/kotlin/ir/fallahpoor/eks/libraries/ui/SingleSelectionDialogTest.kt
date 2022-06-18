@@ -1,10 +1,11 @@
 package ir.fallahpoor.eks.libraries.ui
 
+import android.content.Context
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import androidx.test.platform.app.InstrumentationRegistry
-import ir.fallahpoor.eks.data.NightMode
+import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.libraries.mock
 import org.junit.Rule
 import org.junit.Test
@@ -15,28 +16,29 @@ class SingleSelectionDialogTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    private val context: Context = ApplicationProvider.getApplicationContext()
     private val dialogTitle = "Awesome Dialog"
 
     @Test
     fun dialog_is_initialized_correctly() {
 
         // Given
-        composeSingleSelectionDialog(currentlySelectedItem = NightMode.OFF)
+        composeSingleSelectionDialog(currentlySelectedItem = SortOrder.PINNED_FIRST)
 
         // Then
         with(composeTestRule) {
             onNodeWithText(dialogTitle)
                 .assertIsDisplayed()
-            NightMode.values().forEach { item: NightMode ->
+            SortOrder.values().forEach { item: SortOrder ->
                 onNodeWithText(
-                    item.name,
+                    context.getString(item.stringResId),
                     useUnmergedTree = true
                 ).assertIsDisplayed()
-                if (item == NightMode.OFF) {
-                    onNodeWithTag(item.name)
+                if (item == SortOrder.PINNED_FIRST) {
+                    onNodeWithTag(context.getString(item.stringResId))
                         .assertIsSelected()
                 } else {
-                    onNodeWithTag(item.name)
+                    onNodeWithTag(context.getString(item.stringResId))
                         .assertIsNotSelected()
                 }
             }
@@ -48,20 +50,20 @@ class SingleSelectionDialogTest {
     fun correct_callback_is_called_when_an_item_is_selected() {
 
         // Given
-        val onItemSelect: (NightMode) -> Unit = mock()
+        val onItemSelect: (SortOrder) -> Unit = mock()
         composeSingleSelectionDialog(
-            currentlySelectedItem = NightMode.ON,
+            currentlySelectedItem = SortOrder.Z_TO_A,
             onItemSelect = onItemSelect
         )
 
         // When
         composeTestRule.onNodeWithText(
-            InstrumentationRegistry.getInstrumentation().context.getString(NightMode.AUTO.stringResId),
+            context.getString(SortOrder.A_TO_Z.stringResId),
             useUnmergedTree = true
         ).performClick()
 
         // Then
-        Mockito.verify(onItemSelect).invoke(NightMode.AUTO)
+        Mockito.verify(onItemSelect).invoke(SortOrder.A_TO_Z)
 
     }
 
@@ -81,14 +83,14 @@ class SingleSelectionDialogTest {
     }
 
     private fun composeSingleSelectionDialog(
-        currentlySelectedItem: NightMode = NightMode.OFF,
-        onItemSelect: (NightMode) -> Unit = {},
+        currentlySelectedItem: SortOrder = SortOrder.A_TO_Z,
+        onItemSelect: (SortOrder) -> Unit = {},
         onDismiss: () -> Unit = {}
     ) {
         composeTestRule.setContent {
             SingleSelectionDialog(
                 title = dialogTitle,
-                items = NightMode.values(),
+                items = SortOrder.values(),
                 currentlySelectedItem = currentlySelectedItem,
                 onItemSelect = onItemSelect,
                 onDismiss = onDismiss

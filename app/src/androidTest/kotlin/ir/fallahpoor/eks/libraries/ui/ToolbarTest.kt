@@ -5,7 +5,6 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.eks.R
-import ir.fallahpoor.eks.data.NightMode
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.libraries.mock
 import org.junit.Rule
@@ -21,10 +20,7 @@ class ToolbarTest {
     private val appNameText = context.getString(R.string.app_name)
     private val sortText = context.getString(R.string.sort)
     private val searchText = context.getString(R.string.search)
-    private val moreOptionsText = context.getString(R.string.more_options)
-    private val nightModeText = context.getString(R.string.night_mode)
     private val selectSortOrderText = context.getString(R.string.select_sort_order)
-    private val selectNightMode = context.getString(R.string.select_night_mode)
 
     @Test
     fun toolbar_is_initialized_correctly_when_night_mode_is_supported() {
@@ -43,10 +39,6 @@ class ToolbarTest {
             searchText,
             useUnmergedTree = true
         ).assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription(
-            moreOptionsText,
-            useUnmergedTree = true
-        ).assertIsDisplayed()
         composeTestRule.onNodeWithTag(SearchBarTags.SEARCH_BAR)
             .assertDoesNotExist()
 
@@ -56,7 +48,7 @@ class ToolbarTest {
     fun toolbar_is_initialized_correctly_when_night_mode_is_not_supported() {
 
         // Given
-        composeToolbar(isNightModeSupported = false)
+        composeToolbar()
 
         // Then
         composeTestRule.onNodeWithText(appNameText)
@@ -69,10 +61,6 @@ class ToolbarTest {
             searchText,
             useUnmergedTree = true
         ).assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription(
-            moreOptionsText,
-            useUnmergedTree = true
-        ).assertDoesNotExist()
         composeTestRule.onNodeWithTag(SearchBarTags.SEARCH_BAR)
             .assertDoesNotExist()
 
@@ -92,30 +80,6 @@ class ToolbarTest {
 
         // Then
         composeTestRule.onNodeWithText(selectSortOrderText)
-            .assertIsDisplayed()
-
-    }
-
-    @Test
-    fun night_mode_dialog_is_displayed_when_night_mode_button_is_clicked() {
-
-        // Given
-        composeToolbar()
-
-        // When
-        with(composeTestRule) {
-            onNodeWithContentDescription(
-                moreOptionsText,
-                useUnmergedTree = true
-            ).performClick()
-            onNodeWithText(
-                nightModeText,
-                useUnmergedTree = true
-            ).performClick()
-        }
-
-        // Then
-        composeTestRule.onNodeWithText(selectNightMode)
             .assertIsDisplayed()
 
     }
@@ -187,54 +151,6 @@ class ToolbarTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_night_mode_is_selected() {
-
-        // Given
-        val onNightModeChange: (NightMode) -> Unit = mock()
-        composeToolbar(onNightModeChange = onNightModeChange)
-
-        // When
-        with(composeTestRule) {
-            onNodeWithContentDescription(
-                moreOptionsText,
-                useUnmergedTree = true
-            ).performClick()
-            onNodeWithText(nightModeText)
-                .performClick()
-            onNodeWithText(context.getString(NightMode.AUTO.stringResId))
-                .performClick()
-        }
-
-        // Then
-        Mockito.verify(onNightModeChange).invoke(NightMode.AUTO)
-
-    }
-
-    @Test
-    fun night_mode_dialog_is_closed_when_night_mode_is_selected() {
-
-        // Given
-        composeToolbar()
-
-        // When
-        with(composeTestRule) {
-            onNodeWithContentDescription(
-                moreOptionsText,
-                useUnmergedTree = true
-            ).performClick()
-            onNodeWithText(nightModeText)
-                .performClick()
-            onNodeWithText(context.getString(NightMode.AUTO.stringResId))
-                .performClick()
-        }
-
-        // Then
-        composeTestRule.onNodeWithText(selectNightMode)
-            .assertDoesNotExist()
-
-    }
-
-    @Test
     fun correct_callback_is_called_when_search_query_is_changed() {
 
         // Given
@@ -295,23 +211,17 @@ class ToolbarTest {
     }
 
     private fun composeToolbar(
-        currentSortOrder: SortOrder = SortOrder.A_TO_Z,
+        sortOrder: SortOrder = SortOrder.A_TO_Z,
         onSortOrderChange: (SortOrder) -> Unit = {},
-        isNightModeSupported: Boolean = true,
-        currentNightMode: NightMode = NightMode.ON,
-        onNightModeChange: (NightMode) -> Unit = {},
         searchQuery: String = "",
         onSearchQueryChange: (String) -> Unit = {},
         onSearchQuerySubmit: (String) -> Unit = {}
     ) {
         composeTestRule.setContent {
             Toolbar(
-                sortOrder = currentSortOrder,
+                sortOrder = sortOrder,
                 onSortOrderChange = onSortOrderChange,
-                isNightModeSupported = isNightModeSupported,
-                nightMode = currentNightMode,
                 searchQuery = searchQuery,
-                onNightModeChange = onNightModeChange,
                 onSearchQueryChange = onSearchQueryChange,
                 onSearchQuerySubmit = onSearchQuerySubmit
             )
