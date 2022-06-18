@@ -1,10 +1,11 @@
 package ir.fallahpoor.eks.libraries.ui
 
-import androidx.compose.ui.test.assertIsOff
-import androidx.compose.ui.test.assertTextEquals
+import android.content.Context
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performClick
+import androidx.test.core.app.ApplicationProvider
+import ir.fallahpoor.eks.R
+import ir.fallahpoor.eks.TestData
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.entity.Version
 import ir.fallahpoor.eks.libraries.mock
@@ -14,42 +15,46 @@ import org.mockito.Mockito
 
 class LibraryItemTest {
 
-    private val library = Library(
-        name = "Room",
-        description = "Create, store, and manage persistent data backed by a SQLite database.",
-        releaseDate = "September 21, 2021",
-        url = "https://developer.android.com/jetpack/androidx/releases/room",
-        stableVersion = Version("1.3.1"),
-        rcVersion = Version(),
-        betaVersion = Version("1.5.0-beta05"),
-        alphaVersion = Version("1.6.0-alpha02")
-    )
+    private val context: Context = ApplicationProvider.getApplicationContext()
 
     @get:Rule
     val composeTestRule = createComposeRule()
 
     @Test
-    fun library_information_is_displayed() {
+    fun library_information_is_displayed_correctly() {
 
         // Given
+        val library: Library = TestData.core
         composeLibraryItem(library = library)
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(LibraryItemTags.NAME)
-                .assertTextEquals(library.name)
-            onNodeWithTag(LibraryItemTags.DESCRIPTION)
-                .assertTextEquals(library.description)
-            onNodeWithTag(LibraryItemTags.VERSION_STABLE + library.name)
-                .assertTextEquals(library.stableVersion.name)
-            onNodeWithTag(LibraryItemTags.VERSION_RC + library.name)
-                .assertTextEquals(library.rcVersion.name)
-            onNodeWithTag(LibraryItemTags.VERSION_BETA + library.name)
-                .assertTextEquals(library.betaVersion.name)
-            onNodeWithTag(LibraryItemTags.VERSION_ALPHA + library.name)
-                .assertTextEquals(library.alphaVersion.name)
+            onNodeWithText(library.name, useUnmergedTree = true)
+                .assertIsDisplayed()
+            onNodeWithText(library.description, useUnmergedTree = true)
+                .assertIsDisplayed()
+            onNodeWithText(
+                context.getString(R.string.version_stable, library.stableVersion.name),
+                useUnmergedTree = true
+            )
+                .assertIsDisplayed()
+            onNodeWithText(
+                context.getString(R.string.version_rc, library.rcVersion.name),
+                useUnmergedTree = true
+            )
+                .assertIsDisplayed()
+            onNodeWithText(
+                context.getString(R.string.version_beta, library.betaVersion.name),
+                useUnmergedTree = true
+            )
+                .assertIsDisplayed()
+            onNodeWithText(
+                context.getString(R.string.version_alpha, library.alphaVersion.name),
+                useUnmergedTree = true
+            )
+                .assertIsDisplayed()
             onNodeWithTag(LibraryItemTags.PIN_BUTTON + library.name)
-                .assertIsOff()
+                .assertIsOn()
         }
 
     }
@@ -58,11 +63,12 @@ class LibraryItemTest {
     fun click_callback_is_called_when_library_is_clicked() {
 
         // Given
+        val library: Library = TestData.room
         val onLibraryClick: (Library) -> Unit = mock()
         composeLibraryItem(library = library, onLibraryClick = onLibraryClick)
 
         // When
-        composeTestRule.onNodeWithTag(LibraryItemTags.ITEM + library.name)
+        composeTestRule.onNodeWithText(library.name, useUnmergedTree = true)
             .performClick()
 
         // Then
@@ -74,15 +80,19 @@ class LibraryItemTest {
     fun version_callback_is_called_when_library_version_is_clicked() {
 
         // Given
+        val library: Library = TestData.room
         val onLibraryVersionClick: (Version) -> Unit = mock()
         composeLibraryItem(library = library, onLibraryVersionClick = onLibraryVersionClick)
 
         // When
-        composeTestRule.onNodeWithTag(LibraryItemTags.VERSION_BETA + library.name)
+        composeTestRule.onNodeWithText(
+            context.getString(R.string.version_stable, library.stableVersion.name),
+            useUnmergedTree = true
+        )
             .performClick()
 
         // Then
-        Mockito.verify(onLibraryVersionClick).invoke(library.betaVersion)
+        Mockito.verify(onLibraryVersionClick).invoke(library.stableVersion)
 
     }
 
@@ -90,11 +100,16 @@ class LibraryItemTest {
     fun version_callback_is_not_called_when_library_version_is_not_available_and_library_version_is_clicked() {
 
         // Given
+        val library: Library = TestData.room
+
         val onLibraryVersionClick: (Version) -> Unit = mock()
         composeLibraryItem(library = library, onLibraryVersionClick = onLibraryVersionClick)
 
         // When
-        composeTestRule.onNodeWithTag(LibraryItemTags.VERSION_RC + library.name)
+        composeTestRule.onNodeWithText(
+            context.getString(R.string.version_rc, library.rcVersion.name),
+            useUnmergedTree = true
+        )
             .performClick()
 
         // Then
@@ -103,9 +118,10 @@ class LibraryItemTest {
     }
 
     @Test
-    fun pin_callback_is_called_when_library_is_pinned() {
+    fun pin_callback_is_called_when_library_is_unpinned() {
 
         // Given
+        val library: Library = TestData.core
         val onLibraryPinClick: (Library, Boolean) -> Unit = mock()
         composeLibraryItem(library = library, onLibraryPinClick = onLibraryPinClick)
 
@@ -114,17 +130,18 @@ class LibraryItemTest {
             .performClick()
 
         // Then
-        Mockito.verify(onLibraryPinClick).invoke(library, true)
+        Mockito.verify(onLibraryPinClick).invoke(library, false)
 
     }
 
     @Test
-    fun pin_callback_is_called_when_library_is_unpinned() {
+    fun pin_callback_is_called_when_library_is_pinned() {
 
         // Given
+        val library: Library = TestData.room
         val onLibraryPinClick: (Library, Boolean) -> Unit = mock()
         composeLibraryItem(
-            library = library.copy(pinned = 1),
+            library = library,
             onLibraryPinClick = onLibraryPinClick
         )
 
@@ -133,7 +150,7 @@ class LibraryItemTest {
             .performClick()
 
         // Then
-        Mockito.verify(onLibraryPinClick).invoke(library, false)
+        Mockito.verify(onLibraryPinClick).invoke(library, true)
 
     }
 

@@ -20,12 +20,6 @@ import ir.fallahpoor.eks.theme.spacing
 
 object LibraryItemTags {
     const val ITEM = "libraryItem_"
-    const val NAME = "libraryName"
-    const val DESCRIPTION = "libraryDescription"
-    const val VERSION_STABLE = "libraryVersionStable_"
-    const val VERSION_RC = "libraryVersionRc_"
-    const val VERSION_BETA = "libraryVersionBeta_"
-    const val VERSION_ALPHA = "libraryVersionAlpha_"
     const val PIN_BUTTON = "pinLibraryButton_"
 }
 
@@ -43,24 +37,20 @@ fun LibraryItem(
             .padding(MaterialTheme.spacing.small)
             .testTag(LibraryItemTags.ITEM + library.name)
     ) {
-        PinToggleButton(
+        LibraryPinButton(
             modifier = Modifier.testTag(LibraryItemTags.PIN_BUTTON + library.name),
             isPinned = library.pinned == 1,
             onPinChange = { onLibraryPinClick(library, it) }
         )
-        Column {
-            LibraryName(name = library.name)
-            LibraryDescription(description = library.description)
-            LibraryVersions(
-                library = library,
-                onLibraryVersionClick = onLibraryVersionClick
-            )
-        }
+        LibraryInformation(
+            library = library,
+            onLibraryVersionClick = onLibraryVersionClick
+        )
     }
 }
 
 @Composable
-private fun PinToggleButton(
+private fun LibraryPinButton(
     modifier: Modifier = Modifier,
     isPinned: Boolean,
     onPinChange: (Boolean) -> Unit
@@ -88,6 +78,22 @@ private fun PinToggleButton(
 }
 
 @Composable
+private fun LibraryInformation(
+    modifier: Modifier = Modifier,
+    library: Library,
+    onLibraryVersionClick: (Version) -> Unit
+) {
+    Column(modifier = modifier) {
+        LibraryName(name = library.name)
+        LibraryDescription(description = library.description)
+        LibraryVersions(
+            library = library,
+            onLibraryVersionClick = onLibraryVersionClick
+        )
+    }
+}
+
+@Composable
 private fun LibraryName(name: String) {
     Surface(
         color = MaterialTheme.colors.onBackground,
@@ -96,8 +102,7 @@ private fun LibraryName(name: String) {
     ) {
         Text(
             modifier = Modifier
-                .padding(MaterialTheme.spacing.small)
-                .testTag(LibraryItemTags.NAME),
+                .padding(MaterialTheme.spacing.small),
             text = name,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -110,8 +115,7 @@ private fun LibraryName(name: String) {
 private fun LibraryDescription(description: String) {
     Text(
         modifier = Modifier
-            .padding(vertical = MaterialTheme.spacing.small)
-            .testTag(LibraryItemTags.DESCRIPTION),
+            .padding(vertical = MaterialTheme.spacing.small),
         text = description,
         maxLines = 3,
         overflow = TextOverflow.Ellipsis,
@@ -125,13 +129,11 @@ private fun LibraryVersions(library: Library, onLibraryVersionClick: (Version) -
         Row {
             LibraryVersion(
                 text = stringResource(id = R.string.version_stable, library.stableVersion.name),
-                tag = LibraryItemTags.VERSION_STABLE + library.name,
                 version = library.stableVersion,
                 onLibraryVersionClick = onLibraryVersionClick
             )
             LibraryVersion(
                 text = stringResource(id = R.string.version_beta, library.betaVersion.name),
-                tag = LibraryItemTags.VERSION_BETA + library.name,
                 version = library.betaVersion,
                 onLibraryVersionClick = onLibraryVersionClick
             )
@@ -139,13 +141,11 @@ private fun LibraryVersions(library: Library, onLibraryVersionClick: (Version) -
         Row {
             LibraryVersion(
                 text = stringResource(id = R.string.version_rc, library.rcVersion.name),
-                tag = LibraryItemTags.VERSION_RC + library.name,
                 version = library.rcVersion,
                 onLibraryVersionClick = onLibraryVersionClick
             )
             LibraryVersion(
                 text = stringResource(id = R.string.version_alpha, library.alphaVersion.name),
-                tag = LibraryItemTags.VERSION_ALPHA + library.name,
                 version = library.alphaVersion,
                 onLibraryVersionClick = onLibraryVersionClick
             )
@@ -157,7 +157,6 @@ private fun LibraryVersions(library: Library, onLibraryVersionClick: (Version) -
 private fun RowScope.LibraryVersion(
     version: Version,
     text: String,
-    tag: String,
     onLibraryVersionClick: (Version) -> Unit
 ) {
     Text(
@@ -170,8 +169,7 @@ private fun RowScope.LibraryVersion(
                     }
                 }
             )
-            .padding(vertical = MaterialTheme.spacing.small)
-            .testTag(tag),
+            .padding(vertical = MaterialTheme.spacing.small),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         text = text
