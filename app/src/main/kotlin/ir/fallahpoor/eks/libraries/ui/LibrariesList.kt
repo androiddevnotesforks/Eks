@@ -25,7 +25,7 @@ import ir.fallahpoor.eks.data.entity.Version
 import ir.fallahpoor.eks.theme.spacing
 
 object LibrariesListTags {
-    const val NO_LIBRARY_TEXT = "librariesNoLibrary"
+    const val NO_LIBRARY_TEXT = "librariesListNoLibrary"
 }
 
 @Composable
