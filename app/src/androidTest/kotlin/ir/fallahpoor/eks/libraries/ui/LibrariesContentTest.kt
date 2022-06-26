@@ -1,9 +1,13 @@
 package ir.fallahpoor.eks.libraries.ui
 
+import android.content.Context
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.test.core.app.ApplicationProvider
+import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.TestData
 import ir.fallahpoor.eks.TestData.libraries
 import ir.fallahpoor.eks.data.entity.Library
@@ -18,6 +22,8 @@ class LibrariesContentTest {
     @get:Rule
     val composeRule = createComposeRule()
 
+    private val context: Context = ApplicationProvider.getApplicationContext()
+
     @Test
     fun test_loading_state() {
 
@@ -27,7 +33,7 @@ class LibrariesContentTest {
         // Then
         with(composeRule) {
             composeRule.onNodeWithTag(LibrariesContentTags.REFRESH_DATE)
-                .assertIsDisplayed()
+                .assertDoesNotExist()
             onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
                 .assertIsDisplayed()
             onNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
@@ -40,11 +46,7 @@ class LibrariesContentTest {
     fun list_of_libraries_is_displayed() {
 
         // Given
-        composeLibrariesContent(
-            librariesState = LibrariesState.Success(
-                libraries
-            )
-        )
+        composeLibrariesContent(librariesState = LibrariesState.Success(libraries))
 
         // Then
         with(composeRule) {
@@ -65,7 +67,7 @@ class LibrariesContentTest {
         val library: Library = TestData.room
         val onLibraryClick: (Library) -> Unit = mock()
         composeLibrariesContent(
-            librariesState = LibrariesState.Success(libraries),
+            librariesState = LibrariesState.Success(listOf(library)),
             onLibraryClick = onLibraryClick
         )
 
@@ -85,12 +87,15 @@ class LibrariesContentTest {
         val library: Library = TestData.room
         val onLibraryVersionClick: (Version) -> Unit = mock()
         composeLibrariesContent(
-            librariesState = LibrariesState.Success(libraries),
+            librariesState = LibrariesState.Success(listOf(library)),
             onLibraryVersionClick = onLibraryVersionClick
         )
 
         // When
-        composeRule.onNodeWithTag(LibraryItemTags.VERSION_STABLE + library.name)
+        composeRule.onNodeWithText(
+            context.getString(R.string.version_stable, library.stableVersion.name),
+            useUnmergedTree = true
+        )
             .performClick()
 
         // Then
@@ -102,19 +107,20 @@ class LibrariesContentTest {
     fun correct_callback_is_called_when_a_library_is_pinned() {
 
         // Given
-        val onPinLibrary: (Library, Boolean) -> Unit = mock()
+        val library: Library = TestData.room
+        val onLibraryPinClick: (Library, Boolean) -> Unit = mock()
         composeLibrariesContent(
-            librariesState = LibrariesState.Success(libraries),
-            onPinLibraryClick = onPinLibrary
+            librariesState = LibrariesState.Success(listOf(library)),
+            onLibraryPinClick = onLibraryPinClick
         )
 
         // When
         composeRule.onNodeWithTag(
-            LibraryItemTags.PIN_BUTTON + TestData.preference.name
+            LibraryItemTags.PIN_BUTTON + library.name
         ).performClick()
 
         // Then
-        Mockito.verify(onPinLibrary).invoke(TestData.preference, true)
+        Mockito.verify(onLibraryPinClick).invoke(library, true)
 
     }
 
@@ -122,19 +128,20 @@ class LibrariesContentTest {
     fun correct_callback_is_called_when_a_library_is_unpinned() {
 
         // Given
-        val onPinLibrary: (Library, Boolean) -> Unit = mock()
+        val library: Library = TestData.core
+        val onLibraryPinClick: (Library, Boolean) -> Unit = mock()
         composeLibrariesContent(
-            librariesState = LibrariesState.Success(libraries),
-            onPinLibraryClick = onPinLibrary
+            librariesState = LibrariesState.Success(listOf(library)),
+            onLibraryPinClick = onLibraryPinClick
         )
 
         // When
         composeRule.onNodeWithTag(
-            LibraryItemTags.PIN_BUTTON + TestData.core.name
+            LibraryItemTags.PIN_BUTTON + library.name
         ).performClick()
 
         // Then
-        Mockito.verify(onPinLibrary).invoke(TestData.core, false)
+        Mockito.verify(onLibraryPinClick).invoke(library, false)
 
     }
 
@@ -162,7 +169,7 @@ class LibrariesContentTest {
         refreshDate: String = "N/A",
         onLibraryClick: (Library) -> Unit = {},
         onLibraryVersionClick: (Version) -> Unit = {},
-        onPinLibraryClick: (Library, Boolean) -> Unit = { _, _ -> },
+        onLibraryPinClick: (Library, Boolean) -> Unit = { _, _ -> },
         onTryAgainClick: () -> Unit = {}
     ) {
         composeRule.setContent {
@@ -171,7 +178,7 @@ class LibrariesContentTest {
                 refreshDate = refreshDate,
                 onLibraryClick = onLibraryClick,
                 onLibraryVersionClick = onLibraryVersionClick,
-                onLibraryPinClick = onPinLibraryClick,
+                onLibraryPinClick = onLibraryPinClick,
                 onTryAgainClick = onTryAgainClick
             )
         }
