@@ -23,29 +23,7 @@ class ToolbarTest {
     private val selectSortOrderText = context.getString(R.string.select_sort_order)
 
     @Test
-    fun toolbar_is_initialized_correctly_when_night_mode_is_supported() {
-
-        // Given
-        composeToolbar()
-
-        // Then
-        composeTestRule.onNodeWithText(appNameText)
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription(
-            sortText,
-            useUnmergedTree = true
-        ).assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription(
-            searchText,
-            useUnmergedTree = true
-        ).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(SearchBarTags.SEARCH_BAR)
-            .assertDoesNotExist()
-
-    }
-
-    @Test
-    fun toolbar_is_initialized_correctly_when_night_mode_is_not_supported() {
+    fun toolbar_is_initialized_correctly() {
 
         // Given
         composeToolbar()
@@ -116,13 +94,13 @@ class ToolbarTest {
                 useUnmergedTree = true
             ).performClick()
             onNodeWithText(
-                context.getString(SortOrder.A_TO_Z.stringResId),
+                context.getString(SortOrder.Z_TO_A.stringResId),
                 useUnmergedTree = true
             ).performClick()
         }
 
         // Then
-        Mockito.verify(onSortOrderChange).invoke(SortOrder.A_TO_Z)
+        Mockito.verify(onSortOrderChange).invoke(SortOrder.Z_TO_A)
 
     }
 
@@ -145,7 +123,7 @@ class ToolbarTest {
         }
 
         // Then
-        composeTestRule.onNodeWithText(selectSortOrderText)
+        composeTestRule.onNodeWithText(selectSortOrderText, useUnmergedTree = true)
             .assertDoesNotExist()
 
     }

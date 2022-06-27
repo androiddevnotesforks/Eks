@@ -46,7 +46,7 @@ class SearchBarTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithText(hint)
+            onNodeWithText(hint, useUnmergedTree = true)
                 .assertDoesNotExist()
             onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
                 .assertTextEquals(query)
