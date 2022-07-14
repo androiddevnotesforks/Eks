@@ -20,23 +20,23 @@ class NotificationBodyMaker
 
         val newLibraries: List<Library>? = librariesMap[LibraryDiffer.Type.NEW]
         if (!newLibraries.isNullOrEmpty()) {
-            libraryNames.add(context.getString(R.string.new_libraries))
-            libraryNames.addAll(newLibraries.map { it.name })
+            libraryNames += context.getString(R.string.new_libraries)
+            libraryNames += newLibraries.map { it.name }
         }
 
         val removedLibraries: List<Library>? = librariesMap[LibraryDiffer.Type.REMOVED]
         if (!removedLibraries.isNullOrEmpty()) {
-            libraryNames.add(context.getString(R.string.removed_libraries))
-            libraryNames.addAll(removedLibraries.map { it.name })
+            libraryNames += context.getString(R.string.removed_libraries)
+            libraryNames += removedLibraries.map { it.name }
         }
 
         val updatedLibraries: List<Library>? = librariesMap[LibraryDiffer.Type.UPDATED]
 
         if (!updatedLibraries.isNullOrEmpty()) {
 
-            libraryNames.add(context.getString(R.string.updated_libraries))
+            libraryNames += context.getString(R.string.updated_libraries)
 
-            updatedLibraries.forEach { library: Library ->
+            updatedLibraries.forEachIndexed { index, library ->
 
                 val oldLibrary = oldLibraries.first { it.name == library.name }
                 val refreshedLibrary = refreshedLibraries.first { it.name == library.name }
@@ -49,7 +49,7 @@ class NotificationBodyMaker
                     textResId = R.string.version_stable
                 )
                 updateText?.let {
-                    updatedVersions.add(it)
+                    updatedVersions += it
                 }
 
                 updateText = getOldVersionNewVersionText(
@@ -58,7 +58,7 @@ class NotificationBodyMaker
                     textResId = R.string.version_rc
                 )
                 updateText?.let {
-                    updatedVersions.add(it)
+                    updatedVersions + it
                 }
 
                 updateText = getOldVersionNewVersionText(
@@ -67,7 +67,7 @@ class NotificationBodyMaker
                     textResId = R.string.version_beta
                 )
                 updateText?.let {
-                    updatedVersions.add(it)
+                    updatedVersions + it
                 }
 
                 updateText = getOldVersionNewVersionText(
@@ -76,15 +76,13 @@ class NotificationBodyMaker
                     textResId = R.string.version_alpha
                 )
                 updateText?.let {
-                    updatedVersions.add(it)
+                    updatedVersions += it
                 }
 
-                libraryNames.add(
-                    updatedVersions.joinToString(
-                        prefix = library.name + "\n",
-                        separator = "\n",
-                        postfix = "\n"
-                    )
+                libraryNames += updatedVersions.joinToString(
+                    prefix = library.name + "\n",
+                    separator = "\n",
+                    postfix = if (index != updatedLibraries.lastIndex) "\n" else ""
                 )
             }
 
