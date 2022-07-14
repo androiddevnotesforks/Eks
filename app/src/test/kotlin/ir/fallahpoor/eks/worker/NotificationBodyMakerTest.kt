@@ -17,7 +17,7 @@ class NotificationBodyMakerTest {
     private val notificationBodyMaker = NotificationBodyMaker(context, LibraryDiffer())
 
     @Test
-    fun `when there is no update makeBody() should return null`() {
+    fun `when there is no update body should be null`() {
 
         // Given
         val oldLibraries: List<Library> = listOf(TestData.core, TestData.room)
@@ -90,7 +90,16 @@ class NotificationBodyMakerTest {
         )
 
         // Then
-        Truth.assertThat(actualBody).isEqualTo("")
+        val expectedBody =
+            context.getString(R.string.updated_libraries) +
+                    "\n" +
+                    TestData.activityNew.name +
+                    "\n" +
+                    context.getString(
+                        R.string.version_stable,
+                        TestData.activityOld.stableVersion.name + " -> " + TestData.activityNew.stableVersion.name
+                    )
+        Truth.assertThat(actualBody).isEqualTo(expectedBody)
 
     }
 
