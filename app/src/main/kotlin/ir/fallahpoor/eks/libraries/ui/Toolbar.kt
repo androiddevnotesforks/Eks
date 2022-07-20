@@ -61,11 +61,15 @@ fun Toolbar(
                     },
                     onQuerySubmit = onSearchQuerySubmit,
                     onClearClick = {
-                        onSearchQueryChange("")
+                        if (searchQuery.isNotBlank()) {
+                            onSearchQueryChange("")
+                        }
                     },
                     onCloseClick = {
                         toolbarMode = ToolbarMode.Normal
-                        onSearchQueryChange("")
+                        if (searchQuery.isNotBlank()) {
+                            onSearchQueryChange("")
+                        }
                     }
                 )
             }
