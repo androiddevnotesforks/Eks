@@ -60,7 +60,7 @@ class LibraryDifferTest {
     }
 
     @Test
-    fun `A library should be considered UPDATED when one of its versions changes`() {
+    fun `A library should be considered UPDATED when one of its versions is changed`() {
 
         // Given
         val expectedUpdatedLibraries: List<Library> = listOf(TestData.activityOld)
