@@ -4,7 +4,7 @@ import ir.fallahpoor.eks.data.Constants
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.entity.Library
 
-data class LibrariesScreenState(
+data class LibrariesScreenUiState(
     val sortOrder: SortOrder = SortOrder.A_TO_Z,
     val searchQuery: String = "",
     val refreshDate: String = Constants.NOT_AVAILABLE,

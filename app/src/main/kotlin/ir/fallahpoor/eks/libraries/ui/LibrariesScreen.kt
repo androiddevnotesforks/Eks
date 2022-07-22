@@ -27,7 +27,7 @@ fun LibrariesScreen(
     onLibraryClick: (Library) -> Unit,
     onLibraryVersionClick: (Version) -> Unit
 ) {
-    val uiState: LibrariesScreenState by librariesViewModel.librariesScreenState
+    val uiState: LibrariesScreenUiState by librariesViewModel.librariesScreenUiState
         .collectAsState()
 
     LaunchedEffect(true) {

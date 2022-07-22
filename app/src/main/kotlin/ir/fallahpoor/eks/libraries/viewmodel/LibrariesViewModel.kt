@@ -7,7 +7,7 @@ import ir.fallahpoor.eks.data.ExceptionParser
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.repository.LibraryRepository
-import ir.fallahpoor.eks.libraries.ui.LibrariesScreenState
+import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,15 +29,15 @@ class LibrariesViewModel
         data class ChangeSearchQuery(val searchQuery: String) : Event()
     }
 
-    private val _librariesScreenState = MutableStateFlow(
-        LibrariesScreenState(sortOrder = libraryRepository.getSortOrder())
+    private val _librariesScreenUiState = MutableStateFlow(
+        LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
     )
-    val librariesScreenState: StateFlow<LibrariesScreenState> = _librariesScreenState
+    val librariesScreenUiState: StateFlow<LibrariesScreenUiState> = _librariesScreenUiState
 
     init {
         viewModelScope.launch {
             libraryRepository.getRefreshDate().collect { refreshDate: String ->
-                setState(_librariesScreenState.value.copy(refreshDate = refreshDate))
+                setState(_librariesScreenUiState.value.copy(refreshDate = refreshDate))
             }
         }
     }
@@ -52,7 +52,7 @@ class LibrariesViewModel
     }
 
     private fun getLibraries() {
-        setState(_librariesScreenState.value.copy(librariesState = LibrariesState.Loading))
+        setState(_librariesScreenUiState.value.copy(librariesState = LibrariesState.Loading))
         getLibs()
     }
 
@@ -62,21 +62,21 @@ class LibrariesViewModel
                 try {
                     libraryRepository.pinLibrary(library = library, pinned = pin)
                     val libraries: List<Library> = libraryRepository.getLibraries(
-                        sortOrder = _librariesScreenState.value.sortOrder,
-                        searchQuery = _librariesScreenState.value.searchQuery
+                        sortOrder = _librariesScreenUiState.value.sortOrder,
+                        searchQuery = _librariesScreenUiState.value.searchQuery
                     )
                     LibrariesState.Success(libraries)
                 } catch (e: Throwable) {
                     Timber.e(e)
                     LibrariesState.Error(exceptionParser.getMessage(e))
                 }
-            setState(_librariesScreenState.value.copy(librariesState = state))
+            setState(_librariesScreenUiState.value.copy(librariesState = state))
         }
     }
 
     private fun changeSortOrder(sortOrder: SortOrder) {
         setState(
-            _librariesScreenState.value.copy(
+            _librariesScreenUiState.value.copy(
                 librariesState = LibrariesState.Loading,
                 sortOrder = sortOrder
             )
@@ -86,7 +86,7 @@ class LibrariesViewModel
 
     private fun changeSearchQuery(searchQuery: String) {
         setState(
-            _librariesScreenState.value.copy(
+            _librariesScreenUiState.value.copy(
                 librariesState = LibrariesState.Loading,
                 searchQuery = searchQuery
             )
@@ -99,20 +99,20 @@ class LibrariesViewModel
             val state: LibrariesState =
                 try {
                     val libraries: List<Library> = libraryRepository.getLibraries(
-                        sortOrder = _librariesScreenState.value.sortOrder,
-                        searchQuery = _librariesScreenState.value.searchQuery
+                        sortOrder = _librariesScreenUiState.value.sortOrder,
+                        searchQuery = _librariesScreenUiState.value.searchQuery
                     )
                     LibrariesState.Success(libraries)
                 } catch (e: Throwable) {
                     Timber.e(e)
                     LibrariesState.Error(exceptionParser.getMessage(e))
                 }
-            setState(_librariesScreenState.value.copy(librariesState = state))
+            setState(_librariesScreenUiState.value.copy(librariesState = state))
         }
     }
 
-    private fun setState(state: LibrariesScreenState) {
-        _librariesScreenState.value = state
+    private fun setState(state: LibrariesScreenUiState) {
+        _librariesScreenUiState.value = state
     }
 
 }
