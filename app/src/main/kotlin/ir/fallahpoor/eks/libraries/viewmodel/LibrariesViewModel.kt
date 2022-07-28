@@ -11,6 +11,7 @@ import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -112,7 +113,7 @@ class LibrariesViewModel
     }
 
     private fun setState(state: LibrariesScreenUiState) {
-        _librariesScreenUiState.value = state
+        _librariesScreenUiState.update { state }
     }
 
 }
