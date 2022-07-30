@@ -39,20 +39,4 @@ data class Library(
     private fun isVersionUpdated(oldVersionName: String, newVersionName: String): Boolean =
         newVersionName != NOT_AVAILABLE && oldVersionName != newVersionName
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-        if (javaClass != other?.javaClass) {
-            return false
-        }
-        other as Library
-        if (name != other.name) {
-            return false
-        }
-        return true
-    }
-
-    override fun hashCode(): Int = name.hashCode()
-
 }
