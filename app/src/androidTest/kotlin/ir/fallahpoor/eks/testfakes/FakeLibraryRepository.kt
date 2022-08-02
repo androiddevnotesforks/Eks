@@ -12,29 +12,35 @@ import java.io.IOException
 
 class FakeLibraryRepository : LibraryRepository {
 
-    var throwException = false
-    var updatesAvailable = false
-
     companion object {
         const val REFRESH_DATE = "N/A"
     }
 
-    private var sortOrderLiveData = MutableLiveData(SortOrder.A_TO_Z)
-    private val libraries = TestData.libraries
-    private val refreshedLibraries = TestData.refreshedLibraries
-    private val librariesLiveData = MutableLiveData<List<Library>>(libraries)
+    var throwException = false
+    var exception = IOException()
+    var updateIsAvailable = false
 
-    private fun <T> throwExceptionOrRunBlock(block: () -> T): T =
-        if (throwException) {
-            throw IOException()
-        } else {
-            block()
-        }
+    private val initialLibraries = mutableListOf(
+        TestData.activityOld,
+        TestData.biometricOld,
+        TestData.core,
+        TestData.preference
+    )
+    private val refreshedLibraries = listOf(
+        TestData.activityNew,
+        TestData.biometricNew,
+        TestData.core,
+        TestData.room
+    )
+    private val sortOrderLiveData = MutableLiveData(SortOrder.A_TO_Z)
+    private val librariesLiveData = MutableLiveData<List<Library>>(initialLibraries)
 
     override suspend fun getLibraries(sortOrder: SortOrder, searchQuery: String): List<Library> =
-        libraries.filter {
-            it.name.contains(searchQuery, ignoreCase = true)
-        }.sort(sortOrder)
+        throwExceptionOrRun {
+            initialLibraries.filter {
+                it.name.contains(searchQuery, ignoreCase = true)
+            }.sort(sortOrder)
+        }
 
     private fun List<Library>.sort(sortOrder: SortOrder): List<Library> = when (sortOrder) {
         SortOrder.A_TO_Z -> sortedBy { it.name }
@@ -42,29 +48,25 @@ class FakeLibraryRepository : LibraryRepository {
         SortOrder.PINNED_FIRST -> sortedByDescending { it.pinned }
     }
 
-    override suspend fun refreshLibraries() {
-        throwExceptionOrRunBlock {
-            if (updatesAvailable) {
-                updateLibrariesLiveData(refreshedLibraries)
-            } else {
-                updateLibrariesLiveData(libraries)
-            }
+    override suspend fun refreshLibraries() = throwExceptionOrRun {
+        if (updateIsAvailable) {
+            updateLibrariesLiveData(refreshedLibraries)
+        } else {
+            updateLibrariesLiveData(initialLibraries)
         }
     }
 
-    override suspend fun pinLibrary(library: Library, pinned: Boolean) {
-        throwExceptionOrRunBlock {
-            updateLibrary(library.copy(pinned = if (pinned) 1 else 0))
-        }
+    override suspend fun pinLibrary(library: Library, pinned: Boolean) = throwExceptionOrRun {
+        updateLibrary(library.copy(pinned = if (pinned) 1 else 0))
     }
 
     private fun updateLibrary(library: Library) {
-        val removed: Boolean = libraries.removeIf {
+        val removed: Boolean = initialLibraries.removeIf {
             it.name.equals(library.name, ignoreCase = true)
         }
         if (removed) {
-            libraries += library
-            updateLibrariesLiveData(libraries)
+            initialLibraries += library
+            updateLibrariesLiveData(initialLibraries)
         }
     }
 
@@ -72,15 +74,21 @@ class FakeLibraryRepository : LibraryRepository {
         librariesLiveData.value = libraries
     }
 
-    override fun getRefreshDate(): Flow<String> = throwExceptionOrRunBlock {
+    override fun getRefreshDate(): Flow<String> = throwExceptionOrRun {
         flow {
             emit(REFRESH_DATE)
         }
     }
 
+    private fun <T> throwExceptionOrRun(block: () -> T): T = if (throwException) {
+        throw exception
+    } else {
+        block()
+    }
+
     override fun getSortOrderAsFlow(): Flow<SortOrder> = sortOrderLiveData.asFlow()
 
-    override fun getSortOrder(): SortOrder = sortOrderLiveData.value!!
+    override fun getSortOrder(): SortOrder = sortOrderLiveData.value ?: SortOrder.A_TO_Z
 
     override suspend fun saveSortOrder(sortOrder: SortOrder) {
         sortOrderLiveData.value = sortOrder
