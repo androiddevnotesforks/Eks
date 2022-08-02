@@ -9,6 +9,7 @@ import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.repository.LibraryRepository
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,6 +32,7 @@ class LibrariesViewModel
         data class ChangeSearchQuery(val searchQuery: String) : Event()
     }
 
+    private var currentJob: Job? = null
     private val _librariesScreenUiState = MutableStateFlow(
         LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
     )
@@ -55,7 +57,8 @@ class LibrariesViewModel
     }
 
     private fun getLibraries() {
-        viewModelScope.launch {
+        currentJob?.cancel()
+        currentJob = viewModelScope.launch {
             val state: LibrariesState =
                 try {
                     val libraries: List<Library> = libraryRepository.getLibraries(
@@ -72,7 +75,8 @@ class LibrariesViewModel
     }
 
     private fun pinLibrary(library: Library, pin: Boolean) {
-        viewModelScope.launch {
+        currentJob?.cancel()
+        currentJob = viewModelScope.launch {
             val state: LibrariesState =
                 try {
                     libraryRepository.pinLibrary(library = library, pinned = pin)
