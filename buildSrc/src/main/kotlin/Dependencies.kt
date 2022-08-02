@@ -12,7 +12,7 @@ const val inject = "javax.inject:javax.inject:1"
 const val junit = "junit:junit:4.13.2"
 const val truth = "com.google.truth:truth:1.1.3"
 const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
-const val robolectric = "org.robolectric:robolectric:4.7.3"
+const val robolectric = "org.robolectric:robolectric:4.8.1"
 const val jsoup = "org.jsoup:jsoup:1.14.2"
 
 object Lifecycle {
