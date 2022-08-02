@@ -11,6 +11,7 @@ import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -33,7 +34,8 @@ class LibrariesViewModel
     private val _librariesScreenUiState = MutableStateFlow(
         LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
     )
-    val librariesScreenUiState: StateFlow<LibrariesScreenUiState> = _librariesScreenUiState
+    val librariesScreenUiState: StateFlow<LibrariesScreenUiState> =
+        _librariesScreenUiState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -53,8 +55,20 @@ class LibrariesViewModel
     }
 
     private fun getLibraries() {
-        setState(_librariesScreenUiState.value.copy(librariesState = LibrariesState.Loading))
-        getLibs()
+        viewModelScope.launch {
+            val state: LibrariesState =
+                try {
+                    val libraries: List<Library> = libraryRepository.getLibraries(
+                        sortOrder = _librariesScreenUiState.value.sortOrder,
+                        searchQuery = _librariesScreenUiState.value.searchQuery
+                    )
+                    LibrariesState.Success(libraries)
+                } catch (e: Throwable) {
+                    Timber.e(e)
+                    LibrariesState.Error(exceptionParser.getMessage(e))
+                }
+            setState(_librariesScreenUiState.value.copy(librariesState = state))
+        }
     }
 
     private fun pinLibrary(library: Library, pin: Boolean) {
@@ -82,7 +96,7 @@ class LibrariesViewModel
                 sortOrder = sortOrder
             )
         )
-        getLibs()
+        getLibraries()
     }
 
     private fun changeSearchQuery(searchQuery: String) {
@@ -92,24 +106,7 @@ class LibrariesViewModel
                 searchQuery = searchQuery
             )
         )
-        getLibs()
-    }
-
-    private fun getLibs() {
-        viewModelScope.launch {
-            val state: LibrariesState =
-                try {
-                    val libraries: List<Library> = libraryRepository.getLibraries(
-                        sortOrder = _librariesScreenUiState.value.sortOrder,
-                        searchQuery = _librariesScreenUiState.value.searchQuery
-                    )
-                    LibrariesState.Success(libraries)
-                } catch (e: Throwable) {
-                    Timber.e(e)
-                    LibrariesState.Error(exceptionParser.getMessage(e))
-                }
-            setState(_librariesScreenUiState.value.copy(librariesState = state))
-        }
+        getLibraries()
     }
 
     private fun setState(state: LibrariesScreenUiState) {

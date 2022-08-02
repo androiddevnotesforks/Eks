@@ -105,7 +105,4 @@ object TestData {
         )
     )
 
-    val libraries = mutableListOf(activityOld, biometricOld, core, preference)
-    val refreshedLibraries = mutableListOf(activityNew, biometricNew, core, room)
-
 }
