@@ -7,9 +7,9 @@ import javax.inject.Inject
 class ExceptionParser @Inject constructor(context: Context) {
 
     val INTERNET_NOT_CONNECTED =
-        context.getString(ir.fallahpoor.eks.data.R.string.internet_not_connected)
+        context.getString(R.string.internet_not_connected)
     val SOMETHING_WENT_WRONG =
-        context.getString(ir.fallahpoor.eks.data.R.string.something_went_wrong)
+        context.getString(R.string.something_went_wrong)
 
     fun getMessage(t: Throwable): String {
         return when (t) {
