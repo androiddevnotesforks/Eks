@@ -55,7 +55,7 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `get libraries success`() = runTest {
+    fun `state is updated correctly when getting the list of libraries succeeds`() = runTest {
 
         // Given
         val uiStates = mutableListOf<LibrariesScreenUiState>()
@@ -82,7 +82,7 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `get libraries error`() = runTest {
+    fun `state is updated correctly when getting the list of libraries fails`() = runTest {
 
         // Given
         libraryRepository.throwException = true
@@ -105,7 +105,7 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `change sort order success`() = runTest {
+    fun `state is updated correctly when changing the sort order succeeds`() = runTest {
 
         // Given
         val uiStates = mutableListOf<LibrariesScreenUiState>()
@@ -133,7 +133,7 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `change sort order error`() = runTest {
+    fun `state is updated correctly when changing the sort order fails`() = runTest {
 
         // Given
         libraryRepository.throwException = true
@@ -162,7 +162,7 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `change search query success`() = runTest {
+    fun `state is updated correctly when changing the search query succeeds`() = runTest {
 
         // Given
         val searchQuery = "ko"
@@ -191,7 +191,7 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `change search query error`() = runTest {
+    fun `state is updated correctly when changing the search query fails`() = runTest {
 
         // Given
         libraryRepository.throwException = true
@@ -220,7 +220,7 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `pin success`() = runTest {
+    fun `state is updated correctly when pinning a library succeeds`() = runTest {
 
         // Given
         val uiStates = mutableListOf<LibrariesScreenUiState>()
@@ -254,7 +254,7 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `pin error`() = runTest {
+    fun `state is updated correctly when pinning a library fails`() = runTest {
 
         // Given
         libraryRepository.throwException = true
@@ -284,7 +284,7 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `unpin success`() = runTest {
+    fun `state is updated correctly when unpinning a library succeeds`() = runTest {
 
         // Given
         val uiStates = mutableListOf<LibrariesScreenUiState>()
@@ -318,7 +318,7 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `unpin error`() = runTest {
+    fun `state is updated correctly when unpinning a library fails`() = runTest {
 
         // Given
         libraryRepository.throwException = true
