@@ -6,7 +6,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.SortOrder
-import ir.fallahpoor.eks.libraries.mock
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito

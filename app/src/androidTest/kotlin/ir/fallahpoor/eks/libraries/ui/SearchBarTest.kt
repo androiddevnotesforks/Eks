@@ -2,7 +2,6 @@ package ir.fallahpoor.eks.libraries.ui
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import ir.fallahpoor.eks.libraries.mock
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito

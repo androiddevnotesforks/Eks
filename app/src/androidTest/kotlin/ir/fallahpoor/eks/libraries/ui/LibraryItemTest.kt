@@ -8,7 +8,6 @@ import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.TestData
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.entity.Version
-import ir.fallahpoor.eks.libraries.mock
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito

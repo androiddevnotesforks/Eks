@@ -7,7 +7,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.SortOrder
-import ir.fallahpoor.eks.libraries.mock
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
