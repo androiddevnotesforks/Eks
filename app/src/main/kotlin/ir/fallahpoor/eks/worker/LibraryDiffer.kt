@@ -17,12 +17,14 @@ class LibraryDiffer @Inject constructor() {
         refreshedLibraries: List<Library>
     ): Map<Type, List<Library>> {
 
-        val newLibraries: List<Library> = refreshedLibraries.minus(oldLibraries.toSet())
-        val removedLibraries: List<Library> = oldLibraries.minus(refreshedLibraries.toSet())
+        val newLibraries: List<Library> = getNewLibraries(oldLibraries, refreshedLibraries)
+        val removedLibraries: List<Library> = getRemovedLibraries(oldLibraries, refreshedLibraries)
         val oldLibrariesMinusRemovedOnes: List<Library> =
-            oldLibraries.minus(removedLibraries.toSet()).sortedBy { it.name }
-        val refreshedLibrariesMinusNewOnes: List<Library> =
-            refreshedLibraries.minus(newLibraries.toSet()).sortedBy { it.name }
+            getOldLibrariesMinusRemoveOnes(oldLibraries, removedLibraries).sortedBy { it.name }
+        val refreshedLibrariesMinusNewOnes: List<Library> = getRefreshedLibrariesMinusRemoveOnes(
+            refreshedLibraries,
+            removedLibraries
+        ).sortedBy { it.name }
         val updatedLibraries = mutableListOf<Library>()
         val unchangedLibraries = mutableListOf<Library>()
 
@@ -41,6 +43,38 @@ class LibraryDiffer @Inject constructor() {
             Type.UNCHANGED to unchangedLibraries
         )
 
+    }
+
+    private fun getNewLibraries(
+        oldLibraries: List<Library>,
+        refreshedLibraries: List<Library>
+    ): List<Library> {
+        val oldLibraryNamesSet = oldLibraries.map { it.name }.toSet()
+        return refreshedLibraries.filter { it.name !in oldLibraryNamesSet }
+    }
+
+    private fun getRemovedLibraries(
+        oldLibraries: List<Library>,
+        refreshedLibraries: List<Library>
+    ): List<Library> {
+        val refreshedLibraryNamesSet = refreshedLibraries.map { it.name }.toSet()
+        return oldLibraries.filter { it.name !in refreshedLibraryNamesSet }
+    }
+
+    private fun getOldLibrariesMinusRemoveOnes(
+        oldLibraries: List<Library>,
+        removeLibraries: List<Library>
+    ): List<Library> {
+        val removedLibraryNamesSet = removeLibraries.map { it.name }.toSet()
+        return oldLibraries.filter { it.name !in removedLibraryNamesSet }
+    }
+
+    private fun getRefreshedLibrariesMinusRemoveOnes(
+        refreshedLibraries: List<Library>,
+        removeLibraries: List<Library>
+    ): List<Library> {
+        val removedLibraryNamesSet = removeLibraries.map { it.name }.toSet()
+        return refreshedLibraries.filter { it.name !in removedLibraryNamesSet }
     }
 
 }
