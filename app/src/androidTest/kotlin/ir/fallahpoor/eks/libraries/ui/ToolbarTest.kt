@@ -153,7 +153,7 @@ class ToolbarTest {
 
         // Given
         val onSearchQueryChange: (String) -> Unit = mock()
-        composeToolbar(onSearchQueryChange = onSearchQueryChange)
+        composeToolbar(searchQuery = "Koin", onSearchQueryChange = onSearchQueryChange)
 
         // When
         composeTestRule.onNodeWithContentDescription(

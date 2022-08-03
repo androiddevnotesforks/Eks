@@ -9,7 +9,6 @@ import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.TestData
-import ir.fallahpoor.eks.TestData.libraries
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.entity.Version
 import ir.fallahpoor.eks.libraries.mock
@@ -46,6 +45,8 @@ class LibrariesContentTest {
     fun list_of_libraries_is_displayed() {
 
         // Given
+        val libraries =
+            listOf(TestData.activityOld, TestData.biometricOld, TestData.core, TestData.preference)
         composeLibrariesContent(librariesState = LibrariesState.Success(libraries))
 
         // Then

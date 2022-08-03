@@ -14,6 +14,7 @@ import ir.fallahpoor.eks.data.repository.LibraryRepository
 import ir.fallahpoor.eks.testfakes.FakeLibraryRepository
 import ir.fallahpoor.eks.worker.NotificationBodyMaker
 import ir.fallahpoor.eks.worker.RefreshLibrariesWorker
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -24,6 +25,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class RefreshLibrariesWorkerTest {
 
@@ -102,7 +104,7 @@ class RefreshLibrariesWorkerTest {
 
             // Given
             Mockito.`when`(connectivityChecker.isNetworkReachable()).thenReturn(true)
-            libraryRepository.updatesAvailable = false
+            libraryRepository.updateIsAvailable = false
 
             // When
             val result = worker.doWork()
@@ -121,7 +123,7 @@ class RefreshLibrariesWorkerTest {
             .thenReturn(true)
         Mockito.`when`(notificationBodyMaker.makeBody(anyList(), anyList()))
             .thenReturn("X")
-        libraryRepository.updatesAvailable = true
+        libraryRepository.updateIsAvailable = true
 
         // When
         val result = worker.doWork()
