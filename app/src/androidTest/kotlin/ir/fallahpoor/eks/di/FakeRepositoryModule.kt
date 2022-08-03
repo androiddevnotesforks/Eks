@@ -15,8 +15,6 @@ import ir.fallahpoor.eks.fakes.FakeLibraryRepository
 object FakeRepositoryModule {
 
     @Provides
-    fun provideLibraryRepository(): LibraryRepository {
-        return FakeLibraryRepository()
-    }
+    fun provideLibraryRepository(): LibraryRepository = FakeLibraryRepository()
 
 }
