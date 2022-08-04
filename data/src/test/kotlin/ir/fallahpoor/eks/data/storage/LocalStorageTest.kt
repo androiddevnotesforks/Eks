@@ -25,11 +25,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 // TODO add tests for getSortOrderAsFlow() and getRefreshDateAsFlow()
 
-@Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)
 @OptIn(ExperimentalCoroutinesApi::class)
 class LocalStorageTest {

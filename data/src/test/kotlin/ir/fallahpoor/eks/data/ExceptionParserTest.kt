@@ -19,7 +19,7 @@ class ExceptionParserTest {
     }
 
     @Test
-    fun test_getMessage_for_IOException() {
+    fun `correct message is returned when the exception is a IOException`() {
 
         // Given
         val throwable: Throwable = IOException()
@@ -33,7 +33,7 @@ class ExceptionParserTest {
     }
 
     @Test
-    fun test_getMessage_for_other_exceptions() {
+    fun `correct message is returned when the exception is anything but IOException`() {
 
         // Given any exception other than than HttpException and IOException
         val throwable: Throwable = ArithmeticException()
