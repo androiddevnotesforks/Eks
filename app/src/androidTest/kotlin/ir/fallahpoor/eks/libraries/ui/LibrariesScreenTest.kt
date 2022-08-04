@@ -5,13 +5,13 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
+import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.TestData
 import ir.fallahpoor.eks.data.ExceptionParser
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.entity.Version
-import ir.fallahpoor.eks.libraries.mock
+import ir.fallahpoor.eks.fakes.FakeLibraryRepository
 import ir.fallahpoor.eks.libraries.viewmodel.LibrariesViewModel
-import ir.fallahpoor.eks.testfakes.FakeLibraryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -170,7 +170,12 @@ class LibrariesScreenTest {
         composeLibrariesScreen(onLibraryVersionClick = onLibraryVersionClick)
 
         // When
-        composeTestRule.onNodeWithTag(LibraryItemTags.VERSION_BETA + TestData.core.name)
+        composeTestRule.onNodeWithText(
+            context.getString(
+                R.string.version_beta,
+                TestData.core.betaVersion.name
+            )
+        )
             .performClick()
 
         // Then
