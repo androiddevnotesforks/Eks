@@ -3,7 +3,7 @@
 ![Build status](https://github.com/masoodfallahpoor/Eks/actions/workflows/build.yml/badge.svg?branch=dev)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/masoodfallahpoor/Eks?label=Latest%20version)
 
-Eks is an Android app that displays the latest version of all the official AndroidX libraries and
+Eks is an Android app that displays the latest version of official AndroidX libraries and
 notifies you when there are updates available.
 
 # Screenshots
