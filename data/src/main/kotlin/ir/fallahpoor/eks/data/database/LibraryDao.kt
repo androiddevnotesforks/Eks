@@ -10,7 +10,7 @@ interface LibraryDao {
     suspend fun getLibrariesCount(): Int
 
     @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} LIKE '%' || :searchQuery || '%' ORDER BY ${DatabaseContract.FIELD_NAME} ASC")
-    suspend fun getAllLibraries(searchQuery: String): List<Library>
+    suspend fun getAllLibraries(searchQuery: String = ""): List<Library>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLibrary(libraries: List<Library>)

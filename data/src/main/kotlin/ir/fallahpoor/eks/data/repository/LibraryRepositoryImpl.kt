@@ -37,7 +37,7 @@ class LibraryRepositoryImpl
     override suspend fun refreshLibraries() {
         var newLibraries: List<Library> = librariesFetcher.fetchLibraries()
         storage.setRefreshDate(dateProvider.getCurrentDate())
-        val pinnedOldLibraryNames = libraryDao.getAllLibraries("")
+        val pinnedOldLibraryNames = libraryDao.getAllLibraries()
             .filter { it.pinned == 1 }
             .map { it.name }
         newLibraries = newLibraries.map {

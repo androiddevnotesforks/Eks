@@ -198,7 +198,7 @@ class LibraryRepositoryImplTest {
         libraryRepository.refreshLibraries()
 
         // Then
-        Truth.assertThat(fakeLibraryDao.getAllLibraries(searchQuery = ""))
+        Truth.assertThat(fakeLibraryDao.getAllLibraries())
             .isEqualTo(expectedLibraries)
 
     }
