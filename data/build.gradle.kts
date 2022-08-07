@@ -69,6 +69,7 @@ dependencies {
     testImplementation(Coroutines.test)
     testImplementation(coreTesting)
     testImplementation(AndroidXTest.core)
+    testImplementation(AndroidXTest.junit)
     testImplementation(robolectric)
     testImplementation(Mockito.inline)
 }

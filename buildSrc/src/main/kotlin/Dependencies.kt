@@ -68,6 +68,7 @@ object AndroidXTest {
     const val core = "androidx.test:core:1.0.0"
     const val runner = "androidx.test:runner:1.1.0"
     const val rules = "androidx.test:rules:1.1.0"
+    const val junit = "androidx.test.ext:junit:1.1.3"
 }
 
 object Espresso {
