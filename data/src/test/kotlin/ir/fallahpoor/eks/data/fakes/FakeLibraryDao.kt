@@ -28,7 +28,7 @@ class FakeLibraryDao : LibraryDao {
     override suspend fun updateLibrary(library: Library) {
         val removed = libraries.remove(getLibrary(library.name))
         if (removed) {
-            libraries.add(library)
+            libraries += library
             updatedLibrariesLiveData()
         }
     }
