@@ -19,9 +19,11 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
+import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -55,7 +57,8 @@ class LibraryRepositoryImplTest {
             librariesFetcher = librariesFetcher,
             dateProvider = dateProvider
         )
-        Mockito.`when`(dateProvider.getCurrentDate()).thenReturn(REFRESH_DATE)
+        Mockito.`when`(dateProvider.getCurrentDate(any(SimpleDateFormat::class.java)))
+            .thenReturn(REFRESH_DATE)
     }
 
     @After
@@ -69,10 +72,7 @@ class LibraryRepositoryImplTest {
         // Given
         Mockito.`when`(librariesFetcher.fetchLibraries()).thenReturn(
             listOf(
-                TestData.activity,
-                TestData.biometric,
-                TestData.core,
-                TestData.room
+                TestData.activity, TestData.biometric, TestData.core, TestData.room
             )
         )
 
@@ -82,10 +82,7 @@ class LibraryRepositoryImplTest {
         // Then
         Truth.assertThat(actualLibraries).isEqualTo(
             listOf(
-                TestData.room,
-                TestData.core,
-                TestData.biometric,
-                TestData.activity
+                TestData.room, TestData.core, TestData.biometric, TestData.activity
             )
         )
 
@@ -172,8 +169,7 @@ class LibraryRepositoryImplTest {
         // Then
         val unpinnedLibrary: Library =
             libraryRepository.getLibraries().first { it.name == library.name }
-        Truth.assertThat(unpinnedLibrary.pinned)
-            .isEqualTo(0)
+        Truth.assertThat(unpinnedLibrary.pinned).isEqualTo(0)
 
     }
 
@@ -185,10 +181,7 @@ class LibraryRepositoryImplTest {
         // Given
         fakeLibraryDao.insertLibrary(
             listOf(
-                TestData.activity,
-                TestData.biometric,
-                TestData.core,
-                TestData.room
+                TestData.activity, TestData.biometric, TestData.core, TestData.room
             )
         )
         val expectedLibraries = listOf(TestData.core, TestData.preference, TestData.room)
@@ -198,8 +191,7 @@ class LibraryRepositoryImplTest {
         libraryRepository.refreshLibraries()
 
         // Then
-        Truth.assertThat(fakeLibraryDao.getAllLibraries())
-            .isEqualTo(expectedLibraries)
+        Truth.assertThat(fakeLibraryDao.getAllLibraries()).isEqualTo(expectedLibraries)
 
     }
 

@@ -6,8 +6,6 @@ import javax.inject.Inject
 
 class DateProvider @Inject constructor() {
 
-    private val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
-
-    fun getCurrentDate(): String = simpleDateFormat.format(Date())
+    fun getCurrentDate(simpleDateFormat: SimpleDateFormat): String = simpleDateFormat.format(Date())
 
 }
