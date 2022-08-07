@@ -21,8 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LibrariesViewModel
 @Inject constructor(
-    private val libraryRepository: LibraryRepository,
-    private val exceptionParser: ExceptionParser
+    private val libraryRepository: LibraryRepository, private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
     sealed class Event {
@@ -57,38 +56,29 @@ class LibrariesViewModel
     }
 
     private fun getLibraries() {
-        currentJob?.cancel()
-        currentJob = viewModelScope.launch {
-            val state: LibrariesState =
-                try {
-                    val libraries: List<Library> = libraryRepository.getLibraries(
-                        sortOrder = _librariesScreenUiState.value.sortOrder,
-                        searchQuery = _librariesScreenUiState.value.searchQuery
-                    )
-                    LibrariesState.Success(libraries)
-                } catch (e: Throwable) {
-                    Timber.e(e)
-                    LibrariesState.Error(exceptionParser.getMessage(e))
-                }
-            setState(_librariesScreenUiState.value.copy(librariesState = state))
-        }
+        performActionAndGetLibraries()
     }
 
     private fun pinLibrary(library: Library, pin: Boolean) {
+        performActionAndGetLibraries {
+            libraryRepository.pinLibrary(library = library, pinned = pin)
+        }
+    }
+
+    private fun performActionAndGetLibraries(action: suspend () -> Unit = {}) {
         currentJob?.cancel()
         currentJob = viewModelScope.launch {
-            val state: LibrariesState =
-                try {
-                    libraryRepository.pinLibrary(library = library, pinned = pin)
-                    val libraries: List<Library> = libraryRepository.getLibraries(
-                        sortOrder = _librariesScreenUiState.value.sortOrder,
-                        searchQuery = _librariesScreenUiState.value.searchQuery
-                    )
-                    LibrariesState.Success(libraries)
-                } catch (e: Throwable) {
-                    Timber.e(e)
-                    LibrariesState.Error(exceptionParser.getMessage(e))
-                }
+            val state: LibrariesState = try {
+                action()
+                val libraries: List<Library> = libraryRepository.getLibraries(
+                    sortOrder = _librariesScreenUiState.value.sortOrder,
+                    searchQuery = _librariesScreenUiState.value.searchQuery
+                )
+                LibrariesState.Success(libraries)
+            } catch (e: Throwable) {
+                Timber.e(e)
+                LibrariesState.Error(exceptionParser.getMessage(e))
+            }
             setState(_librariesScreenUiState.value.copy(librariesState = state))
         }
     }
@@ -96,8 +86,7 @@ class LibrariesViewModel
     private fun changeSortOrder(sortOrder: SortOrder) {
         setState(
             _librariesScreenUiState.value.copy(
-                librariesState = LibrariesState.Loading,
-                sortOrder = sortOrder
+                librariesState = LibrariesState.Loading, sortOrder = sortOrder
             )
         )
         getLibraries()
@@ -106,8 +95,7 @@ class LibrariesViewModel
     private fun changeSearchQuery(searchQuery: String) {
         setState(
             _librariesScreenUiState.value.copy(
-                librariesState = LibrariesState.Loading,
-                searchQuery = searchQuery
+                librariesState = LibrariesState.Loading, searchQuery = searchQuery
             )
         )
         getLibraries()
