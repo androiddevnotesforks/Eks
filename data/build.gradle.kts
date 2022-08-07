@@ -72,4 +72,5 @@ dependencies {
     testImplementation(AndroidXTest.junit)
     testImplementation(robolectric)
     testImplementation(Mockito.inline)
+    testImplementation(reflection)
 }

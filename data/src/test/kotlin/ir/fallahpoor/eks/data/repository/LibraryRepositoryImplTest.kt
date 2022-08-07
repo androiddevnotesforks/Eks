@@ -2,28 +2,23 @@ package ir.fallahpoor.eks.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
+import ir.fallahpoor.eks.data.MainDispatcherRule
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.TestData
+import ir.fallahpoor.eks.data.any
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.fakes.FakeLibraryDao
 import ir.fallahpoor.eks.data.fakes.FakeStorage
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -32,6 +27,9 @@ class LibraryRepositoryImplTest {
     companion object {
         private const val REFRESH_DATE = "September 11, 09:10"
     }
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -48,7 +46,6 @@ class LibraryRepositoryImplTest {
 
     @Before
     fun runBeforeEachTest() {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         fakeStorage = FakeStorage()
         fakeLibraryDao = FakeLibraryDao()
         libraryRepository = LibraryRepositoryImpl(
@@ -57,13 +54,8 @@ class LibraryRepositoryImplTest {
             librariesFetcher = librariesFetcher,
             dateProvider = dateProvider
         )
-        Mockito.`when`(dateProvider.getCurrentDate(any(SimpleDateFormat::class.java)))
+        Mockito.`when`(dateProvider.getCurrentDate(any()))
             .thenReturn(REFRESH_DATE)
-    }
-
-    @After
-    fun runAfterEachTest() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -176,7 +168,7 @@ class LibraryRepositoryImplTest {
     @Test
     fun `refreshLibraries() replaces old libraries with latest libraries`() = runTest {
 
-        // FIXME the pin state of libraries should be preserved
+        // TODO Check that the pin state of libraries are preserved
 
         // Given
         fakeLibraryDao.insertLibrary(

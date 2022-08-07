@@ -14,6 +14,7 @@ const val truth = "com.google.truth:truth:1.1.3"
 const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
 const val robolectric = "org.robolectric:robolectric:4.8.1"
 const val jsoup = "org.jsoup:jsoup:1.14.2"
+const val reflection = "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
 object Lifecycle {
     private const val lifecycleVersion = "2.5.1"
