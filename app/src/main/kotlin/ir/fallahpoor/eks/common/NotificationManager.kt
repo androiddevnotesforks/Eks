@@ -17,21 +17,29 @@ class NotificationManager
 @Inject constructor(private val context: Context) {
 
     companion object {
-        private const val CHANNEL_ID = "general_channel"
+        const val ID_GENERAL_CHANNEL = "general_channel"
     }
 
-    fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelName = context.getString(R.string.notification_channel_name)
-            val channelDescription = context.getString(R.string.notification_channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val notificationChannel =
-                NotificationChannel(CHANNEL_ID, channelName, importance).apply {
-                    description = channelDescription
-                }
-            val notificationManager: NotificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(notificationChannel)
+    fun createNotificationChannel(): Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        createChannel()
+        true
+    } else {
+        false
+    }
+
+    private fun createChannel() {
+        val notificationChannel = constructNotificationChannel()
+        val notificationManager: NotificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(notificationChannel)
+    }
+
+    private fun constructNotificationChannel(): NotificationChannel {
+        val channelName = context.getString(R.string.notification_channel_name)
+        val channelDescription = context.getString(R.string.notification_channel_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        return NotificationChannel(ID_GENERAL_CHANNEL, channelName, importance).apply {
+            description = channelDescription
         }
     }
 
@@ -42,7 +50,7 @@ class NotificationManager
     }
 
     private fun createNotification(title: String, content: String): Notification =
-        NotificationCompat.Builder(context, CHANNEL_ID)
+        NotificationCompat.Builder(context, ID_GENERAL_CHANNEL)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
             .setContentText(content)
