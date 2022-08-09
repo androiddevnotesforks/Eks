@@ -25,6 +25,7 @@ import ir.fallahpoor.eks.data.entity.Version
 import ir.fallahpoor.eks.theme.spacing
 
 object LibrariesListTags {
+    const val LIBRARIES_LIST = "librariesListLibrariesList"
     const val NO_LIBRARY_TEXT = "librariesListNoLibrary"
 }
 
@@ -50,7 +51,11 @@ fun LibrariesList(
             visible = libraries.isNotEmpty(),
             enter = fadeIn()
         ) {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(LibrariesListTags.LIBRARIES_LIST)
+            ) {
                 items(
                     items = libraries,
                     key = { library: Library -> library.name }

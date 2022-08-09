@@ -30,7 +30,6 @@ class LibrariesScreenTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
     private val searchText = context.getString(R.string.search)
 
-    private lateinit var librariesViewModel: LibrariesViewModel
     private lateinit var fakeLibraryRepository: FakeLibraryRepository
 
     @Test
@@ -66,6 +65,8 @@ class LibrariesScreenTest {
         // Then
         fakeLibraryRepository.getLibraries().forEach {
             if (it.name.contains("co", ignoreCase = true)) {
+                composeTestRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
+                    .performScrollToKey(it.name)
                 composeTestRule.onNodeWithTag(
                     LibraryItemTags.ITEM + it.name,
                     useUnmergedTree = true
@@ -99,14 +100,14 @@ class LibrariesScreenTest {
         // Then
         with(composeTestRule) {
             fakeLibraryRepository.getLibraries().forEach {
+                composeTestRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
+                    .performScrollToKey(it.name)
                 onNodeWithTag(
                     LibraryItemTags.ITEM + it.name,
                     useUnmergedTree = true
                 ).assertIsDisplayed()
             }
             onNodeWithTag(LibrariesListTags.NO_LIBRARY_TEXT)
-                .assertDoesNotExist()
-            onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
             onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
@@ -133,6 +134,8 @@ class LibrariesScreenTest {
         // Then
         with(composeTestRule) {
             fakeLibraryRepository.getLibraries().forEach {
+                onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
+                    .performScrollToKey(it.name)
                 onNodeWithTag(
                     LibraryItemTags.ITEM + it.name,
                     useUnmergedTree = true
@@ -147,11 +150,13 @@ class LibrariesScreenTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_a_library_is_clicked() = runTest {
+    fun correct_callback_is_called_when_a_library_is_clicked() {
 
         // Given
         val onLibraryClick: (Library) -> Unit = mock()
         composeLibrariesScreen(onLibraryClick = onLibraryClick)
+        composeTestRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
+            .performScrollToKey(TestData.preference.name)
 
         // When
         composeTestRule.onNodeWithTag(LibraryItemTags.ITEM + TestData.preference.name)
@@ -168,6 +173,8 @@ class LibrariesScreenTest {
         // Given
         val onLibraryVersionClick: (Version) -> Unit = mock()
         composeLibrariesScreen(onLibraryVersionClick = onLibraryVersionClick)
+        composeTestRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
+            .performScrollToKey(TestData.core.name)
 
         // When
         composeTestRule.onNodeWithText(
@@ -188,7 +195,7 @@ class LibrariesScreenTest {
         onLibraryVersionClick: (Version) -> Unit = {}
     ) {
         fakeLibraryRepository = FakeLibraryRepository()
-        librariesViewModel = LibrariesViewModel(
+        val librariesViewModel = LibrariesViewModel(
             libraryRepository = fakeLibraryRepository,
             exceptionParser = ExceptionParser(context)
         )
