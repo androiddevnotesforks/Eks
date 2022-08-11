@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ir.fallahpoor.eks.MainActivity
@@ -27,6 +28,7 @@ class NotificationManager
         false
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun createChannel() {
         val notificationChannel = constructNotificationChannel()
         val notificationManager: NotificationManager =
@@ -34,6 +36,7 @@ class NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun constructNotificationChannel(): NotificationChannel {
         val channelName = context.getString(R.string.notification_channel_name)
         val channelDescription = context.getString(R.string.notification_channel_description)

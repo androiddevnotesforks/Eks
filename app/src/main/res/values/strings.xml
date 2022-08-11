@@ -12,7 +12,6 @@
     <string name="select_sort_order">Select sort order</string>
     <string name="refresh_date">Refresh date: %s</string>
     <string name="no_library">There is no library</string>
-    <string name="content_description_search">Search for libraries</string>
     <string name="search">Search</string>
     <string name="pin_library">Pin library</string>
     <string name="unpin_library">Unpin library</string>
