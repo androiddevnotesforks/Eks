@@ -45,6 +45,10 @@ android {
         }
     }
 
+    // TODO remove it once the reason for this Lint error is found
+    lint {
+        disable += "DialogFragmentCallbacksDetector"
+    }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {

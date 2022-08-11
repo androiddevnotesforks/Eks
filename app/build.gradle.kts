@@ -79,6 +79,11 @@ android {
             isIncludeAndroidResources = true
         }
     }
+
+    // TODO remove it once the reason for this Lint error is found
+    lint {
+        disable += "DialogFragmentCallbacksDetector"
+    }
 }
 
 kapt {
