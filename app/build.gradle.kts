@@ -27,9 +27,9 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("../SigningKey.jks")
+            storeFile = file("../Eks.jks")
             storePassword = sp
-            keyAlias = "android app signing certificate"
+            keyAlias = "key0"
             keyPassword = kp
         }
     }
