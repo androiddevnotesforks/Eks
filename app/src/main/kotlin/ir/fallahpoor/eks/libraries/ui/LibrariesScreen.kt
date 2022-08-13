@@ -6,10 +6,11 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.entity.Library
@@ -22,6 +23,7 @@ object LibrariesScreenTags {
     const val CONTENT = "librariesScreenContent"
 }
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun LibrariesScreen(
     librariesViewModel: LibrariesViewModel = viewModel(),
@@ -29,7 +31,7 @@ fun LibrariesScreen(
     onLibraryVersionClick: (Version) -> Unit
 ) {
     val uiState: LibrariesScreenUiState by librariesViewModel.librariesScreenUiState
-        .collectAsState()
+        .collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         librariesViewModel.handleEvent(LibrariesViewModel.Event.GetLibraries)

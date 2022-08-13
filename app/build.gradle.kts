@@ -105,6 +105,7 @@ dependencies {
     implementation(Lifecycle.viewModel)
     implementation(Lifecycle.liveData)
     implementation(Lifecycle.viewModelCompose)
+    implementation(Lifecycle.runtimeCompose)
     implementation(Room.runtime)
     implementation(WorkManager.workManager)
     implementation(timber)

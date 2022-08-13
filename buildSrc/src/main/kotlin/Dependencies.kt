@@ -17,11 +17,11 @@ const val jsoup = "org.jsoup:jsoup:1.14.2"
 const val reflection = "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
 object Lifecycle {
-    private const val lifecycleVersion = "2.5.1"
-    const val liveData =
-        "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    private const val lifecycleVersion = "2.6.0-alpha01"
+    const val liveData = "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion"
-    const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
+    const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
+    const val runtimeCompose = "androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion"
 }
 
 object Room {
