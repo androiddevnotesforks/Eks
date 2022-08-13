@@ -95,6 +95,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
+    implementation(project(":data"))
     implementation(kotlinStdLib)
     implementation(appCompat)
     implementation(core)
@@ -121,6 +122,7 @@ dependencies {
     implementation(Compose.runtime)
     implementation(Compose.runtimeLiveData)
 
+    testImplementation(project(":commonTest"))
     testImplementation(junit)
     testImplementation(truth)
     testImplementation(coreTesting)
@@ -129,6 +131,7 @@ dependencies {
     testImplementation(robolectric)
     testImplementation(Mockito.inline)
 
+    androidTestImplementation(project(":commonTest"))
     androidTestImplementation(AndroidXTest.runner)
     androidTestImplementation(AndroidXTest.rules)
     androidTestImplementation(truth)
@@ -142,6 +145,4 @@ dependencies {
     androidTestImplementation(Hilt.androidTesting)
     androidTestImplementation(WorkManager.workManagerTest)
     kaptAndroidTest(Hilt.androidCompiler)
-
-    implementation(project(":data"))
 }

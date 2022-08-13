@@ -1,4 +1,4 @@
-package ir.fallahpoor.eks.data
+package ir.fallahpoor.eks.commontest
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

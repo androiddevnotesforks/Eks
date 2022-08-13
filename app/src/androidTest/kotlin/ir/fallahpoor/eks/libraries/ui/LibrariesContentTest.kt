@@ -8,7 +8,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.eks.R
-import ir.fallahpoor.eks.TestData
+import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.entity.Version
 import org.junit.Rule

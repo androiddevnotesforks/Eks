@@ -1,4 +1,4 @@
-package ir.fallahpoor.eks
+package ir.fallahpoor.eks.commontest
 
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.entity.Version

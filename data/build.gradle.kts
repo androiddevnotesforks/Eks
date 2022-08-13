@@ -68,6 +68,7 @@ dependencies {
     kapt(Room.compiler)
     implementation(Room.ktx)
 
+    testImplementation(project(":commonTest"))
     testImplementation(junit)
     testImplementation(truth)
     testImplementation(Coroutines.test)

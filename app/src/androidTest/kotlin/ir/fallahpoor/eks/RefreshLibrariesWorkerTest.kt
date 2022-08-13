@@ -9,9 +9,9 @@ import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import com.google.common.truth.Truth
 import ir.fallahpoor.eks.common.NotificationManager
+import ir.fallahpoor.eks.commontest.FakeLibraryRepository
 import ir.fallahpoor.eks.data.ConnectivityChecker
 import ir.fallahpoor.eks.data.repository.LibraryRepository
-import ir.fallahpoor.eks.fakes.FakeLibraryRepository
 import ir.fallahpoor.eks.worker.NotificationBodyMaker
 import ir.fallahpoor.eks.worker.RefreshLibrariesWorker
 import kotlinx.coroutines.ExperimentalCoroutinesApi

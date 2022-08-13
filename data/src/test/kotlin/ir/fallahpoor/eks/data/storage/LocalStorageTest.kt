@@ -9,7 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
-import ir.fallahpoor.eks.data.MainDispatcherRule
+import ir.fallahpoor.eks.commontest.MainDispatcherRule
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.storage.LocalStorage.Companion.KEY_REFRESH_DATE
 import ir.fallahpoor.eks.data.storage.LocalStorage.Companion.KEY_SORT_ORDER

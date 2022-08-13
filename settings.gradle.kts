@@ -1,2 +1,2 @@
 rootProject.name = "Eks"
-include(":app", ":data")
+include(":app", ":data", ":commonTest")

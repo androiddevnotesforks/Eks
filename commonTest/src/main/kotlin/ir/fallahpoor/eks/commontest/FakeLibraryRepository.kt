@@ -1,8 +1,7 @@
-package ir.fallahpoor.eks.fakes
+package ir.fallahpoor.eks.commontest
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
-import ir.fallahpoor.eks.TestData
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.repository.LibraryRepository
@@ -61,10 +60,10 @@ class FakeLibraryRepository : LibraryRepository {
     }
 
     private fun updateLibrary(library: Library) {
-        val removed: Boolean = initialLibraries.removeIf {
-            it.name.equals(library.name, ignoreCase = true)
-        }
-        if (removed) {
+        val libraryToRemove: Library? =
+            initialLibraries.find { it.name.equals(library.name, ignoreCase = true) }
+        if (libraryToRemove != null) {
+            initialLibraries -= libraryToRemove
             initialLibraries += library
             updateLibrariesLiveData(initialLibraries)
         }

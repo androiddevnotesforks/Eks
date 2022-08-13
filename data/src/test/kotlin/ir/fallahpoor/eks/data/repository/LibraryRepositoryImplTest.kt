@@ -2,13 +2,13 @@ package ir.fallahpoor.eks.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
-import ir.fallahpoor.eks.data.MainDispatcherRule
+import ir.fallahpoor.eks.commontest.FakeLibraryDao
+import ir.fallahpoor.eks.commontest.FakeStorage
+import ir.fallahpoor.eks.commontest.MainDispatcherRule
+import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.SortOrder
-import ir.fallahpoor.eks.data.TestData
 import ir.fallahpoor.eks.data.any
 import ir.fallahpoor.eks.data.entity.Library
-import ir.fallahpoor.eks.data.fakes.FakeLibraryDao
-import ir.fallahpoor.eks.data.fakes.FakeStorage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -75,7 +75,7 @@ class LibraryRepositoryImplTest {
     }
 
     private fun getOldLibraries() = listOf(
-        TestData.activity, TestData.biometric, TestData.core, TestData.room
+        TestData.activityOld, TestData.biometricOld, TestData.core, TestData.room
     )
 
     @Test
@@ -105,7 +105,7 @@ class LibraryRepositoryImplTest {
 
         // Then
         val expectedLibraries = listOf(
-            TestData.room, TestData.core, TestData.biometric, TestData.activity
+            TestData.room, TestData.core, TestData.biometricOld, TestData.activityOld
         )
         Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
         Mockito.verify(librariesFetcher).fetchLibraries()
@@ -130,7 +130,7 @@ class LibraryRepositoryImplTest {
     fun `library is pinned`() = runTest {
 
         // Given
-        val library: Library = TestData.activity
+        val library: Library = TestData.activityOld
         fakeLibraryDao.insertLibraries(listOf(library))
 
         // When

@@ -3,22 +3,19 @@ package ir.fallahpoor.eks.libraries.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
-import ir.fallahpoor.eks.TestData
+import ir.fallahpoor.eks.commontest.FakeLibraryRepository
+import ir.fallahpoor.eks.commontest.FakeStorage
+import ir.fallahpoor.eks.commontest.MainDispatcherRule
+import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.ExceptionParser
 import ir.fallahpoor.eks.data.SortOrder
-import ir.fallahpoor.eks.fakes.FakeLibraryRepository
-import ir.fallahpoor.eks.fakes.FakeStorage
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -32,6 +29,9 @@ import org.robolectric.annotation.Config
 class LibrariesViewModelTest {
 
     @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var librariesViewModel: LibrariesViewModel
@@ -41,17 +41,11 @@ class LibrariesViewModelTest {
 
     @Before
     fun runBeforeEachTest() {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         libraryRepository = FakeLibraryRepository()
         storage = FakeStorage()
         librariesViewModel = LibrariesViewModel(
             libraryRepository = libraryRepository, exceptionParser = exceptionParser
         )
-    }
-
-    @After
-    fun runAfterEachTest() {
-        Dispatchers.resetMain()
     }
 
     @Test

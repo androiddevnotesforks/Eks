@@ -1,4 +1,4 @@
-package ir.fallahpoor.eks.fakes
+package ir.fallahpoor.eks.commontest
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
@@ -13,7 +13,7 @@ class FakeStorage : Storage {
     private var sortOrderLiveData = MutableLiveData(SortOrder.A_TO_Z)
 
     override suspend fun setSortOrder(sortOrder: SortOrder) {
-        sortOrderLiveData.value = sortOrder
+        this.sortOrderLiveData.value = sortOrder
     }
 
     override fun getSortOrder() = sortOrderLiveData.value!!
