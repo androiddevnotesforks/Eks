@@ -11,16 +11,16 @@ class FakeLibraryDao : LibraryDao {
 
     override suspend fun getLibrariesCount(): Int = libraries.size
 
-    override suspend fun getAllLibraries(searchQuery: String): List<Library> =
+    override suspend fun getLibraries(searchQuery: String): List<Library> =
         libraries.filter { it.name.contains(searchQuery, ignoreCase = true) }
             .sortedBy { it.name }
 
-    override suspend fun insertLibrary(libraries: List<Library>) {
+    override suspend fun insertLibraries(libraries: List<Library>) {
         this.libraries += libraries
         updatedLibrariesLiveData()
     }
 
-    override suspend fun deleteAllLibraries() {
+    override suspend fun deleteLibraries() {
         libraries.clear()
         updatedLibrariesLiveData()
     }

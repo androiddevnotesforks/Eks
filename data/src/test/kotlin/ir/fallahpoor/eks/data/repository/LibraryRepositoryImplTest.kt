@@ -59,6 +59,40 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
+    fun `list of libraries is fetched from the Internet when cache is empty`() = runTest {
+
+        // Given
+        val expectedLibraries =
+            listOf(TestData.activity, TestData.biometric, TestData.core, TestData.room)
+        Mockito.`when`(librariesFetcher.fetchLibraries()).thenReturn(expectedLibraries)
+
+        // When
+        val actualLibraries = libraryRepository.getLibraries()
+
+        // Then
+        Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
+        Mockito.verify(librariesFetcher).fetchLibraries()
+
+    }
+
+    @Test
+    fun `list of libraries is returned from cache when cache is not empty`() = runTest {
+
+        // Given
+        val expectedLibraries =
+            listOf(TestData.activity, TestData.biometric, TestData.core, TestData.room)
+        fakeLibraryDao.insertLibraries(expectedLibraries)
+
+        // When
+        val actualLibraries = libraryRepository.getLibraries()
+
+        // Then
+        Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
+        Mockito.verifyNoInteractions(librariesFetcher)
+
+    }
+
+    @Test
     fun `list of libraries is returned sorted by given sort order`() = runTest {
 
         // Given
@@ -77,6 +111,7 @@ class LibraryRepositoryImplTest {
                 TestData.room, TestData.core, TestData.biometric, TestData.activity
             )
         )
+        Mockito.verify(librariesFetcher).fetchLibraries()
 
     }
 
@@ -86,7 +121,7 @@ class LibraryRepositoryImplTest {
         // Given
         val expectedLibraries =
             listOf(TestData.activity, TestData.biometric, TestData.core, TestData.room)
-        fakeLibraryDao.insertLibrary(expectedLibraries)
+        fakeLibraryDao.insertLibraries(expectedLibraries)
 
         // When
         val actualLibraries = libraryRepository.getLibraries(searchQuery = "ro")
@@ -96,44 +131,11 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun `list of libraries is fetched when cache is empty`() = runTest {
-
-        // Given
-        val expectedLibraries =
-            listOf(TestData.activity, TestData.biometric, TestData.core, TestData.room)
-        Mockito.`when`(librariesFetcher.fetchLibraries()).thenReturn(expectedLibraries)
-
-        // When
-        val actualLibraries = libraryRepository.getLibraries()
-
-        // Then
-        Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
-
-    }
-
-    @Test
-    fun `list of libraries is returned from cache when cache is not empty`() = runTest {
-
-        // Given
-        val expectedLibraries =
-            listOf(TestData.activity, TestData.biometric, TestData.core, TestData.room)
-        fakeLibraryDao.insertLibrary(expectedLibraries)
-
-        // When
-        val actualLibraries = libraryRepository.getLibraries()
-
-        // Then
-        Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
-        Mockito.verifyNoInteractions(librariesFetcher)
-
-    }
-
-    @Test
     fun `library is pinned`() = runTest {
 
         // Given
         val library: Library = TestData.activity
-        fakeLibraryDao.insertLibrary(listOf(library))
+        fakeLibraryDao.insertLibraries(listOf(library))
 
         // When
         val libraryToPin: Library =
@@ -151,7 +153,7 @@ class LibraryRepositoryImplTest {
 
         // Given
         val library: Library = TestData.core
-        fakeLibraryDao.insertLibrary(listOf(library))
+        fakeLibraryDao.insertLibraries(listOf(library))
 
         // When
         val libraryToUnpin: Library =
@@ -171,7 +173,7 @@ class LibraryRepositoryImplTest {
         // TODO Check that the pin state of libraries are preserved
 
         // Given
-        fakeLibraryDao.insertLibrary(
+        fakeLibraryDao.insertLibraries(
             listOf(
                 TestData.activity, TestData.biometric, TestData.core, TestData.room
             )
@@ -183,7 +185,7 @@ class LibraryRepositoryImplTest {
         libraryRepository.refreshLibraries()
 
         // Then
-        Truth.assertThat(fakeLibraryDao.getAllLibraries()).isEqualTo(expectedLibraries)
+        Truth.assertThat(fakeLibraryDao.getLibraries()).isEqualTo(expectedLibraries)
 
     }
 

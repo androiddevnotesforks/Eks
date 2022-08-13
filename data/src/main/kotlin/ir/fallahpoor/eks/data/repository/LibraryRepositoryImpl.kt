@@ -19,7 +19,14 @@ class LibraryRepositoryImpl
 
     override suspend fun getLibraries(sortOrder: SortOrder, searchQuery: String): List<Library> {
         fetchLibrariesIfCacheIsEmpty()
-        return libraryDao.getAllLibraries(searchQuery).sort(sortOrder)
+        return libraryDao.getLibraries(searchQuery).sort(sortOrder)
+    }
+
+    private suspend fun fetchLibrariesIfCacheIsEmpty() {
+        val librariesCount: Int = libraryDao.getLibrariesCount()
+        if (librariesCount == 0) {
+            refreshLibraries()
+        }
     }
 
     private fun List<Library>.sort(sortOrder: SortOrder): List<Library> =
@@ -28,13 +35,6 @@ class LibraryRepositoryImpl
             SortOrder.Z_TO_A -> sortedByDescending { it.name }
             SortOrder.PINNED_FIRST -> sortedByDescending { it.pinned }
         }
-
-    private suspend fun fetchLibrariesIfCacheIsEmpty() {
-        val librariesCount: Int = libraryDao.getLibrariesCount()
-        if (librariesCount == 0) {
-            refreshLibraries()
-        }
-    }
 
     override suspend fun refreshLibraries() {
         var newLibraries: List<Library> = librariesFetcher.fetchLibraries()
@@ -46,9 +46,10 @@ class LibraryRepositoryImpl
                 )
             )
         )
-        val pinnedOldLibraryNames = libraryDao.getAllLibraries()
+        val pinnedOldLibraryNames = libraryDao.getLibraries()
             .filter { it.pinned == 1 }
             .map { it.name }
+            .toSet()
         newLibraries = newLibraries.map {
             if (it.name in pinnedOldLibraryNames) {
                 it.copy(pinned = 1)
@@ -56,8 +57,8 @@ class LibraryRepositoryImpl
                 it
             }
         }
-        libraryDao.deleteAllLibraries()
-        libraryDao.insertLibrary(newLibraries)
+        libraryDao.deleteLibraries()
+        libraryDao.insertLibraries(newLibraries)
     }
 
     override suspend fun pinLibrary(library: Library, pinned: Boolean) {
