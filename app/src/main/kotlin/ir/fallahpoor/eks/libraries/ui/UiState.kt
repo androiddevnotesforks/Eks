@@ -11,8 +11,8 @@ data class LibrariesScreenUiState(
     val librariesState: LibrariesState = LibrariesState.Loading
 )
 
-sealed class LibrariesState {
-    object Loading : LibrariesState()
-    data class Success(val libraries: List<Library>) : LibrariesState()
-    data class Error(val message: String) : LibrariesState()
+sealed interface LibrariesState {
+    object Loading : LibrariesState
+    data class Success(val libraries: List<Library>) : LibrariesState
+    data class Error(val message: String) : LibrariesState
 }
