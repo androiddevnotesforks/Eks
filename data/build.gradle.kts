@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace = "ir.fallahpoor.eks.data"
-    compileSdk = SdkVersions.compileSdk
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = SdkVersions.minSdk
-        targetSdk = SdkVersions.targetSdk
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")
@@ -56,26 +56,26 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
-    implementation(kotlinStdLib)
-    implementation(core)
-    implementation(dataStore)
-    implementation(Lifecycle.liveData)
-    implementation(Coroutines.android)
-    implementation(inject)
-    implementation(jsoup)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.core)
+    implementation(libs.dataStore.preferences)
+    implementation(libs.lifecycle.liveData)
+    implementation(libs.coroutines.android)
+    implementation(libs.inject)
+    implementation(libs.jsoup)
 
-    implementation(Room.runtime)
-    kapt(Room.compiler)
-    implementation(Room.ktx)
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
 
     testImplementation(project(":commonTest"))
-    testImplementation(junit)
-    testImplementation(truth)
-    testImplementation(Coroutines.test)
-    testImplementation(coreTesting)
-    testImplementation(AndroidXTest.core)
-    testImplementation(AndroidXTest.junit)
-    testImplementation(robolectric)
-    testImplementation(Mockito.inline)
-    testImplementation(reflection)
+    testImplementation(libs.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.core.testing)
+    testImplementation(libs.test.core)
+    testImplementation(libs.test.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.reflection)
 }

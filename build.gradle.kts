@@ -5,9 +5,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.4.0-alpha09")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:${Hilt.version}")
+        classpath(libs.plugin.android)
+        classpath(libs.plugin.kotlin)
+        classpath(libs.plugin.dagger)
     }
 }
 

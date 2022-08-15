@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace = "ir.fallahpoor.eks.commontest"
-    compileSdk = SdkVersions.compileSdk
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = SdkVersions.minSdk
-        targetSdk = SdkVersions.targetSdk
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
 
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -36,10 +36,10 @@ android {
 
 dependencies {
     implementation(project(":data"))
-    implementation(Lifecycle.liveData)
-    implementation(Coroutines.test)
-    implementation(junit)
-    implementation(coreTesting)
-    implementation(AndroidXTest.core)
-    implementation(AndroidXTest.junit)
+    implementation(libs.lifecycle.liveData)
+    implementation(libs.coroutines.test)
+    implementation(libs.junit)
+    implementation(libs.core.testing)
+    implementation(libs.test.core)
+    implementation(libs.test.junit)
 }

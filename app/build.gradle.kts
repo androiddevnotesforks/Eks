@@ -13,14 +13,14 @@ val kp: String = properties.getProperty("keyPassword")
 
 android {
     namespace = "ir.fallahpoor.eks"
-    compileSdk = SdkVersions.compileSdk
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "ir.fallahpoor.eks"
-        minSdk = SdkVersions.minSdk
-        targetSdk = SdkVersions.targetSdk
-        versionCode = AppVersion.versionCode
-        versionName = AppVersion.versionName
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = 1
+        versionName = "1.0"
         setProperty("archivesBaseName", "Eks")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -58,18 +58,11 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Compose.version
+        kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
 
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-
-    packagingOptions {
-        resources.excludes.add("**/attach_hotspot_windows.dll")
-        resources.excludes.add("META-INF/licenses/ASM")
-        resources.excludes.add("META-INF/AL2.0")
-        resources.excludes.add("META-INF/LGPL2.1")
     }
 
     testOptions {
@@ -96,53 +89,49 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 
 dependencies {
     implementation(project(":data"))
-    implementation(kotlinStdLib)
-    implementation(appCompat)
-    implementation(core)
-    implementation(dataStore)
-    implementation(activityCompose)
-    implementation(constraintLayoutCompose)
-    implementation(material)
-    implementation(Lifecycle.viewModel)
-    implementation(Lifecycle.liveData)
-    implementation(Lifecycle.viewModelCompose)
-    implementation(Lifecycle.runtimeCompose)
-    implementation(Room.runtime)
-    implementation(WorkManager.workManager)
-    implementation(timber)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.appCompat)
+    implementation(libs.core)
+    implementation(libs.dataStore.preferences)
+    implementation(libs.activity.compose)
+    implementation(libs.constraintLayout.compose)
+    implementation(libs.material)
+    implementation(libs.bundles.lifecycle)
+    implementation(libs.room.runtime)
+    implementation(libs.workManager)
+    implementation(libs.timber)
 
-    implementation(Hilt.android)
-    implementation(Hilt.workManager)
-    kapt(Hilt.androidCompiler)
-    kapt(Hilt.compiler)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.workManager)
+    kapt(libs.hilt.android.compiler)
+    kapt(libs.hilt.compiler)
 
-    implementation(Compose.ui)
-    implementation(Compose.tooling)
-    implementation(Compose.material)
-    implementation(Compose.runtime)
-    implementation(Compose.runtimeLiveData)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.tooling)
+    implementation(libs.compose.material)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.runtime.liveData)
 
     testImplementation(project(":commonTest"))
-    testImplementation(junit)
-    testImplementation(truth)
-    testImplementation(coreTesting)
-    testImplementation(Coroutines.test)
-    testImplementation(AndroidXTest.core)
-    testImplementation(robolectric)
-    testImplementation(Mockito.inline)
+    testImplementation(libs.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.core.testing)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.test.core)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockito.inline)
 
     androidTestImplementation(project(":commonTest"))
-    androidTestImplementation(AndroidXTest.runner)
-    androidTestImplementation(AndroidXTest.rules)
-    androidTestImplementation(truth)
-    androidTestImplementation(Compose.uiTestJunit)
-    debugImplementation(Compose.uiTestManifest)
-    androidTestImplementation(Mockito.core)
-    androidTestImplementation(Mockito.dexMaker)
-    androidTestImplementation(coreTesting)
-    androidTestImplementation(Espresso.core)
-    androidTestImplementation(Espresso.intents)
-    androidTestImplementation(Hilt.androidTesting)
-    androidTestImplementation(WorkManager.workManagerTest)
-    kaptAndroidTest(Hilt.androidCompiler)
+    androidTestImplementation(libs.test.runner)
+    androidTestImplementation(libs.test.rules)
+    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.compose.uiTest.junit)
+    debugImplementation(libs.compose.uiTest.manifest)
+    androidTestImplementation(libs.mockito.core)
+    androidTestImplementation(libs.dexMaker)
+    androidTestImplementation(libs.core.testing)
+    androidTestImplementation(libs.bundles.espresso)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.workManager.test)
+    kaptAndroidTest(libs.hilt.android.compiler)
 }
