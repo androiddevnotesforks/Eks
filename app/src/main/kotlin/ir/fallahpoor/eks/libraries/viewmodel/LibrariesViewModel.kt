@@ -10,10 +10,7 @@ import ir.fallahpoor.eks.data.repository.LibraryRepository
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,15 +33,16 @@ class LibrariesViewModel
         LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
     )
     val librariesScreenUiState: StateFlow<LibrariesScreenUiState> =
-        _librariesScreenUiState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            libraryRepository.getRefreshDate().collect { refreshDate: String ->
-                setState(_librariesScreenUiState.value.copy(refreshDate = refreshDate))
-            }
-        }
-    }
+        combine(
+            _librariesScreenUiState,
+            libraryRepository.getRefreshDate()
+        ) { libraries, refreshDate ->
+            libraries.copy(refreshDate = refreshDate)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
+        )
 
     fun handleEvent(event: Event) {
         when (event) {
