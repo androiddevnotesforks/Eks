@@ -6,11 +6,11 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.eks.R
-import ir.fallahpoor.eks.TestData
+import ir.fallahpoor.eks.commontest.FakeLibraryRepository
+import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.ExceptionParser
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.entity.Version
-import ir.fallahpoor.eks.fakes.FakeLibraryRepository
 import ir.fallahpoor.eks.libraries.viewmodel.LibrariesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -48,6 +48,20 @@ class LibrariesScreenTest {
 
     }
 
+//    @Test
+//    fun libraries_are_sorted_based_on_selected_sort_order() {
+//
+//        // Given
+//        composeLibrariesScreen()
+//
+//        // When
+//        composeTestRule.onNodeWithText(context.getString(SortOrder.Z_TO_A.stringResId), useUnmergedTree = true)
+//            .performClick()
+//
+//        // Then
+//
+//    }
+
     @Test
     fun search() = runTest {
 
@@ -63,19 +77,21 @@ class LibrariesScreenTest {
         }
 
         // Then
-        fakeLibraryRepository.getLibraries().forEach {
-            if (it.name.contains("co", ignoreCase = true)) {
-                composeTestRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
-                    .performScrollToKey(it.name)
-                composeTestRule.onNodeWithTag(
-                    LibraryItemTags.ITEM + it.name,
-                    useUnmergedTree = true
-                ).assertIsDisplayed()
-            } else {
-                composeTestRule.onNodeWithTag(
-                    LibraryItemTags.ITEM + it.name,
-                    useUnmergedTree = true
-                ).assertDoesNotExist()
+        with(composeTestRule) {
+            fakeLibraryRepository.getLibraries().forEach {
+                if (it.name.contains("co", ignoreCase = true)) {
+                    onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
+                        .performScrollToKey(it.name)
+                    onNodeWithTag(
+                        LibraryItemTags.ITEM + it.name,
+                        useUnmergedTree = true
+                    ).assertIsDisplayed()
+                } else {
+                    onNodeWithTag(
+                        LibraryItemTags.ITEM + it.name,
+                        useUnmergedTree = true
+                    ).assertDoesNotExist()
+                }
             }
         }
 
@@ -100,7 +116,7 @@ class LibrariesScreenTest {
         // Then
         with(composeTestRule) {
             fakeLibraryRepository.getLibraries().forEach {
-                composeTestRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
+                onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
                     .performScrollToKey(it.name)
                 onNodeWithTag(
                     LibraryItemTags.ITEM + it.name,
