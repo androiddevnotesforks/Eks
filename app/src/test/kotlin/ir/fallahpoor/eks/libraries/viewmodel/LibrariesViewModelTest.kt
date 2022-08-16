@@ -7,7 +7,6 @@ import ir.fallahpoor.eks.commontest.FakeLibraryRepository
 import ir.fallahpoor.eks.commontest.FakeStorage
 import ir.fallahpoor.eks.commontest.MainDispatcherRule
 import ir.fallahpoor.eks.commontest.TestData
-import ir.fallahpoor.eks.data.ExceptionParser
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState

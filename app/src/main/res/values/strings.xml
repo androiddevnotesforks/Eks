@@ -22,4 +22,6 @@
     <string name="notification_channel_description">All notifications of the app</string>
     <string name="notification_title">Updates Available</string>
     <string name="no_browser_found">No browser found to open the web page</string>
+    <string name="internet_not_connected">Internet not connected.</string>
+    <string name="something_went_wrong">Something went wrong.</string>
 </resources>

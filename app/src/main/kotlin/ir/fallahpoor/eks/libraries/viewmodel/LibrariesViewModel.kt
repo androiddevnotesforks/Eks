@@ -3,7 +3,6 @@ package ir.fallahpoor.eks.libraries.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.fallahpoor.eks.data.ExceptionParser
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.repository.LibraryRepository
@@ -18,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LibrariesViewModel
 @Inject constructor(
-    private val libraryRepository: LibraryRepository, private val exceptionParser: ExceptionParser
+    private val libraryRepository: LibraryRepository,
+    private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
     sealed class Event {

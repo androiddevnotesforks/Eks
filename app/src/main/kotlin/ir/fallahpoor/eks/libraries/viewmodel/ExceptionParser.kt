@@ -1,6 +1,7 @@
-package ir.fallahpoor.eks.data
+package ir.fallahpoor.eks.libraries.viewmodel
 
 import android.content.Context
+import ir.fallahpoor.eks.R
 import java.io.IOException
 import javax.inject.Inject
 
