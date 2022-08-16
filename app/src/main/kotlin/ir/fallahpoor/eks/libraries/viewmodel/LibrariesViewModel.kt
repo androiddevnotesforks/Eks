@@ -8,6 +8,7 @@ import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.repository.LibraryRepository
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
+import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParser
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

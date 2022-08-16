@@ -10,6 +10,7 @@ import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
+import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParserImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -36,7 +37,7 @@ class LibrariesViewModelTest {
     private lateinit var librariesViewModel: LibrariesViewModel
     private lateinit var libraryRepository: FakeLibraryRepository
     private lateinit var storage: FakeStorage
-    private val exceptionParser = ExceptionParser(ApplicationProvider.getApplicationContext())
+    private val exceptionParser = ExceptionParserImpl(ApplicationProvider.getApplicationContext())
 
     @Before
     fun runBeforeEachTest() {

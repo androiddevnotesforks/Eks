@@ -10,8 +10,8 @@ import ir.fallahpoor.eks.commontest.FakeLibraryRepository
 import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.entity.Version
-import ir.fallahpoor.eks.libraries.viewmodel.ExceptionParser
 import ir.fallahpoor.eks.libraries.viewmodel.LibrariesViewModel
+import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParserImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -215,7 +215,7 @@ class LibrariesScreenTest {
         fakeLibraryRepository = FakeLibraryRepository()
         val librariesViewModel = LibrariesViewModel(
             libraryRepository = fakeLibraryRepository,
-            exceptionParser = ExceptionParser(context)
+            exceptionParser = ExceptionParserImpl(context)
         )
         composeTestRule.setContent {
             LibrariesScreen(

@@ -1,4 +1,4 @@
-package ir.fallahpoor.eks.libraries.viewmodel
+package ir.fallahpoor.eks.libraries.viewmodel.exceptionparser
 
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
@@ -9,13 +9,13 @@ import org.robolectric.RobolectricTestRunner
 import java.io.IOException
 
 @RunWith(RobolectricTestRunner::class)
-class ExceptionParserTest {
+class ExceptionParserImplTest {
 
-    private lateinit var exceptionParser: ExceptionParser
+    private lateinit var exceptionParser: ExceptionParserImpl
 
     @Before
     fun setup() {
-        exceptionParser = ExceptionParser(ApplicationProvider.getApplicationContext())
+        exceptionParser = ExceptionParserImpl(ApplicationProvider.getApplicationContext())
     }
 
     @Test
