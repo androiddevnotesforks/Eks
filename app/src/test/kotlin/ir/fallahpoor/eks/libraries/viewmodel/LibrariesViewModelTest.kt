@@ -45,22 +45,20 @@ class LibrariesViewModelTest {
     fun `state is updated correctly when getting the list of libraries succeeds`() = runTest {
 
         // Given
-        val uiStates = mutableListOf<LibrariesScreenUiState>()
+        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(uiStates)
+            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
         }
 
         // When
         librariesViewModel.handleEvent(LibrariesViewModel.Event.GetLibraries)
 
         // Then
-        Truth.assertThat(uiStates.size).isEqualTo(2)
-        Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
-        Truth.assertThat(uiStates[1]).isEqualTo(
-            LibrariesScreenUiState(
-                librariesState = LibrariesState.Success(
-                    libraryRepository.getLibraries()
-                )
+        assertStateSequence(
+            actualStateSequence = actualStateSequence,
+            expectedStateSequence = listOf(
+                LibrariesScreenUiState(),
+                LibrariesScreenUiState(librariesState = LibrariesState.Success(libraryRepository.getLibraries()))
             )
         )
 
@@ -73,25 +71,22 @@ class LibrariesViewModelTest {
 
         // Given
         libraryRepository.throwException = true
-        val uiStates = mutableListOf<LibrariesScreenUiState>()
+        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(uiStates)
+            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
         }
 
         // When
         librariesViewModel.handleEvent(LibrariesViewModel.Event.GetLibraries)
 
         // Then
-        Truth.assertThat(uiStates.size).isEqualTo(2)
-        Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
-        Truth.assertThat(uiStates[1])
-            .isEqualTo(
-                LibrariesScreenUiState(
-                    librariesState = LibrariesState.Error(
-                        FakeExceptionParser.ERROR_MESSAGE
-                    )
-                )
+        assertStateSequence(
+            actualStateSequence = actualStateSequence,
+            expectedStateSequence = listOf(
+                LibrariesScreenUiState(),
+                LibrariesScreenUiState(librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE))
             )
+        )
 
         job.cancel()
 
@@ -101,23 +96,24 @@ class LibrariesViewModelTest {
     fun `state is updated correctly when changing the sort order succeeds`() = runTest {
 
         // Given
-        val uiStates = mutableListOf<LibrariesScreenUiState>()
+        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(uiStates)
+            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
         }
 
         // When
         librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSortOrder(SortOrder.Z_TO_A))
 
         // Then
-        Truth.assertThat(uiStates.size).isEqualTo(3)
-        Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
-        Truth.assertThat(uiStates[1])
-            .isEqualTo(LibrariesScreenUiState(sortOrder = SortOrder.Z_TO_A))
-        Truth.assertThat(uiStates[2]).isEqualTo(
-            LibrariesScreenUiState(
-                sortOrder = SortOrder.Z_TO_A,
-                librariesState = LibrariesState.Success(libraryRepository.getLibraries(sortOrder = SortOrder.Z_TO_A))
+        assertStateSequence(
+            actualStateSequence = actualStateSequence,
+            expectedStateSequence = listOf(
+                LibrariesScreenUiState(),
+                LibrariesScreenUiState(sortOrder = SortOrder.Z_TO_A),
+                LibrariesScreenUiState(
+                    sortOrder = SortOrder.Z_TO_A,
+                    librariesState = LibrariesState.Success(libraryRepository.getLibraries(sortOrder = SortOrder.Z_TO_A))
+                )
             )
         )
 
@@ -130,23 +126,25 @@ class LibrariesViewModelTest {
 
         // Given
         libraryRepository.throwException = true
-        val uiStates = mutableListOf<LibrariesScreenUiState>()
+        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(uiStates)
+            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
         }
 
         // When
         librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSortOrder(SortOrder.Z_TO_A))
 
         // Then
-        Truth.assertThat(uiStates.size).isEqualTo(3)
-        Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
-        Truth.assertThat(uiStates[1])
-            .isEqualTo(LibrariesScreenUiState(sortOrder = SortOrder.Z_TO_A))
-        Truth.assertThat(uiStates[2]).isEqualTo(
-            LibrariesScreenUiState(
-                sortOrder = SortOrder.Z_TO_A,
-                librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
+
+        assertStateSequence(
+            actualStateSequence = actualStateSequence,
+            expectedStateSequence = listOf(
+                LibrariesScreenUiState(),
+                LibrariesScreenUiState(sortOrder = SortOrder.Z_TO_A),
+                LibrariesScreenUiState(
+                    sortOrder = SortOrder.Z_TO_A,
+                    librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
+                )
             )
         )
 
@@ -159,22 +157,24 @@ class LibrariesViewModelTest {
 
         // Given
         val searchQuery = "ko"
-        val uiStates = mutableListOf<LibrariesScreenUiState>()
+        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(uiStates)
+            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
         }
 
         // When
         librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSearchQuery(searchQuery))
 
         // Then
-        Truth.assertThat(uiStates.size).isEqualTo(3)
-        Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
-        Truth.assertThat(uiStates[1]).isEqualTo(LibrariesScreenUiState(searchQuery = searchQuery))
-        Truth.assertThat(uiStates[2]).isEqualTo(
-            LibrariesScreenUiState(
-                searchQuery = searchQuery, librariesState = LibrariesState.Success(
-                    libraryRepository.getLibraries(searchQuery = searchQuery)
+        assertStateSequence(
+            actualStateSequence = actualStateSequence,
+            expectedStateSequence = listOf(
+                LibrariesScreenUiState(),
+                LibrariesScreenUiState(searchQuery = searchQuery),
+                LibrariesScreenUiState(
+                    searchQuery = searchQuery, librariesState = LibrariesState.Success(
+                        libraryRepository.getLibraries(searchQuery = searchQuery)
+                    )
                 )
             )
         )
@@ -189,22 +189,24 @@ class LibrariesViewModelTest {
         // Given
         libraryRepository.throwException = true
         val searchQuery = "ko"
-        val uiStates = mutableListOf<LibrariesScreenUiState>()
+        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(uiStates)
+            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
         }
 
         // When
         librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSearchQuery(searchQuery))
 
         // Then
-        Truth.assertThat(uiStates.size).isEqualTo(3)
-        Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
-        Truth.assertThat(uiStates[1]).isEqualTo(LibrariesScreenUiState(searchQuery = searchQuery))
-        Truth.assertThat(uiStates[2]).isEqualTo(
-            LibrariesScreenUiState(
-                searchQuery = searchQuery,
-                librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
+        assertStateSequence(
+            actualStateSequence = actualStateSequence,
+            expectedStateSequence = listOf(
+                LibrariesScreenUiState(),
+                LibrariesScreenUiState(searchQuery = searchQuery),
+                LibrariesScreenUiState(
+                    searchQuery = searchQuery,
+                    librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
+                )
             )
         )
 
@@ -216,9 +218,9 @@ class LibrariesViewModelTest {
     fun `state is updated correctly when pinning a library succeeds`() = runTest {
 
         // Given
-        val uiStates = mutableListOf<LibrariesScreenUiState>()
+        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(uiStates)
+            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
         }
         val libraries = libraryRepository.getLibraries().map {
             if (it.name.equals(TestData.preference.name, ignoreCase = true)) {
@@ -230,17 +232,17 @@ class LibrariesViewModelTest {
 
         // When
         librariesViewModel.handleEvent(
-            LibrariesViewModel.Event.PinLibrary(
-                TestData.preference,
-                pin = true
-            )
+            LibrariesViewModel.Event.PinLibrary(library = TestData.preference, pin = true)
         )
 
         // Then
-        Truth.assertThat(uiStates.size).isEqualTo(2)
-        Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
-        Truth.assertThat(uiStates[1])
-            .isEqualTo(LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries)))
+        assertStateSequence(
+            actualStateSequence = actualStateSequence,
+            expectedStateSequence = listOf(
+                LibrariesScreenUiState(),
+                LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries))
+            )
+        )
 
         job.cancel()
 
@@ -251,24 +253,22 @@ class LibrariesViewModelTest {
 
         // Given
         libraryRepository.throwException = true
-        val uiStates = mutableListOf<LibrariesScreenUiState>()
+        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(uiStates)
+            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
         }
 
         // When
         librariesViewModel.handleEvent(
-            LibrariesViewModel.Event.PinLibrary(
-                TestData.preference, pin = true
-            )
+            LibrariesViewModel.Event.PinLibrary(library = TestData.preference, pin = true)
         )
 
         // Then
-        Truth.assertThat(uiStates.size).isEqualTo(2)
-        Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
-        Truth.assertThat(uiStates[1]).isEqualTo(
-            LibrariesScreenUiState(
-                librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
+        assertStateSequence(
+            actualStateSequence = actualStateSequence,
+            expectedStateSequence = listOf(
+                LibrariesScreenUiState(),
+                LibrariesScreenUiState(librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE))
             )
         )
 
@@ -280,9 +280,9 @@ class LibrariesViewModelTest {
     fun `state is updated correctly when unpinning a library succeeds`() = runTest {
 
         // Given
-        val uiStates = mutableListOf<LibrariesScreenUiState>()
+        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(uiStates)
+            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
         }
         val libraries = libraryRepository.getLibraries().map {
             if (it.name.equals(TestData.core.name, ignoreCase = true)) {
@@ -294,17 +294,17 @@ class LibrariesViewModelTest {
 
         // When
         librariesViewModel.handleEvent(
-            LibrariesViewModel.Event.PinLibrary(
-                TestData.core,
-                pin = false
-            )
+            LibrariesViewModel.Event.PinLibrary(library = TestData.core, pin = false)
         )
 
         // Then
-        Truth.assertThat(uiStates.size).isEqualTo(2)
-        Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
-        Truth.assertThat(uiStates[1])
-            .isEqualTo(LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries)))
+        assertStateSequence(
+            actualStateSequence = actualStateSequence,
+            expectedStateSequence = listOf(
+                LibrariesScreenUiState(),
+                LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries))
+            )
+        )
 
         job.cancel()
 
@@ -315,29 +315,37 @@ class LibrariesViewModelTest {
 
         // Given
         libraryRepository.throwException = true
-        val uiStates = mutableListOf<LibrariesScreenUiState>()
+        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(uiStates)
+            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
         }
 
         // When
         librariesViewModel.handleEvent(
-            LibrariesViewModel.Event.PinLibrary(
-                TestData.core, pin = false
-            )
+            LibrariesViewModel.Event.PinLibrary(library = TestData.core, pin = false)
         )
 
         // Then
-        Truth.assertThat(uiStates.size).isEqualTo(2)
-        Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
-        Truth.assertThat(uiStates[1]).isEqualTo(
-            LibrariesScreenUiState(
-                librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
+        assertStateSequence(
+            actualStateSequence = actualStateSequence,
+            expectedStateSequence = listOf(
+                LibrariesScreenUiState(),
+                LibrariesScreenUiState(librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE))
             )
         )
 
         job.cancel()
 
+    }
+
+    private fun assertStateSequence(
+        actualStateSequence: List<LibrariesScreenUiState>,
+        expectedStateSequence: List<LibrariesScreenUiState>
+    ) {
+        Truth.assertThat(actualStateSequence.size).isEqualTo(expectedStateSequence.size)
+        actualStateSequence.zip(expectedStateSequence) { actualState, expectedState ->
+            Truth.assertThat(actualState).isEqualTo(expectedState)
+        }
     }
 
 }
