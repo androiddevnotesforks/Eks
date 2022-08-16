@@ -1,7 +1,6 @@
 package ir.fallahpoor.eks.libraries.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
 import ir.fallahpoor.eks.commontest.FakeLibraryRepository
 import ir.fallahpoor.eks.commontest.FakeStorage
@@ -10,7 +9,7 @@ import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
-import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParserImpl
+import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.FakeExceptionParser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -19,13 +18,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
-@Config(manifest = Config.NONE)
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(RobolectricTestRunner::class)
 class LibrariesViewModelTest {
 
     @get:Rule
@@ -37,14 +31,13 @@ class LibrariesViewModelTest {
     private lateinit var librariesViewModel: LibrariesViewModel
     private lateinit var libraryRepository: FakeLibraryRepository
     private lateinit var storage: FakeStorage
-    private val exceptionParser = ExceptionParserImpl(ApplicationProvider.getApplicationContext())
 
     @Before
     fun runBeforeEachTest() {
         libraryRepository = FakeLibraryRepository()
         storage = FakeStorage()
         librariesViewModel = LibrariesViewModel(
-            libraryRepository = libraryRepository, exceptionParser = exceptionParser
+            libraryRepository = libraryRepository, exceptionParser = FakeExceptionParser()
         )
     }
 
@@ -92,7 +85,13 @@ class LibrariesViewModelTest {
         Truth.assertThat(uiStates.size).isEqualTo(2)
         Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
         Truth.assertThat(uiStates[1])
-            .isEqualTo(LibrariesScreenUiState(librariesState = LibrariesState.Error(exceptionParser.INTERNET_NOT_CONNECTED)))
+            .isEqualTo(
+                LibrariesScreenUiState(
+                    librariesState = LibrariesState.Error(
+                        FakeExceptionParser.ERROR_MESSAGE
+                    )
+                )
+            )
 
         job.cancel()
 
@@ -147,7 +146,7 @@ class LibrariesViewModelTest {
         Truth.assertThat(uiStates[2]).isEqualTo(
             LibrariesScreenUiState(
                 sortOrder = SortOrder.Z_TO_A,
-                librariesState = LibrariesState.Error(exceptionParser.INTERNET_NOT_CONNECTED)
+                librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
             )
         )
 
@@ -205,7 +204,7 @@ class LibrariesViewModelTest {
         Truth.assertThat(uiStates[2]).isEqualTo(
             LibrariesScreenUiState(
                 searchQuery = searchQuery,
-                librariesState = LibrariesState.Error(exceptionParser.INTERNET_NOT_CONNECTED)
+                librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
             )
         )
 
@@ -269,7 +268,7 @@ class LibrariesViewModelTest {
         Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
         Truth.assertThat(uiStates[1]).isEqualTo(
             LibrariesScreenUiState(
-                librariesState = LibrariesState.Error(exceptionParser.INTERNET_NOT_CONNECTED)
+                librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
             )
         )
 
@@ -333,7 +332,7 @@ class LibrariesViewModelTest {
         Truth.assertThat(uiStates[0]).isEqualTo(LibrariesScreenUiState())
         Truth.assertThat(uiStates[1]).isEqualTo(
             LibrariesScreenUiState(
-                librariesState = LibrariesState.Error(exceptionParser.INTERNET_NOT_CONNECTED)
+                librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
             )
         )
 
