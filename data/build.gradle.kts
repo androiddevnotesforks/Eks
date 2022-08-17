@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.coroutines.android)
     implementation(libs.inject)
     implementation(libs.jsoup)
+    implementation(libs.timber)
 
     implementation(libs.room.runtime)
     kapt(libs.room.compiler)

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import timber.log.Timber
 import javax.inject.Inject
 
 // TODO: Remove the remaining "runBlocking" calls.
@@ -57,8 +58,12 @@ class LocalStorage @Inject constructor(
 
     private suspend fun putString(key: String, value: String) {
         val prefKey = stringPreferencesKey(key)
-        dataStore.edit { settings ->
-            settings[prefKey] = value
+        try {
+            dataStore.edit { preferences ->
+                preferences[prefKey] = value
+            }
+        } catch (e: Exception) {
+            Timber.e(e)
         }
     }
 
