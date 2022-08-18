@@ -3,10 +3,12 @@ package ir.fallahpoor.eks.data.storage
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import ir.fallahpoor.eks.data.Constants
 import ir.fallahpoor.eks.data.SortOrder
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -22,6 +24,7 @@ class LocalStorage @Inject constructor(
     companion object {
         const val KEY_SORT_ORDER = "sort_order"
         const val KEY_REFRESH_DATE = "refresh_date"
+        val DEFAULT_SORT_ORDER = SortOrder.A_TO_Z
     }
 
     override suspend fun setSortOrder(sortOrder: SortOrder) {
@@ -33,15 +36,14 @@ class LocalStorage @Inject constructor(
         runBlocking {
             sortOrderStr = getString(KEY_SORT_ORDER)
         }
-        return SortOrder.valueOf(sortOrderStr ?: SortOrder.A_TO_Z.name)
+        return SortOrder.valueOf(sortOrderStr ?: DEFAULT_SORT_ORDER.name)
     }
 
     override fun getSortOrderAsFlow(): Flow<SortOrder> {
-        val prefKey = stringPreferencesKey(KEY_SORT_ORDER)
-        return dataStore.data
-            .map { preferences ->
-                SortOrder.valueOf(preferences[prefKey] ?: SortOrder.A_TO_Z.name)
-            }
+        val key = stringPreferencesKey(KEY_SORT_ORDER)
+        return getPreferencesFlow { preferences ->
+            SortOrder.valueOf(preferences[key] ?: DEFAULT_SORT_ORDER.name)
+        }
     }
 
     override suspend fun setRefreshDate(date: String) {
@@ -49,11 +51,10 @@ class LocalStorage @Inject constructor(
     }
 
     override fun getRefreshDateAsFlow(): Flow<String> {
-        val prefKey = stringPreferencesKey(KEY_REFRESH_DATE)
-        return dataStore.data
-            .map { preferences ->
-                preferences[prefKey] ?: Constants.NOT_AVAILABLE
-            }
+        val key = stringPreferencesKey(KEY_REFRESH_DATE)
+        return getPreferencesFlow { preferences ->
+            preferences[key] ?: Constants.NOT_AVAILABLE
+        }
     }
 
     private suspend fun putString(key: String, value: String) {
@@ -69,11 +70,18 @@ class LocalStorage @Inject constructor(
 
     private suspend fun getString(key: String): String? {
         val prefKey = stringPreferencesKey(key)
-        val flow: Flow<String?> = dataStore.data
-            .map { preferences ->
-                preferences[prefKey]
-            }
+        val flow: Flow<String?> = getPreferencesFlow { preferences ->
+            preferences[prefKey]
+        }
         return flow.first()
     }
+
+    private fun <T> getPreferencesFlow(action: suspend (Preferences) -> T): Flow<T> =
+        dataStore.data.catch { exception ->
+            Timber.e(exception)
+            emit(emptyPreferences())
+        }.map { preferences ->
+            action(preferences)
+        }
 
 }
