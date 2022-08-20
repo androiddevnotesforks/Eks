@@ -12,11 +12,9 @@ class ExceptionParserImpl @Inject constructor(context: Context) : ExceptionParse
     val SOMETHING_WENT_WRONG =
         context.getString(R.string.something_went_wrong)
 
-    override fun getMessage(t: Throwable): String {
-        return when (t) {
-            is IOException -> INTERNET_NOT_CONNECTED
-            else -> SOMETHING_WENT_WRONG
-        }
+    override fun getMessage(t: Throwable): String = when (t) {
+        is IOException -> INTERNET_NOT_CONNECTED
+        else -> SOMETHING_WENT_WRONG
     }
 
 }
