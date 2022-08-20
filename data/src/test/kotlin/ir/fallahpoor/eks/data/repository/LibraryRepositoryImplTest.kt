@@ -41,16 +41,16 @@ class LibraryRepositoryImplTest {
     private lateinit var dateProvider: DateProvider
 
     private lateinit var libraryRepository: LibraryRepositoryImpl
-    private lateinit var fakeLibraryDao: FakeLibraryDao
-    private lateinit var fakeStorage: FakeStorage
+    private lateinit var libraryDao: FakeLibraryDao
+    private lateinit var storage: FakeStorage
 
     @Before
     fun runBeforeEachTest() {
-        fakeStorage = FakeStorage()
-        fakeLibraryDao = FakeLibraryDao()
+        storage = FakeStorage()
+        libraryDao = FakeLibraryDao()
         libraryRepository = LibraryRepositoryImpl(
-            storage = fakeStorage,
-            libraryDao = fakeLibraryDao,
+            storage = storage,
+            libraryDao = libraryDao,
             librariesFetcher = librariesFetcher,
             dateProvider = dateProvider
         )
@@ -83,7 +83,7 @@ class LibraryRepositoryImplTest {
 
         // Given
         val expectedLibraries = getOldLibraries()
-        fakeLibraryDao.insertLibraries(expectedLibraries)
+        libraryDao.insertLibraries(expectedLibraries)
 
         // When
         val actualLibraries = libraryRepository.getLibraries()
@@ -116,7 +116,7 @@ class LibraryRepositoryImplTest {
     fun `list of libraries is filtered by given search query`() = runTest {
 
         // Given
-        fakeLibraryDao.insertLibraries(getOldLibraries())
+        libraryDao.insertLibraries(getOldLibraries())
 
         // When
         val actualLibraries = libraryRepository.getLibraries(searchQuery = "ro")
@@ -131,7 +131,7 @@ class LibraryRepositoryImplTest {
 
         // Given
         val library: Library = TestData.activityOld
-        fakeLibraryDao.insertLibraries(listOf(library))
+        libraryDao.insertLibraries(listOf(library))
 
         // When
         val libraryToPin: Library =
@@ -149,7 +149,7 @@ class LibraryRepositoryImplTest {
 
         // Given
         val library: Library = TestData.core
-        fakeLibraryDao.insertLibraries(listOf(library))
+        libraryDao.insertLibraries(listOf(library))
 
         // When
         val libraryToUnpin: Library =
@@ -167,7 +167,7 @@ class LibraryRepositoryImplTest {
     fun `refreshing libraries replaces old libraries with the latest ones`() = runTest {
 
         // Given
-        fakeLibraryDao.insertLibraries(getOldLibraries())
+        libraryDao.insertLibraries(getOldLibraries())
         val expectedLibraries = listOf(TestData.core, TestData.preference, TestData.room)
         Mockito.`when`(librariesFetcher.fetchLibraries()).thenReturn(expectedLibraries)
 
@@ -175,7 +175,7 @@ class LibraryRepositoryImplTest {
         libraryRepository.refreshLibraries()
 
         // Then
-        Truth.assertThat(fakeLibraryDao.getLibraries()).isEqualTo(expectedLibraries)
+        Truth.assertThat(libraryDao.getLibraries()).isEqualTo(expectedLibraries)
 
     }
 
@@ -183,7 +183,7 @@ class LibraryRepositoryImplTest {
     fun `refreshing libraries preserves the pin state of libraries`() = runTest {
 
         // Given
-        fakeLibraryDao.insertLibraries(getOldLibraries())
+        libraryDao.insertLibraries(getOldLibraries())
         val refreshedLibraries = listOf(TestData.core, TestData.preference, TestData.room)
         val expectedPinStates = refreshedLibraries.map { it.pinned == 1 }
         Mockito.`when`(librariesFetcher.fetchLibraries()).thenReturn(refreshedLibraries)
@@ -192,7 +192,7 @@ class LibraryRepositoryImplTest {
         libraryRepository.refreshLibraries()
 
         // Then
-        val actualPinStates = fakeLibraryDao.getLibraries().map { it.pinned == 1 }
+        val actualPinStates = libraryDao.getLibraries().map { it.pinned == 1 }
         Truth.assertThat(actualPinStates).isEqualTo(expectedPinStates)
 
     }
@@ -207,7 +207,7 @@ class LibraryRepositoryImplTest {
         libraryRepository.refreshLibraries()
 
         // Then
-        Truth.assertThat(fakeStorage.getRefreshDateAsFlow().first()).isEqualTo(REFRESH_DATE)
+        Truth.assertThat(storage.getRefreshDateAsFlow().first()).isEqualTo(REFRESH_DATE)
 
     }
 
@@ -215,7 +215,7 @@ class LibraryRepositoryImplTest {
     fun `correct refresh date is returned`() = runTest {
 
         // Given
-        fakeStorage.setRefreshDate(REFRESH_DATE)
+        storage.setRefreshDate(REFRESH_DATE)
 
         // When
         val actualRefreshDate: String = libraryRepository.getRefreshDate().first()
@@ -234,7 +234,7 @@ class LibraryRepositoryImplTest {
         libraryRepository.saveSortOrder(SortOrder.PINNED_FIRST)
 
         // Then
-        Truth.assertThat(fakeStorage.getSortOrder()).isEqualTo(SortOrder.PINNED_FIRST)
+        Truth.assertThat(storage.getSortOrder()).isEqualTo(SortOrder.PINNED_FIRST)
 
     }
 
@@ -242,7 +242,7 @@ class LibraryRepositoryImplTest {
     fun `correct sort order is returned`() = runTest {
 
         // Given
-        fakeStorage.setSortOrder(SortOrder.Z_TO_A)
+        storage.setSortOrder(SortOrder.Z_TO_A)
 
         // When
         val actualSortOrder: SortOrder = libraryRepository.getSortOrder()
