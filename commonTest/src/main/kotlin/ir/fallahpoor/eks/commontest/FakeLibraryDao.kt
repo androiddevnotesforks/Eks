@@ -16,27 +16,38 @@ class FakeLibraryDao : LibraryDao {
             .sortedBy { it.name }
 
     override suspend fun insertLibraries(libraries: List<Library>) {
+        val libraryNames = libraries.map { it.name }
+        removeElementsIf(this.libraries) { library -> library.name in libraryNames }
         this.libraries += libraries
-        updatedLibrariesLiveData()
+        updatedLibrariesLiveData(this.libraries)
+    }
+
+    private fun removeElementsIf(libraries: MutableList<Library>, filter: (Library) -> Boolean) {
+        val iterator: MutableIterator<Library> = libraries.iterator()
+        while (iterator.hasNext()) {
+            if (filter(iterator.next())) {
+                iterator.remove()
+            }
+        }
     }
 
     override suspend fun deleteLibraries() {
         libraries.clear()
-        updatedLibrariesLiveData()
+        updatedLibrariesLiveData(libraries)
     }
 
     override suspend fun updateLibrary(library: Library) {
         val removed = libraries.remove(getLibrary(library.name))
         if (removed) {
             libraries += library
-            updatedLibrariesLiveData()
+            updatedLibrariesLiveData(libraries)
         }
     }
 
     private fun getLibrary(libraryName: String): Library? =
         libraries.find { it.name.contentEquals(libraryName, ignoreCase = true) }
 
-    private fun updatedLibrariesLiveData() {
+    private fun updatedLibrariesLiveData(libraries: List<Library>) {
         librariesLiveData.value = libraries
     }
 
