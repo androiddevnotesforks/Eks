@@ -45,7 +45,12 @@ class LibrariesContentTest {
 
         // Given
         val libraries =
-            listOf(TestData.activityOld, TestData.biometricOld, TestData.core, TestData.preference)
+            listOf(
+                TestData.Activity.old,
+                TestData.Biometric.old,
+                TestData.core,
+                TestData.preference
+            )
         composeLibrariesContent(librariesState = LibrariesState.Success(libraries))
 
         // Then

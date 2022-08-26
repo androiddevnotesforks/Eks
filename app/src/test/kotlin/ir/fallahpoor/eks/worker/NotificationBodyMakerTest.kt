@@ -79,9 +79,10 @@ class NotificationBodyMakerTest {
     fun updated() {
 
         // Given
-        val oldLibraries: List<Library> = listOf(TestData.activityOld, TestData.core, TestData.room)
+        val oldLibraries: List<Library> =
+            listOf(TestData.Activity.old, TestData.core, TestData.room)
         val refreshedLibraries: List<Library> =
-            listOf(TestData.activityNew, TestData.core, TestData.room)
+            listOf(TestData.Activity.new, TestData.core, TestData.room)
 
         // When
         val actualBody: String? = notificationBodyMaker.makeBody(
@@ -93,11 +94,11 @@ class NotificationBodyMakerTest {
         val expectedBody =
             context.getString(R.string.updated_libraries) +
                     "\n" +
-                    TestData.activityNew.name +
+                    TestData.Activity.new.name +
                     "\n" +
                     context.getString(
                         R.string.version_stable,
-                        TestData.activityOld.stableVersion.name + " -> " + TestData.activityNew.stableVersion.name
+                        TestData.Activity.old.stableVersion.name + " -> " + TestData.Activity.new.stableVersion.name
                     )
         Truth.assertThat(actualBody).isEqualTo(expectedBody)
 

@@ -63,13 +63,13 @@ class LibraryDifferTest {
     fun `A library should be considered UPDATED when one of its versions is changed`() {
 
         // Given
-        val expectedUpdatedLibraries: List<Library> = listOf(TestData.activityOld)
+        val expectedUpdatedLibraries: List<Library> = listOf(TestData.Activity.old)
 
         // When
         val map: Map<LibraryDiffer.Type, List<Library>> =
             libraryClassifier.diffLibraries(
-                oldLibraries = listOf(TestData.activityOld),
-                refreshedLibraries = listOf(TestData.activityNew)
+                oldLibraries = listOf(TestData.Activity.old),
+                refreshedLibraries = listOf(TestData.Activity.new)
             )
 
         // Then
@@ -88,13 +88,13 @@ class LibraryDifferTest {
     fun `A library should be considered UNCHANGED when any of its versions becomes NA`() {
 
         // Given
-        val expectedUnchangedLibraries = listOf(TestData.biometricOld, TestData.room)
+        val expectedUnchangedLibraries = listOf(TestData.Biometric.old, TestData.room)
 
         // When
         val map: Map<LibraryDiffer.Type, List<Library>> =
             libraryClassifier.diffLibraries(
-                oldLibraries = listOf(TestData.biometricOld, TestData.room),
-                refreshedLibraries = listOf(TestData.biometricNew, TestData.room)
+                oldLibraries = listOf(TestData.Biometric.old, TestData.room),
+                refreshedLibraries = listOf(TestData.Biometric.new, TestData.room)
             )
 
         // Then

@@ -20,14 +20,14 @@ class FakeLibraryRepository : LibraryRepository {
     var updateIsAvailable = false
 
     private val initialLibraries = mutableListOf(
-        TestData.activityOld,
-        TestData.biometricOld,
+        TestData.Activity.old,
+        TestData.Biometric.old,
         TestData.core,
         TestData.preference
     )
     private val refreshedLibraries = listOf(
-        TestData.activityNew,
-        TestData.biometricNew,
+        TestData.Activity.new,
+        TestData.Biometric.new,
         TestData.core,
         TestData.room
     )

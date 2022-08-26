@@ -7,61 +7,65 @@ object TestData {
 
     private const val URL_PREFIX = "https://developer.android.com/jetpack/androidx/releases/"
 
-    val activityOld = Library(
-        name = "activity",
-        description = "Access composable APIs built on top of Activity.",
-        url = "${URL_PREFIX}activity",
-        releaseDate = "September 15, 2021",
-        stableVersion = Version(
-            name = "1.3.1",
-            releaseNotesUrl = "${URL_PREFIX}activity#1.3.1"
-        ),
-        alphaVersion = Version(
-            name = "1.4.0-alpha02",
-            releaseNotesUrl = "${URL_PREFIX}activity#1.4.0-alpha02"
+    object Activity {
+        val old = Library(
+            name = "activity",
+            description = "Access composable APIs built on top of Activity.",
+            url = "${URL_PREFIX}activity",
+            releaseDate = "September 15, 2021",
+            stableVersion = Version(
+                name = "1.3.1",
+                releaseNotesUrl = "${URL_PREFIX}activity#1.3.1"
+            ),
+            alphaVersion = Version(
+                name = "1.4.0-alpha02",
+                releaseNotesUrl = "${URL_PREFIX}activity#1.4.0-alpha02"
+            )
         )
-    )
 
-    val activityNew = Library(
-        name = "activity",
-        description = "Access composable APIs built on top of Activity.",
-        url = "${URL_PREFIX}activity",
-        releaseDate = "October 10, 2021",
-        stableVersion = Version(
-            name = "1.3.2",
-            releaseNotesUrl = "${URL_PREFIX}activity#1.3.2"
-        ),
-        alphaVersion = Version(
-            name = "1.4.0-alpha02",
-            releaseNotesUrl = "${URL_PREFIX}activity#1.4.0-alpha02"
+        val new = Library(
+            name = "activity",
+            description = "Access composable APIs built on top of Activity.",
+            url = "${URL_PREFIX}activity",
+            releaseDate = "October 10, 2021",
+            stableVersion = Version(
+                name = "1.3.2",
+                releaseNotesUrl = "${URL_PREFIX}activity#1.3.2"
+            ),
+            alphaVersion = Version(
+                name = "1.4.0-alpha02",
+                releaseNotesUrl = "${URL_PREFIX}activity#1.4.0-alpha02"
+            )
         )
-    )
+    }
 
-    val biometricOld = Library(
-        name = "biometric",
-        description = "Authenticate with biometrics or device credentials, and perform cryptographic operations.",
-        url = "${URL_PREFIX}biometric",
-        releaseDate = "February 24, 2021",
-        stableVersion = Version(
-            name = "1.1.0",
-            releaseNotesUrl = "${URL_PREFIX}biometric#1.1.0"
-        ),
-        alphaVersion = Version(
-            name = "1.2.0-alpha03",
-            releaseNotesUrl = "${URL_PREFIX}biometric#1.2.0-alpha03"
+    object Biometric {
+        val old = Library(
+            name = "biometric",
+            description = "Authenticate with biometrics or device credentials, and perform cryptographic operations.",
+            url = "${URL_PREFIX}biometric",
+            releaseDate = "February 24, 2021",
+            stableVersion = Version(
+                name = "1.1.0",
+                releaseNotesUrl = "${URL_PREFIX}biometric#1.1.0"
+            ),
+            alphaVersion = Version(
+                name = "1.2.0-alpha03",
+                releaseNotesUrl = "${URL_PREFIX}biometric#1.2.0-alpha03"
+            )
         )
-    )
 
-    val biometricNew = Library(
-        name = "biometric",
-        description = "Authenticate with biometrics or device credentials, and perform cryptographic operations.",
-        url = "${URL_PREFIX}biometric",
-        releaseDate = "February 24, 2021",
-        stableVersion = Version(
-            name = "1.1.0",
-            releaseNotesUrl = "${URL_PREFIX}biometric#1.1.0"
+        val new = Library(
+            name = "biometric",
+            description = "Authenticate with biometrics or device credentials, and perform cryptographic operations.",
+            url = "${URL_PREFIX}biometric",
+            releaseDate = "February 24, 2021",
+            stableVersion = Version(
+                name = "1.1.0",
+                releaseNotesUrl = "${URL_PREFIX}biometric#1.1.0"
+            )
         )
-    )
+    }
 
     val core = Library(
         name = "core",

@@ -75,7 +75,7 @@ class LibraryRepositoryImplTest {
     }
 
     private fun getOldLibraries() = listOf(
-        TestData.activityOld, TestData.biometricOld, TestData.core, TestData.room
+        TestData.Activity.old, TestData.Biometric.old, TestData.core, TestData.room
     )
 
     @Test
@@ -105,7 +105,7 @@ class LibraryRepositoryImplTest {
 
         // Then
         val expectedLibraries = listOf(
-            TestData.room, TestData.core, TestData.biometricOld, TestData.activityOld
+            TestData.room, TestData.core, TestData.Biometric.old, TestData.Activity.old
         )
         Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
         Mockito.verify(librariesFetcher).fetchLibraries()
@@ -130,7 +130,7 @@ class LibraryRepositoryImplTest {
     fun `library is pinned`() = runTest {
 
         // Given
-        val library: Library = TestData.activityOld
+        val library: Library = TestData.Activity.old
         libraryDao.insertLibraries(listOf(library))
 
         // When
