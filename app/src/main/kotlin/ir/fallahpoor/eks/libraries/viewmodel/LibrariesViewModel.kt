@@ -18,8 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LibrariesViewModel
 @Inject constructor(
-    private val libraryRepository: LibraryRepository,
-    private val exceptionParser: ExceptionParser
+    private val libraryRepository: LibraryRepository, private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
     sealed class Event {
@@ -33,17 +32,15 @@ class LibrariesViewModel
     private val _librariesScreenUiState = MutableStateFlow(
         LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
     )
-    val librariesScreenUiState: StateFlow<LibrariesScreenUiState> =
-        combine(
-            _librariesScreenUiState,
-            libraryRepository.getRefreshDate()
-        ) { libraries, refreshDate ->
-            libraries.copy(refreshDate = refreshDate)
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
-        )
+    val librariesScreenUiState: StateFlow<LibrariesScreenUiState> = combine(
+        _librariesScreenUiState, libraryRepository.getRefreshDate()
+    ) { libraries, refreshDate ->
+        libraries.copy(refreshDate = refreshDate)
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
+    )
 
     fun handleEvent(event: Event) {
         when (event) {
@@ -67,18 +64,20 @@ class LibrariesViewModel
     private fun performActionAndGetLibraries(action: suspend () -> Unit = {}) {
         currentJob?.cancel()
         currentJob = viewModelScope.launch {
-            val state: LibrariesState = try {
+            kotlin.runCatching {
                 action()
-                val libraries: List<Library> = libraryRepository.getLibraries(
+                libraryRepository.getLibraries(
                     sortOrder = _librariesScreenUiState.value.sortOrder,
                     searchQuery = _librariesScreenUiState.value.searchQuery
                 )
-                LibrariesState.Success(libraries)
-            } catch (e: Throwable) {
-                Timber.e(e)
-                LibrariesState.Error(exceptionParser.getMessage(e))
+            }.onSuccess { libraries ->
+                val librariesState = LibrariesState.Success(libraries)
+                setState(_librariesScreenUiState.value.copy(librariesState = librariesState))
+            }.onFailure { throwable ->
+                Timber.e(throwable)
+                val librariesState = LibrariesState.Error(exceptionParser.getMessage(throwable))
+                setState(_librariesScreenUiState.value.copy(librariesState = librariesState))
             }
-            setState(_librariesScreenUiState.value.copy(librariesState = state))
         }
     }
 
