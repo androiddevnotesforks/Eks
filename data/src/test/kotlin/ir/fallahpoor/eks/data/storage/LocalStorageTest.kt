@@ -71,7 +71,7 @@ class LocalStorageTest {
 
         // Given
         val expectedSortOrder = SortOrder.PINNED_FIRST
-        putString(KEY_SORT_ORDER, expectedSortOrder.name)
+        saveString(KEY_SORT_ORDER, expectedSortOrder.name)
 
         // When
         val actualSortOrder = localStorage.getSortOrder()
@@ -98,7 +98,7 @@ class LocalStorageTest {
     fun `refresh date is saved`() = runTest {
 
         // Given
-        val expectedRefreshDate = "15:30, March"
+        val expectedRefreshDate = "March 1st, 2022"
 
         // When
         localStorage.setRefreshDate(expectedRefreshDate)
@@ -113,18 +113,18 @@ class LocalStorageTest {
     fun `refresh date flow emits a new value when refresh date is updated`() = runTest {
 
         // Given
-        val refreshDate = "March 1st 2022"
+        val expectedRefreshDate = "March 1st, 2022"
         val actualRefreshDates = mutableListOf<String>()
         val job = launch(UnconfinedTestDispatcher()) {
             localStorage.getRefreshDateAsFlow().toList(actualRefreshDates)
         }
 
         // When
-        putString(KEY_REFRESH_DATE, refreshDate)
+        saveString(KEY_REFRESH_DATE, expectedRefreshDate)
 
         // Then
         Truth.assertThat(actualRefreshDates)
-            .isEqualTo(listOf(Constants.NOT_AVAILABLE, refreshDate))
+            .isEqualTo(listOf(Constants.NOT_AVAILABLE, expectedRefreshDate))
 
         job.cancel()
 
@@ -141,7 +141,7 @@ class LocalStorageTest {
         }
 
         // When
-        putString(KEY_SORT_ORDER, sortOrder.name)
+        saveString(KEY_SORT_ORDER, sortOrder.name)
 
         // Then
         Truth.assertThat(actualSortOrders)
@@ -151,7 +151,7 @@ class LocalStorageTest {
 
     }
 
-    private suspend fun putString(key: String, value: String) {
+    private suspend fun saveString(key: String, value: String) {
         val prefKey = stringPreferencesKey(key)
         dataStore.edit { settings ->
             settings[prefKey] = value
