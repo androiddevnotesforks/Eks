@@ -3,7 +3,6 @@ package ir.fallahpoor.eks.libraries.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.eks.commontest.FakeLibraryRepository
-import ir.fallahpoor.eks.commontest.FakeStorage
 import ir.fallahpoor.eks.commontest.MainDispatcherRule
 import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.SortOrder
@@ -30,14 +29,13 @@ class LibrariesViewModelTest {
 
     private lateinit var librariesViewModel: LibrariesViewModel
     private lateinit var libraryRepository: FakeLibraryRepository
-    private lateinit var storage: FakeStorage
 
     @Before
     fun runBeforeEachTest() {
         libraryRepository = FakeLibraryRepository()
-        storage = FakeStorage()
         librariesViewModel = LibrariesViewModel(
-            libraryRepository = libraryRepository, exceptionParser = FakeExceptionParser()
+            libraryRepository = libraryRepository,
+            exceptionParser = FakeExceptionParser()
         )
     }
 
@@ -96,26 +94,28 @@ class LibrariesViewModelTest {
     fun `state is updated correctly when changing the sort order succeeds`() = runTest {
 
         // Given
+        val expectedSortOrder = SortOrder.Z_TO_A
         val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
             librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
         }
 
         // When
-        librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSortOrder(SortOrder.Z_TO_A))
+        librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSortOrder(expectedSortOrder))
 
         // Then
         assertStateSequence(
             actualStateSequence = actualStateSequence,
             expectedStateSequence = listOf(
                 LibrariesScreenUiState(),
-                LibrariesScreenUiState(sortOrder = SortOrder.Z_TO_A),
+                LibrariesScreenUiState(sortOrder = expectedSortOrder),
                 LibrariesScreenUiState(
-                    sortOrder = SortOrder.Z_TO_A,
-                    librariesState = LibrariesState.Success(libraryRepository.getLibraries(sortOrder = SortOrder.Z_TO_A))
+                    sortOrder = expectedSortOrder,
+                    librariesState = LibrariesState.Success(libraryRepository.getLibraries(sortOrder = expectedSortOrder))
                 )
             )
         )
+        Truth.assertThat(libraryRepository.getSortOrder()).isEqualTo(expectedSortOrder)
 
         job.cancel()
 
@@ -125,6 +125,7 @@ class LibrariesViewModelTest {
     fun `state is updated correctly when changing the sort order fails`() = runTest {
 
         // Given
+        val expectedSortOrder = SortOrder.Z_TO_A
         libraryRepository.throwException = true
         val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
         val job = launch(UnconfinedTestDispatcher()) {
@@ -132,17 +133,16 @@ class LibrariesViewModelTest {
         }
 
         // When
-        librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSortOrder(SortOrder.Z_TO_A))
+        librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSortOrder(expectedSortOrder))
 
         // Then
-
         assertStateSequence(
             actualStateSequence = actualStateSequence,
             expectedStateSequence = listOf(
                 LibrariesScreenUiState(),
-                LibrariesScreenUiState(sortOrder = SortOrder.Z_TO_A),
+                LibrariesScreenUiState(sortOrder = expectedSortOrder),
                 LibrariesScreenUiState(
-                    sortOrder = SortOrder.Z_TO_A,
+                    sortOrder = expectedSortOrder,
                     librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
                 )
             )

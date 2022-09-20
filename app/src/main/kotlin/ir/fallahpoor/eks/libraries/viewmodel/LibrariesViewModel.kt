@@ -82,12 +82,21 @@ class LibrariesViewModel
     }
 
     private fun changeSortOrder(sortOrder: SortOrder) {
-        setState(
-            _librariesScreenUiState.value.copy(
-                librariesState = LibrariesState.Loading, sortOrder = sortOrder
-            )
-        )
-        getLibraries()
+        viewModelScope.launch {
+            kotlin.runCatching {
+                libraryRepository.saveSortOrder(sortOrder)
+            }.onSuccess {
+                setState(
+                    _librariesScreenUiState.value.copy(
+                        librariesState = LibrariesState.Loading,
+                        sortOrder = libraryRepository.getSortOrder()
+                    )
+                )
+                getLibraries()
+            }.onFailure { throwable ->
+                Timber.e(throwable)
+            }
+        }
     }
 
     private fun changeSearchQuery(searchQuery: String) {
