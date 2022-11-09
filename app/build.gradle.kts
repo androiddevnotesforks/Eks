@@ -58,7 +58,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.get()
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
     kotlinOptions {
@@ -106,6 +106,7 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     kapt(libs.hilt.compiler)
 
+    implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.tooling)
     implementation(libs.compose.material)
@@ -122,6 +123,7 @@ dependencies {
     testImplementation(libs.mockito.inline)
 
     androidTestImplementation(project(":commonTest"))
+    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.test.runner)
     androidTestImplementation(libs.test.rules)
     androidTestImplementation(libs.truth)
