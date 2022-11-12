@@ -10,7 +10,12 @@ import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
 import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParser
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -37,9 +42,9 @@ class LibrariesViewModel
     ) { libraries, refreshDate ->
         libraries.copy(refreshDate = refreshDate)
     }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(),
-        LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
     )
 
     fun handleEvent(event: Event) {
@@ -72,11 +77,15 @@ class LibrariesViewModel
                 )
             }.onSuccess { libraries ->
                 val librariesState = LibrariesState.Success(libraries)
-                setState(_librariesScreenUiState.value.copy(librariesState = librariesState))
+                _librariesScreenUiState.update {
+                    it.copy(librariesState = librariesState)
+                }
             }.onFailure { throwable ->
                 Timber.e(throwable)
                 val librariesState = LibrariesState.Error(exceptionParser.getMessage(throwable))
-                setState(_librariesScreenUiState.value.copy(librariesState = librariesState))
+                _librariesScreenUiState.update {
+                    it.copy(librariesState = librariesState)
+                }
             }
         }
     }
@@ -86,12 +95,12 @@ class LibrariesViewModel
             kotlin.runCatching {
                 libraryRepository.saveSortOrder(sortOrder)
             }.onSuccess {
-                setState(
-                    _librariesScreenUiState.value.copy(
+                _librariesScreenUiState.update {
+                    it.copy(
                         librariesState = LibrariesState.Loading,
                         sortOrder = libraryRepository.getSortOrder()
                     )
-                )
+                }
                 getLibraries()
             }.onFailure { throwable ->
                 Timber.e(throwable)
@@ -100,16 +109,12 @@ class LibrariesViewModel
     }
 
     private fun changeSearchQuery(searchQuery: String) {
-        setState(
-            _librariesScreenUiState.value.copy(
+        _librariesScreenUiState.update {
+            it.copy(
                 librariesState = LibrariesState.Loading, searchQuery = searchQuery
             )
-        )
+        }
         getLibraries()
-    }
-
-    private fun setState(state: LibrariesScreenUiState) {
-        _librariesScreenUiState.update { state }
     }
 
 }
