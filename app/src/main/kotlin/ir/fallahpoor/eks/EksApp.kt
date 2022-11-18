@@ -2,7 +2,14 @@ package ir.fallahpoor.eks
 
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.*
+import androidx.work.BackoffPolicy
+import androidx.work.Configuration
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
 import ir.fallahpoor.eks.common.NotificationManager
 import ir.fallahpoor.eks.worker.RefreshLibrariesWorker
@@ -36,7 +43,7 @@ class EksApp : Application(), Configuration.Provider {
         WorkManager.getInstance(this)
             .enqueueUniquePeriodicWork(
                 getString(R.string.worker_tag),
-                ExistingPeriodicWorkPolicy.REPLACE,
+                ExistingPeriodicWorkPolicy.UPDATE,
                 createWorkRequest()
             )
     }

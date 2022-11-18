@@ -13,7 +13,7 @@ class FakeStorage : Storage {
     private var sortOrderLiveData = MutableLiveData(SortOrder.A_TO_Z)
 
     override suspend fun setSortOrder(sortOrder: SortOrder) {
-        this.sortOrderLiveData.value = sortOrder
+        sortOrderLiveData.value = sortOrder
     }
 
     override fun getSortOrder() = sortOrderLiveData.value!!

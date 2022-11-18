@@ -43,7 +43,7 @@ class LibrariesViewModel
         libraries.copy(refreshDate = refreshDate)
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
+        started = SharingStarted.WhileSubscribed(5000),
         initialValue = LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
     )
 
