@@ -161,7 +161,7 @@ class LibrariesContentTest {
         )
 
         // When
-        composeRule.onNodeWithTag(LibrariesContentTags.TRY_AGAIN)
+        composeRule.onNodeWithTag(LibrariesContentTags.TRY_AGAIN_BUTTON, useUnmergedTree = true)
             .performClick()
 
         // Then

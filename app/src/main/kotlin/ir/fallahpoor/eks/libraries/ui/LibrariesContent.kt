@@ -1,7 +1,16 @@
 package ir.fallahpoor.eks.libraries.ui
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +30,7 @@ object LibrariesContentTags {
     const val PROGRESS_INDICATOR = "librariesContentProgressIndicator"
     const val LIBRARIES_LIST = "librariesContentLibrariesList"
     const val REFRESH_DATE = "librariesContentRefreshDate"
-    const val TRY_AGAIN = "librariesContentTryAgain"
+    const val TRY_AGAIN_BUTTON = "librariesContentTryAgainButton"
 }
 
 @Composable
@@ -53,6 +62,7 @@ fun LibrariesContent(
                     onLibraryPinClick = onLibraryPinClick
                 )
             }
+
             is LibrariesState.Error -> {
                 TryAgain(
                     errorMessage = librariesState.message,
@@ -91,7 +101,6 @@ private fun TryAgain(errorMessage: String, onTryAgainClick: () -> Unit) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .testTag(LibrariesContentTags.TRY_AGAIN)
     ) {
         val guideline = createGuidelineFromTop(0.5f)
         val (tryAgainButton, errorMessageText) = createRefs()
@@ -109,11 +118,13 @@ private fun TryAgain(errorMessage: String, onTryAgainClick: () -> Unit) {
             overflow = TextOverflow.Ellipsis
         )
         Button(
-            modifier = Modifier.constrainAs(tryAgainButton) {
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                top.linkTo(guideline)
-            },
+            modifier = Modifier
+                .constrainAs(tryAgainButton) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(guideline)
+                }
+                .testTag(LibrariesContentTags.TRY_AGAIN_BUTTON),
             onClick = onTryAgainClick
         ) {
             Text(text = stringResource(R.string.try_again))
