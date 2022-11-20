@@ -30,6 +30,7 @@ object LibrariesContentTags {
     const val PROGRESS_INDICATOR = "librariesContentProgressIndicator"
     const val LIBRARIES_LIST = "librariesContentLibrariesList"
     const val REFRESH_DATE = "librariesContentRefreshDate"
+    const val TRY_AGAIN_LAYOUT = "librariesContentTryAgainLayout"
     const val TRY_AGAIN_BUTTON = "librariesContentTryAgainButton"
 }
 
@@ -101,6 +102,7 @@ private fun TryAgain(errorMessage: String, onTryAgainClick: () -> Unit) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
+            .testTag(LibrariesContentTags.TRY_AGAIN_LAYOUT)
     ) {
         val guideline = createGuidelineFromTop(0.5f)
         val (tryAgainButton, errorMessageText) = createRefs()

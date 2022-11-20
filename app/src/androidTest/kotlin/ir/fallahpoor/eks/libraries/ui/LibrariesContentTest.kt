@@ -23,50 +23,178 @@ class LibrariesContentTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
 
     @Test
-    fun test_loading_state() {
+    fun when_state_is_LOADING_progress_indicator_is_displayed() {
 
         // Given
         composeLibrariesContent(librariesState = LibrariesState.Loading)
 
         // Then
-        with(composeRule) {
-            composeRule.onNodeWithTag(LibrariesContentTags.REFRESH_DATE)
-                .assertDoesNotExist()
-            onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
-                .assertIsDisplayed()
-            onNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
-                .assertDoesNotExist()
-        }
+        composeRule.onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
+            .assertIsDisplayed()
 
     }
 
     @Test
-    fun list_of_libraries_is_displayed() {
+    fun when_state_is_LOADING_refresh_date_is_not_displayed() {
 
         // Given
-        val libraries =
-            listOf(
-                TestData.Activity.old,
-                TestData.Biometric.old,
-                TestData.core,
-                TestData.preference
-            )
+        composeLibrariesContent(librariesState = LibrariesState.Loading)
+
+        // Then
+        composeRule.onNodeWithTag(LibrariesContentTags.REFRESH_DATE)
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun when_state_is_LOADING_libraries_are_not_displayed() {
+
+        // Given
+        composeLibrariesContent(librariesState = LibrariesState.Loading)
+
+        // Then
+        composeRule.onNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
+            .assertDoesNotExist()
+
+    }
+
+    @Test
+    fun when_state_is_LOADING_try_again_is_not_displayed() {
+
+        // Given
+        composeLibrariesContent(librariesState = LibrariesState.Loading)
+
+        // Then
+        composeRule.onNodeWithTag(LibrariesContentTags.TRY_AGAIN_LAYOUT)
+            .assertDoesNotExist()
+
+    }
+
+    @Test
+    fun when_state_is_SUCCESS_libraries_are_displayed() {
+
+        // Given
+        val libraries = listOf(
+            TestData.Activity.old,
+            TestData.Biometric.old,
+            TestData.core, TestData.preference
+        )
         composeLibrariesContent(librariesState = LibrariesState.Success(libraries))
 
         // Then
+        composeRule.onNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
+            .assertIsDisplayed()
+
+    }
+
+    @Test
+    fun when_state_is_SUCCESS_refresh_date_is_displayed() {
+
+        // Given
+        val libraries = listOf(
+            TestData.Activity.old,
+            TestData.Biometric.old,
+            TestData.core,
+            TestData.preference
+        )
+        composeLibrariesContent(librariesState = LibrariesState.Success(libraries))
+
+        // Then
+        composeRule.onNodeWithTag(LibrariesContentTags.REFRESH_DATE)
+            .assertIsDisplayed()
+
+    }
+
+    @Test
+    fun when_state_is_SUCCESS_progress_indicator_is_not_displayed() {
+
+        // Given
+        val libraries = listOf(
+            TestData.Activity.old,
+            TestData.Biometric.old,
+            TestData.core,
+            TestData.preference
+        )
+        composeLibrariesContent(librariesState = LibrariesState.Success(libraries))
+
+        // Then
+        composeRule.onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
+            .assertDoesNotExist()
+
+    }
+
+    @Test
+    fun when_state_is_SUCCESS_try_again_is_not_displayed() {
+
+        // Given
+        val libraries = listOf(
+            TestData.Activity.old,
+            TestData.Biometric.old,
+            TestData.core,
+            TestData.preference
+        )
+        composeLibrariesContent(librariesState = LibrariesState.Success(libraries))
+
+        // Then
+        composeRule.onNodeWithTag(LibrariesContentTags.TRY_AGAIN_LAYOUT)
+            .assertDoesNotExist()
+
+    }
+
+    @Test
+    fun when_state_is_ERROR_try_again_is_displayed() {
+
+        // Given
+        val errorMessage = "An error occurred."
+        composeLibrariesContent(librariesState = LibrariesState.Error(errorMessage))
+
+        // Then
         with(composeRule) {
-            onNodeWithTag(LibrariesContentTags.REFRESH_DATE)
+            onNodeWithTag(LibrariesContentTags.TRY_AGAIN_LAYOUT)
                 .assertIsDisplayed()
-            onNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
+            onNodeWithText(errorMessage, useUnmergedTree = true)
                 .assertIsDisplayed()
-            onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
-                .assertDoesNotExist()
         }
 
     }
 
     @Test
-    fun correct_callback_is_called_when_a_library_is_clicked() {
+    fun when_state_is_ERROR_libraries_are_not_displayed() {
+
+        // Given
+        composeLibrariesContent(librariesState = LibrariesState.Error("An error occurred."))
+
+        // Then
+        composeRule.onNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
+            .assertDoesNotExist()
+
+    }
+
+    @Test
+    fun when_state_is_ERROR_refresh_date_is_not_displayed() {
+
+        // Given
+        composeLibrariesContent(librariesState = LibrariesState.Error("An error occurred."))
+
+        // Then
+        composeRule.onNodeWithTag(LibrariesContentTags.REFRESH_DATE)
+            .assertDoesNotExist()
+
+    }
+
+    @Test
+    fun when_state_is_ERROR_progress_indicator_is_not_displayed() {
+
+        // Given
+        composeLibrariesContent(librariesState = LibrariesState.Error("An error occurred."))
+
+        // Then
+        composeRule.onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
+            .assertDoesNotExist()
+
+    }
+
+    @Test
+    fun when_a_library_is_clicked_correct_callback_is_called() {
 
         // Given
         val library: Library = TestData.room
@@ -77,8 +205,7 @@ class LibrariesContentTest {
         )
 
         // When
-        composeRule.onNodeWithTag(LibraryItemTags.ITEM + library.name)
-            .performClick()
+        composeRule.onNodeWithTag(LibraryItemTags.ITEM + library.name).performClick()
 
         // Then
         Mockito.verify(onLibraryClick).invoke(library)
@@ -86,7 +213,7 @@ class LibrariesContentTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_a_library_version_is_clicked() {
+    fun when_a_library_version_is_clicked_correct_callback_is_called() {
 
         // Given
         val library: Library = TestData.room
@@ -100,8 +227,7 @@ class LibrariesContentTest {
         composeRule.onNodeWithText(
             context.getString(R.string.version_stable, library.stableVersion.name),
             useUnmergedTree = true
-        )
-            .performClick()
+        ).performClick()
 
         // Then
         Mockito.verify(onLibraryVersionClick).invoke(library.stableVersion)
@@ -109,7 +235,7 @@ class LibrariesContentTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_a_library_is_pinned() {
+    fun when_a_library_is_pinned_correct_callback_is_called() {
 
         // Given
         val library: Library = TestData.room
@@ -130,7 +256,7 @@ class LibrariesContentTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_a_library_is_unpinned() {
+    fun when_a_library_is_unpinned_correct_callback_is_called() {
 
         // Given
         val library: Library = TestData.core
@@ -151,7 +277,7 @@ class LibrariesContentTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_try_again_is_clicked() {
+    fun when_try_again_button_is_clicked_correct_callback_is_called() {
 
         // Given
         val onTryAgainClick: () -> Unit = mock()
