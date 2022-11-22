@@ -51,18 +51,15 @@ class RefreshLibrariesWorkerTest {
         worker = createWorker(libraryRepository)
     }
 
-    private fun createWorker(libraryRepository: LibraryRepository): RefreshLibrariesWorker {
-        return TestListenableWorkerBuilder<RefreshLibrariesWorker>(context)
-            .setWorkerFactory(
-                CustomWorkerFactory(
-                    libraryRepository,
-                    connectivityChecker,
-                    notificationBodyMaker,
-                    notificationManager
-                )
+    private fun createWorker(libraryRepository: LibraryRepository): RefreshLibrariesWorker =
+        TestListenableWorkerBuilder<RefreshLibrariesWorker>(context).setWorkerFactory(
+            CustomWorkerFactory(
+                libraryRepository,
+                connectivityChecker,
+                notificationBodyMaker,
+                notificationManager
             )
-            .build()
-    }
+        ).build()
 
     @Test
     fun doWork_should_return_Retry_when_network_is_not_reachable() = runTest {
@@ -99,30 +96,27 @@ class RefreshLibrariesWorkerTest {
     }
 
     @Test
-    fun no_notification_is_displayed_when_there_is_no_update() =
-        runTest {
+    fun no_notification_is_displayed_when_there_is_no_update() = runTest {
 
-            // Given
-            Mockito.`when`(connectivityChecker.isNetworkReachable()).thenReturn(true)
-            libraryRepository.updateIsAvailable = false
+        // Given
+        Mockito.`when`(connectivityChecker.isNetworkReachable()).thenReturn(true)
+        libraryRepository.updateIsAvailable = false
 
-            // When
-            val result = worker.doWork()
+        // When
+        val result = worker.doWork()
 
-            // Then
-            Mockito.verifyNoInteractions(notificationManager)
-            Truth.assertThat(result).isInstanceOf(ListenableWorker.Result.Success::class.java)
+        // Then
+        Mockito.verifyNoInteractions(notificationManager)
+        Truth.assertThat(result).isInstanceOf(ListenableWorker.Result.Success::class.java)
 
-        }
+    }
 
     @Test
     fun a_notification_is_displayed_when_there_are_updates() = runTest {
 
         // Given
-        Mockito.`when`(connectivityChecker.isNetworkReachable())
-            .thenReturn(true)
-        Mockito.`when`(notificationBodyMaker.makeBody(anyList(), anyList()))
-            .thenReturn("X")
+        Mockito.`when`(connectivityChecker.isNetworkReachable()).thenReturn(true)
+        Mockito.`when`(notificationBodyMaker.makeBody(anyList(), anyList())).thenReturn("X")
         libraryRepository.updateIsAvailable = true
 
         // When
@@ -143,18 +137,15 @@ class RefreshLibrariesWorkerTest {
     ) : WorkerFactory() {
 
         override fun createWorker(
-            context: Context,
-            workerClassName: String,
-            workerParameters: WorkerParameters
-        ): ListenableWorker =
-            RefreshLibrariesWorker(
-                context,
-                workerParameters,
-                libraryRepository,
-                connectivityChecker,
-                notificationBodyMaker,
-                notificationManager
-            )
+            context: Context, workerClassName: String, workerParameters: WorkerParameters
+        ): ListenableWorker = RefreshLibrariesWorker(
+            context,
+            workerParameters,
+            libraryRepository,
+            connectivityChecker,
+            notificationBodyMaker,
+            notificationManager
+        )
 
     }
 }
