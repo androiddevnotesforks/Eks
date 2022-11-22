@@ -1,11 +1,7 @@
 package ir.fallahpoor.eks.libraries.ui
 
 import android.content.Context
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.commontest.TestData
@@ -29,8 +25,7 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Loading)
 
         // Then
-        composeRule.onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
-            .assertIsDisplayed()
+        composeRule.assertIsDisplayedNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
 
     }
 
@@ -41,8 +36,7 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Loading)
 
         // Then
-        composeRule.onNodeWithTag(LibrariesContentTags.REFRESH_DATE)
-            .assertDoesNotExist()
+        composeRule.assertDoesNotExistNodeWithTag(LibrariesContentTags.REFRESH_DATE)
     }
 
     @Test
@@ -52,8 +46,7 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Loading)
 
         // Then
-        composeRule.onNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
-            .assertDoesNotExist()
+        composeRule.assertDoesNotExistNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
 
     }
 
@@ -64,8 +57,7 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Loading)
 
         // Then
-        composeRule.onNodeWithTag(LibrariesContentTags.TRY_AGAIN_LAYOUT)
-            .assertDoesNotExist()
+        composeRule.assertDoesNotExistNodeWithTag(LibrariesContentTags.TRY_AGAIN_LAYOUT)
 
     }
 
@@ -81,8 +73,7 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Success(libraries))
 
         // Then
-        composeRule.onNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
-            .assertIsDisplayed()
+        composeRule.assertIsDisplayedNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
 
     }
 
@@ -99,8 +90,7 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Success(libraries))
 
         // Then
-        composeRule.onNodeWithTag(LibrariesContentTags.REFRESH_DATE)
-            .assertIsDisplayed()
+        composeRule.assertIsDisplayedNodeWithTag(LibrariesContentTags.REFRESH_DATE)
 
     }
 
@@ -117,8 +107,7 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Success(libraries))
 
         // Then
-        composeRule.onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
-            .assertDoesNotExist()
+        composeRule.assertDoesNotExistNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
 
     }
 
@@ -135,8 +124,7 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Success(libraries))
 
         // Then
-        composeRule.onNodeWithTag(LibrariesContentTags.TRY_AGAIN_LAYOUT)
-            .assertDoesNotExist()
+        composeRule.assertDoesNotExistNodeWithTag(LibrariesContentTags.TRY_AGAIN_LAYOUT)
 
     }
 
@@ -148,12 +136,8 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Error(errorMessage))
 
         // Then
-        with(composeRule) {
-            onNodeWithTag(LibrariesContentTags.TRY_AGAIN_LAYOUT)
-                .assertIsDisplayed()
-            onNodeWithText(errorMessage, useUnmergedTree = true)
-                .assertIsDisplayed()
-        }
+        composeRule.assertIsDisplayedNodeWithTag(LibrariesContentTags.TRY_AGAIN_LAYOUT)
+        composeRule.assertTextIsDisplayed(errorMessage)
 
     }
 
@@ -164,8 +148,7 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Error("An error occurred."))
 
         // Then
-        composeRule.onNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
-            .assertDoesNotExist()
+        composeRule.assertDoesNotExistNodeWithTag(LibrariesContentTags.LIBRARIES_LIST)
 
     }
 
@@ -176,8 +159,7 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Error("An error occurred."))
 
         // Then
-        composeRule.onNodeWithTag(LibrariesContentTags.REFRESH_DATE)
-            .assertDoesNotExist()
+        composeRule.assertDoesNotExistNodeWithTag(LibrariesContentTags.REFRESH_DATE)
 
     }
 
@@ -188,8 +170,7 @@ class LibrariesContentTest {
         composeLibrariesContent(librariesState = LibrariesState.Error("An error occurred."))
 
         // Then
-        composeRule.onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
-            .assertDoesNotExist()
+        composeRule.assertDoesNotExistNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
 
     }
 
@@ -205,7 +186,7 @@ class LibrariesContentTest {
         )
 
         // When
-        composeRule.onNodeWithTag(LibraryItemTags.ITEM + library.name).performClick()
+        composeRule.clickOnNodeWithTag(LibraryItemTags.ITEM + library.name)
 
         // Then
         Mockito.verify(onLibraryClick).invoke(library)
@@ -224,10 +205,9 @@ class LibrariesContentTest {
         )
 
         // When
-        composeRule.onNodeWithText(
-            context.getString(R.string.version_stable, library.stableVersion.name),
-            useUnmergedTree = true
-        ).performClick()
+        composeRule.clickOnNodeWithText(
+            context.getString(R.string.version_stable, library.stableVersion.name)
+        )
 
         // Then
         Mockito.verify(onLibraryVersionClick).invoke(library.stableVersion)
@@ -246,9 +226,7 @@ class LibrariesContentTest {
         )
 
         // When
-        composeRule.onNodeWithTag(
-            LibraryItemTags.PIN_BUTTON + library.name
-        ).performClick()
+        composeRule.clickOnNodeWithTag(LibraryItemTags.PIN_BUTTON + library.name)
 
         // Then
         Mockito.verify(onLibraryPinClick).invoke(library, true)
@@ -267,9 +245,7 @@ class LibrariesContentTest {
         )
 
         // When
-        composeRule.onNodeWithTag(
-            LibraryItemTags.PIN_BUTTON + library.name
-        ).performClick()
+        composeRule.clickOnNodeWithTag(LibraryItemTags.PIN_BUTTON + library.name)
 
         // Then
         Mockito.verify(onLibraryPinClick).invoke(library, false)
@@ -287,8 +263,7 @@ class LibrariesContentTest {
         )
 
         // When
-        composeRule.onNodeWithTag(LibrariesContentTags.TRY_AGAIN_BUTTON, useUnmergedTree = true)
-            .performClick()
+        composeRule.clickOnNodeWithTag(LibrariesContentTags.TRY_AGAIN_BUTTON)
 
         // Then
         Mockito.verify(onTryAgainClick).invoke()

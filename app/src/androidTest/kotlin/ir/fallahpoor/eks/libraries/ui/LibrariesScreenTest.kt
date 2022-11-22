@@ -41,12 +41,8 @@ class LibrariesScreenTest {
         composeLibrariesScreen()
 
         // Then
-        with(composeTestRule) {
-            onNodeWithTag(LibrariesScreenTags.TOOLBAR)
-                .assertIsDisplayed()
-            onNodeWithTag(LibrariesScreenTags.CONTENT)
-                .assertIsDisplayed()
-        }
+        composeTestRule.assertIsDisplayedNodeWithTag(LibrariesScreenTags.TOOLBAR)
+        composeTestRule.assertIsDisplayedNodeWithTag(LibrariesScreenTags.CONTENT)
 
     }
 
@@ -72,8 +68,7 @@ class LibrariesScreenTest {
 
         // When
         with(composeTestRule) {
-            onNodeWithContentDescription(searchText, useUnmergedTree = true)
-                .performClick()
+            clickOnNodeWithContentDescription(searchText)
             onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
                 .performTextInput("co")
         }
@@ -84,15 +79,9 @@ class LibrariesScreenTest {
                 if (it.name.contains("co", ignoreCase = true)) {
                     onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
                         .performScrollToKey(it.name)
-                    onNodeWithTag(
-                        LibraryItemTags.ITEM + it.name,
-                        useUnmergedTree = true
-                    ).assertIsDisplayed()
+                    assertIsDisplayedNodeWithTag(LibraryItemTags.ITEM + it.name)
                 } else {
-                    onNodeWithTag(
-                        LibraryItemTags.ITEM + it.name,
-                        useUnmergedTree = true
-                    ).assertDoesNotExist()
+                    assertDoesNotExistNodeWithTag(LibraryItemTags.ITEM + it.name)
                 }
             }
         }
@@ -105,30 +94,23 @@ class LibrariesScreenTest {
         // Given
         composeLibrariesScreen()
         with(composeTestRule) {
-            onNodeWithContentDescription(searchText, useUnmergedTree = true)
-                .performClick()
+            clickOnNodeWithContentDescription(searchText)
             onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
                 .performTextInput("co")
         }
 
         // When
-        composeTestRule.onNodeWithTag(SearchBarTags.CLOSE_BUTTON)
-            .performClick()
+        composeTestRule.clickOnNodeWithTag(SearchBarTags.CLOSE_BUTTON)
 
         // Then
         with(composeTestRule) {
             fakeLibraryRepository.getLibraries().forEach {
                 onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
                     .performScrollToKey(it.name)
-                onNodeWithTag(
-                    LibraryItemTags.ITEM + it.name,
-                    useUnmergedTree = true
-                ).assertIsDisplayed()
+                assertIsDisplayedNodeWithTag(LibraryItemTags.ITEM + it.name)
             }
-            onNodeWithTag(LibrariesListTags.NO_LIBRARY_TEXT)
-                .assertDoesNotExist()
-            onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
-                .assertDoesNotExist()
+            assertDoesNotExistNodeWithTag(LibrariesListTags.NO_LIBRARY_TEXT)
+            assertDoesNotExistNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
         }
 
     }
@@ -139,30 +121,23 @@ class LibrariesScreenTest {
         // Given
         composeLibrariesScreen()
         with(composeTestRule) {
-            onNodeWithContentDescription(searchText, useUnmergedTree = true)
-                .performClick()
+            clickOnNodeWithContentDescription(searchText)
             onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
                 .performTextInput("co")
         }
 
         // When
-        composeTestRule.onNodeWithTag(SearchBarTags.CLEAR_BUTTON)
-            .performClick()
+        composeTestRule.clickOnNodeWithTag(SearchBarTags.CLEAR_BUTTON)
 
         // Then
         with(composeTestRule) {
             fakeLibraryRepository.getLibraries().forEach {
                 onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
                     .performScrollToKey(it.name)
-                onNodeWithTag(
-                    LibraryItemTags.ITEM + it.name,
-                    useUnmergedTree = true
-                ).assertIsDisplayed()
+                assertIsDisplayedNodeWithTag(LibraryItemTags.ITEM + it.name)
             }
-            onNodeWithText(LibrariesListTags.NO_LIBRARY_TEXT)
-                .assertDoesNotExist()
-            onNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
-                .assertDoesNotExist()
+            assertTextDoesNotExist(LibrariesListTags.NO_LIBRARY_TEXT)
+            assertDoesNotExistNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
         }
 
     }
@@ -177,8 +152,7 @@ class LibrariesScreenTest {
             .performScrollToKey(TestData.preference.name)
 
         // When
-        composeTestRule.onNodeWithTag(LibraryItemTags.ITEM + TestData.preference.name)
-            .performClick()
+        composeTestRule.clickOnNodeWithTag(LibraryItemTags.ITEM + TestData.preference.name)
 
         // Then
         Mockito.verify(onLibraryClick).invoke(TestData.preference)
@@ -195,13 +169,12 @@ class LibrariesScreenTest {
             .performScrollToKey(TestData.core.name)
 
         // When
-        composeTestRule.onNodeWithText(
+        composeTestRule.clickOnNodeWithText(
             context.getString(
                 R.string.version_beta,
                 TestData.core.betaVersion.name
             )
         )
-            .performClick()
 
         // Then
         Mockito.verify(onLibraryVersionClick).invoke(TestData.core.betaVersion)

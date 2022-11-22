@@ -2,11 +2,8 @@ package ir.fallahpoor.eks.libraries.ui
 
 import android.content.Context
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.eks.R
@@ -32,14 +29,8 @@ class LibrariesListTest {
 
         // Then
         with(composeRule) {
-            onNodeWithTag(
-                LibrariesListTags.LIBRARIES_LIST,
-                useUnmergedTree = true
-            ).assertIsDisplayed()
-            onNodeWithText(
-                context.getString(R.string.no_library),
-                useUnmergedTree = true
-            ).assertDoesNotExist()
+            assertIsDisplayedNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
+            assertTextDoesNotExist(context.getString(R.string.no_library))
         }
 
     }
@@ -58,10 +49,7 @@ class LibrariesListTest {
 
         // Then
         with(composeRule) {
-            onNodeWithText(
-                context.getString(R.string.no_library),
-                useUnmergedTree = true
-            ).assertDoesNotExist()
+            assertTextDoesNotExist(context.getString(R.string.no_library))
         }
 
     }
@@ -79,8 +67,7 @@ class LibrariesListTest {
         composeRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST).performScrollToIndex(0)
 
         // Then
-        composeRule.onNodeWithTag(LibrariesListTags.SCROLL_TO_TOP_BUTTON, useUnmergedTree = true)
-            .assertDoesNotExist()
+        composeRule.assertDoesNotExistNodeWithTag(LibrariesListTags.SCROLL_TO_TOP_BUTTON)
 
     }
 
@@ -96,8 +83,7 @@ class LibrariesListTest {
             .performScrollToIndex(libraries.lastIndex)
 
         // Then
-        composeRule.onNodeWithTag(LibrariesListTags.SCROLL_TO_TOP_BUTTON, useUnmergedTree = true)
-            .assertIsDisplayed()
+        composeRule.assertIsDisplayedNodeWithTag(LibrariesListTags.SCROLL_TO_TOP_BUTTON)
 
     }
 
@@ -112,11 +98,10 @@ class LibrariesListTest {
             .performScrollToIndex(libraries.lastIndex)
 
         // When
-        composeRule.onNodeWithTag(LibrariesListTags.SCROLL_TO_TOP_BUTTON).performClick()
+        composeRule.clickOnNodeWithTag(LibrariesListTags.SCROLL_TO_TOP_BUTTON)
 
         // Then
-        composeRule.onNodeWithTag(LibraryItemTags.ITEM + TestData.room.name, useUnmergedTree = true)
-            .assertIsDisplayed()
+        composeRule.assertIsDisplayedNodeWithTag(LibraryItemTags.ITEM + TestData.room.name)
 
     }
 
@@ -127,8 +112,7 @@ class LibrariesListTest {
         composeLibrariesList(libraries = emptyList())
 
         // Then
-        composeRule.onNodeWithText(context.getString(R.string.no_library), useUnmergedTree = true)
-            .assertIsDisplayed()
+        composeRule.assertTextIsDisplayed(context.getString(R.string.no_library))
 
     }
 
@@ -139,8 +123,7 @@ class LibrariesListTest {
         composeLibrariesList(libraries = emptyList())
 
         // Then
-        composeRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST, useUnmergedTree = true)
-            .assertDoesNotExist()
+        composeRule.assertDoesNotExistNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
 
     }
 
@@ -151,13 +134,12 @@ class LibrariesListTest {
         composeLibrariesList(libraries = emptyList())
 
         // Then
-        composeRule.onNodeWithTag(LibrariesListTags.SCROLL_TO_TOP_BUTTON, useUnmergedTree = true)
-            .assertDoesNotExist()
+        composeRule.assertDoesNotExistNodeWithTag(LibrariesListTags.SCROLL_TO_TOP_BUTTON)
 
     }
 
     @Test
-    fun correct_callback_is_called_when_a_library_is_clicked() {
+    fun when_a_library_is_clicked_correct_callback_is_called() {
 
         // Given
         val library: Library = TestData.room
@@ -167,7 +149,7 @@ class LibrariesListTest {
         )
 
         // When
-        composeRule.onNodeWithTag(LibraryItemTags.ITEM + library.name).performClick()
+        composeRule.clickOnNodeWithTag(LibraryItemTags.ITEM + library.name)
 
         // Then
         Mockito.verify(onLibraryClick).invoke(library)
@@ -175,7 +157,7 @@ class LibrariesListTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_a_library_version_is_clicked() {
+    fun when_a_library_version_is_clicked_correct_callback_is_called() {
 
         // Given
         val library: Library = TestData.room
@@ -185,10 +167,9 @@ class LibrariesListTest {
         )
 
         // When
-        composeRule.onNodeWithText(
-            context.getString(R.string.version_stable, library.stableVersion.name),
-            useUnmergedTree = true
-        ).performClick()
+        composeRule.clickOnNodeWithText(
+            context.getString(R.string.version_stable, library.stableVersion.name)
+        )
 
         // Then
         Mockito.verify(onLibraryVersionClick).invoke(library.stableVersion)
@@ -196,7 +177,7 @@ class LibrariesListTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_a_library_is_pinned() {
+    fun when_a_library_is_pinned_correct_callback_is_called() {
 
         // Given
         val library: Library = TestData.preference
@@ -206,7 +187,7 @@ class LibrariesListTest {
         )
 
         // When
-        composeRule.onNodeWithTag(LibraryItemTags.PIN_BUTTON + library.name).performClick()
+        composeRule.clickOnNodeWithTag(LibraryItemTags.PIN_BUTTON + library.name)
 
         // Then
         Mockito.verify(onLibraryPinClick).invoke(library, true)
@@ -214,7 +195,7 @@ class LibrariesListTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_a_library_is_unpinned() {
+    fun when_a_library_is_unpinned_correct_callback_is_called() {
 
         // Given
         val library: Library = TestData.core
@@ -224,7 +205,7 @@ class LibrariesListTest {
         )
 
         // When
-        composeRule.onNodeWithTag(LibraryItemTags.PIN_BUTTON + library.name).performClick()
+        composeRule.clickOnNodeWithTag(LibraryItemTags.PIN_BUTTON + library.name)
 
         // Then
         Mockito.verify(onLibraryPinClick).invoke(library, false)

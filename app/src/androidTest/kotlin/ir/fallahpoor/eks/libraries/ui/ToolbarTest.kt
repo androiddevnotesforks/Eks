@@ -1,8 +1,9 @@
 package ir.fallahpoor.eks.libraries.ui
 
 import android.content.Context
-import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performTextInput
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.SortOrder
@@ -16,7 +17,6 @@ class ToolbarTest {
     val composeTestRule = createComposeRule()
 
     private val context: Context = ApplicationProvider.getApplicationContext()
-    private val appNameText = context.getString(R.string.app_name)
     private val sortText = context.getString(R.string.sort)
     private val searchText = context.getString(R.string.search)
     private val selectSortOrderText = context.getString(R.string.select_sort_order)
@@ -28,139 +28,107 @@ class ToolbarTest {
         composeToolbar()
 
         // Then
-        composeTestRule.onNodeWithText(appNameText)
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription(
-            sortText,
-            useUnmergedTree = true
-        ).assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription(
-            searchText,
-            useUnmergedTree = true
-        ).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(SearchBarTags.SEARCH_BAR)
-            .assertDoesNotExist()
+        with(composeTestRule) {
+            assertTextIsDisplayed(context.getString(R.string.app_name))
+            assertIsDisplayedNodeWithContentDescription(sortText)
+            assertIsDisplayedNodeWithContentDescription(searchText)
+            assertDoesNotExistNodeWithTag(SearchBarTags.SEARCH_BAR)
+        }
 
     }
 
     @Test
-    fun sort_dialog_is_displayed_when_sort_button_is_clicked() {
+    fun when_sort_button_is_clicked_sort_dialog_is_displayed() {
 
         // Given
         composeToolbar()
 
         // When
-        composeTestRule.onNodeWithContentDescription(
-            sortText,
-            useUnmergedTree = true
-        ).performClick()
+        composeTestRule.clickOnNodeWithContentDescription(sortText)
 
         // Then
-        composeTestRule.onNodeWithText(selectSortOrderText)
-            .assertIsDisplayed()
+        composeTestRule.assertTextIsDisplayed(selectSortOrderText)
 
     }
 
     @Test
-    fun search_bar_is_displayed_when_search_button_is_clicked() {
+    fun when_search_button_is_clicked_search_bar_is_displayed() {
 
         // Given
         composeToolbar()
 
         // When
-        composeTestRule.onNodeWithContentDescription(
-            searchText,
-            useUnmergedTree = true
-        ).performClick()
+        clickOnSearchButton()
 
         // Then
-        composeTestRule.onNodeWithTag(SearchBarTags.SEARCH_BAR)
-            .assertIsDisplayed()
+        composeTestRule.assertIsDisplayedNodeWithTag(SearchBarTags.SEARCH_BAR)
 
     }
 
     @Test
-    fun correct_callback_is_called_when_sort_order_is_selected() {
+    fun when_sort_order_is_selected_correct_callback_is_called() {
 
         // Given
         val onSortOrderChange: (SortOrder) -> Unit = mock()
         composeToolbar(onSortOrderChange = onSortOrderChange)
 
         // When
-        with(composeTestRule) {
-            onNodeWithContentDescription(
-                sortText,
-                useUnmergedTree = true
-            ).performClick()
-            onNodeWithText(
-                context.getString(SortOrder.Z_TO_A.stringResId),
-                useUnmergedTree = true
-            ).performClick()
-        }
+        selectSortOrder(SortOrder.Z_TO_A)
 
         // Then
         Mockito.verify(onSortOrderChange).invoke(SortOrder.Z_TO_A)
 
     }
 
+    private fun selectSortOrder(sortOrder: SortOrder) {
+        composeTestRule.clickOnNodeWithContentDescription(sortText)
+        composeTestRule.clickOnNodeWithText(context.getString(sortOrder.stringResId))
+    }
+
     @Test
-    fun sort_dialog_is_closed_when_sort_order_is_selected() {
+    fun when_sort_order_is_selected_sort_order_dialog_is_closed() {
 
         // Given
         composeToolbar()
 
         // When
-        with(composeTestRule) {
-            onNodeWithContentDescription(
-                sortText,
-                useUnmergedTree = true
-            ).performClick()
-            onNodeWithText(
-                context.getString(SortOrder.A_TO_Z.stringResId),
-                useUnmergedTree = true
-            ).performClick()
-        }
+        selectSortOrder(SortOrder.A_TO_Z)
 
         // Then
-        composeTestRule.onNodeWithText(selectSortOrderText, useUnmergedTree = true)
-            .assertDoesNotExist()
+        composeTestRule.assertTextDoesNotExist(selectSortOrderText)
 
     }
 
     @Test
-    fun correct_callback_is_called_when_search_query_is_changed() {
+    fun when_search_query_is_changed_correct_callback_is_called() {
 
         // Given
         val onSearchQueryChange: (String) -> Unit = mock()
         composeToolbar(onSearchQueryChange = onSearchQueryChange)
 
         // When
-        composeTestRule.onNodeWithContentDescription(
-            searchText,
-            useUnmergedTree = true
-        ).performClick()
-        composeTestRule.onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
-            .performTextInput("Coil")
+        enterSearchQuery("Coil")
 
         // Then
         Mockito.verify(onSearchQueryChange).invoke("Coil")
 
     }
 
+    private fun enterSearchQuery(searchQuery: String) {
+        clickOnSearchButton()
+        composeTestRule.onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
+            .performTextInput(searchQuery)
+    }
+
     @Test
-    fun correct_callback_is_called_when_search_query_is_cleared() {
+    fun when_search_query_is_cleared_correct_callback_is_called() {
 
         // Given
         val onSearchQueryChange: (String) -> Unit = mock()
         composeToolbar(searchQuery = "Koin", onSearchQueryChange = onSearchQueryChange)
 
         // When
-        composeTestRule.onNodeWithContentDescription(
-            searchText,
-            useUnmergedTree = true
-        ).performClick()
-        composeTestRule.onNodeWithTag(SearchBarTags.CLEAR_BUTTON)
-            .performClick()
+        clearSearchQuery()
 
         // Then
         Mockito.verify(onSearchQueryChange).invoke("")
@@ -168,23 +136,31 @@ class ToolbarTest {
     }
 
     @Test
-    fun toolbar_is_set_to_normal_mode_when_search_bar_is_closed() {
+    fun when_search_bar_is_closed_toolbar_is_set_to_normal_mode() {
 
         // Given
         composeToolbar()
 
         // When
-        composeTestRule.onNodeWithContentDescription(
-            searchText,
-            useUnmergedTree = true
-        ).performClick()
-        composeTestRule.onNodeWithTag(SearchBarTags.CLOSE_BUTTON)
-            .performClick()
+        closeSearchBar()
 
         // Then
-        composeTestRule.onNodeWithTag(SearchBarTags.SEARCH_BAR)
-            .assertDoesNotExist()
+        composeTestRule.assertDoesNotExistNodeWithTag(SearchBarTags.SEARCH_BAR)
 
+    }
+
+    private fun clearSearchQuery() {
+        clickOnSearchButton()
+        composeTestRule.clickOnNodeWithTag(SearchBarTags.CLEAR_BUTTON)
+    }
+
+    private fun closeSearchBar() {
+        composeTestRule.clickOnNodeWithContentDescription(searchText)
+        composeTestRule.clickOnNodeWithTag(SearchBarTags.CLOSE_BUTTON)
+    }
+
+    private fun clickOnSearchButton() {
+        composeTestRule.clickOnNodeWithContentDescription(searchText)
     }
 
     private fun composeToolbar(

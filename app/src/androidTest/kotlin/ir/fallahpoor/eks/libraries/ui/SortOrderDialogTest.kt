@@ -1,8 +1,10 @@
 package ir.fallahpoor.eks.libraries.ui
 
 import android.content.Context
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsNotSelected
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import ir.fallahpoor.eks.R
@@ -26,13 +28,9 @@ class SortOrderDialogTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithText(context.getString(R.string.select_sort_order))
-                .assertIsDisplayed()
+            assertTextIsDisplayed(context.getString(R.string.select_sort_order))
             SortOrder.values().forEach {
-                onNodeWithText(
-                    context.getString(it.stringResId),
-                    useUnmergedTree = true
-                ).assertIsDisplayed()
+                assertTextIsDisplayed(context.getString(it.stringResId))
                 if (it == SortOrder.PINNED_FIRST) {
                     onNodeWithTag(context.getString(it.stringResId))
                         .assertIsSelected()
@@ -46,7 +44,7 @@ class SortOrderDialogTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_an_sort_order_is_selected() {
+    fun when_a_sort_order_is_selected_correct_callback_is_called() {
 
         // Given
         val onSortOrderClick: (SortOrder) -> Unit = mock()
@@ -56,10 +54,7 @@ class SortOrderDialogTest {
         )
 
         // When
-        composeTestRule.onNodeWithText(
-            context.getString(SortOrder.A_TO_Z.stringResId),
-            useUnmergedTree = true
-        ).performClick()
+        composeTestRule.clickOnNodeWithText(context.getString(SortOrder.A_TO_Z.stringResId))
 
         // Then
         Mockito.verify(onSortOrderClick).invoke(SortOrder.A_TO_Z)
@@ -67,7 +62,7 @@ class SortOrderDialogTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_dialog_is_dismissed() {
+    fun when_dialog_is_dismissed_correct_callback_is_called() {
 
         // Given
         val onDismiss: () -> Unit = mock()

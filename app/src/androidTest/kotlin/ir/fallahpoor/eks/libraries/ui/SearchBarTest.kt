@@ -1,7 +1,11 @@
 package ir.fallahpoor.eks.libraries.ui
 
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performTextInput
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -25,16 +29,14 @@ class SearchBarTest {
             onNodeWithText(hint).assertIsDisplayed()
             onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
                 .assertTextEquals("")
-            onNodeWithTag(SearchBarTags.CLOSE_BUTTON)
-                .assertIsDisplayed()
-            onNodeWithTag(SearchBarTags.CLEAR_BUTTON)
-                .assertIsDisplayed()
+            assertIsDisplayedNodeWithTag(SearchBarTags.CLOSE_BUTTON)
+            assertIsDisplayedNodeWithTag(SearchBarTags.CLEAR_BUTTON)
         }
 
     }
 
     @Test
-    fun hint_is_not_displayed_when_search_query_is_not_empty() {
+    fun when_search_query_is_not_empty_hint_is_not_displayed() {
 
         // Given
         val hint = "Enter library name"
@@ -45,8 +47,7 @@ class SearchBarTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithText(hint, useUnmergedTree = true)
-                .assertDoesNotExist()
+            assertTextDoesNotExist(hint)
             onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
                 .assertTextEquals(query)
         }
@@ -54,15 +55,14 @@ class SearchBarTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_clear_button_is_clicked() {
+    fun when_clear_button_is_clicked_correct_callback_is_called() {
 
         // Given
         val onClearClick: () -> Unit = mock()
         composeSearchBar(onClearClick = onClearClick)
 
         // When
-        composeTestRule.onNodeWithTag(SearchBarTags.CLEAR_BUTTON)
-            .performClick()
+        composeTestRule.clickOnNodeWithTag(SearchBarTags.CLEAR_BUTTON)
 
         // Then
         Mockito.verify(onClearClick).invoke()
@@ -70,15 +70,14 @@ class SearchBarTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_close_button_is_clicked() {
+    fun when_close_button_is_clicked_correct_callback_is_called() {
 
         // Given
         val onCloseClick: () -> Unit = mock()
         composeSearchBar(onCloseClick = onCloseClick)
 
         // When
-        composeTestRule.onNodeWithTag(SearchBarTags.CLOSE_BUTTON)
-            .performClick()
+        composeTestRule.clickOnNodeWithTag(SearchBarTags.CLOSE_BUTTON)
 
         // Then
         Mockito.verify(onCloseClick).invoke()
@@ -86,19 +85,23 @@ class SearchBarTest {
     }
 
     @Test
-    fun correct_callback_is_called_when_query_is_changed() {
+    fun when_query_is_changed_correct_callback_is_called() {
 
         // Given
         val onQueryChange: (String) -> Unit = mock()
         composeSearchBar(onQueryChange = onQueryChange)
 
         // When
-        composeTestRule.onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
-            .performTextInput("Coroutines")
+        enterSearchQuery("Coroutines")
 
         // Then
         Mockito.verify(onQueryChange).invoke("Coroutines")
 
+    }
+
+    private fun enterSearchQuery(searchQuery: String) {
+        composeTestRule.onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
+            .performTextInput(searchQuery)
     }
 
     // TODO Test if the correct callback is called when query is submitted
