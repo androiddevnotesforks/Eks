@@ -1,67 +1,45 @@
 package ir.fallahpoor.eks.libraries.ui
 
 import android.content.Context
-import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.core.app.ApplicationProvider
-import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.entity.Library
 import ir.fallahpoor.eks.data.entity.Version
+import ir.fallahpoor.eks.libraries.ui.robots.LibraryItemRobot
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 
 class LibraryItemTest {
 
-    private val context: Context = ApplicationProvider.getApplicationContext()
-
     @get:Rule
     val composeTestRule = createComposeRule()
+
+    private val context: Context = ApplicationProvider.getApplicationContext()
+    private val libraryItemRobot = LibraryItemRobot(context, composeTestRule)
 
     @Test
     fun library_information_is_displayed_correctly() {
 
         // Given
-        val library: Library = TestData.core
-        composeLibraryItem(library = library)
+        libraryItemRobot.composeLibraryItem(library = TestData.core)
 
         // Then
-        with(composeTestRule) {
-            assertTextIsDisplayed(library.name)
-            assertTextIsDisplayed(library.description)
-            assertTextIsDisplayed(
-                context.getString(
-                    R.string.version_stable,
-                    library.stableVersion.name
-                )
-            )
-            assertTextIsDisplayed(
-                context.getString(R.string.version_rc, library.rcVersion.name)
-            )
-            assertTextIsDisplayed(
-                context.getString(R.string.version_beta, library.betaVersion.name)
-            )
-            assertTextIsDisplayed(
-                context.getString(R.string.version_alpha, library.alphaVersion.name)
-            )
-            onNodeWithTag(LibraryItemTags.PIN_BUTTON + library.name)
-                .assertIsOn()
-        }
+        libraryItemRobot.assertAllInformationAreDisplayedCorrectly()
 
     }
 
     @Test
-    fun when_a_library_is_clicked_correct_callback_is_called_() {
+    fun when_a_library_is_clicked_correct_callback_is_called() {
 
         // Given
         val library: Library = TestData.room
         val onLibraryClick: (Library) -> Unit = mock()
-        composeLibraryItem(library = library, onLibraryClick = onLibraryClick)
+        libraryItemRobot.composeLibraryItem(library = library, onLibraryClick = onLibraryClick)
 
         // When
-        composeTestRule.clickOnNodeWithText(library.name)
+        libraryItemRobot.clickOnLibrary()
 
         // Then
         Mockito.verify(onLibraryClick).invoke(library)
@@ -74,15 +52,13 @@ class LibraryItemTest {
         // Given
         val library: Library = TestData.room
         val onLibraryVersionClick: (Version) -> Unit = mock()
-        composeLibraryItem(library = library, onLibraryVersionClick = onLibraryVersionClick)
+        libraryItemRobot.composeLibraryItem(
+            library = library,
+            onLibraryVersionClick = onLibraryVersionClick
+        )
 
         // When
-        composeTestRule.clickOnNodeWithText(
-            context.getString(
-                R.string.version_stable,
-                library.stableVersion.name
-            )
-        )
+        libraryItemRobot.clickOnStableVersion()
 
         // Then
         Mockito.verify(onLibraryVersionClick).invoke(library.stableVersion)
@@ -93,18 +69,14 @@ class LibraryItemTest {
     fun when_a_library_version_is_clicked_and_library_version_is_not_available_no_callback_is_called() {
 
         // Given
-        val library: Library = TestData.room
-
         val onLibraryVersionClick: (Version) -> Unit = mock()
-        composeLibraryItem(library = library, onLibraryVersionClick = onLibraryVersionClick)
+        libraryItemRobot.composeLibraryItem(
+            library = TestData.room,
+            onLibraryVersionClick = onLibraryVersionClick
+        )
 
         // When
-        composeTestRule.clickOnNodeWithText(
-            context.getString(
-                R.string.version_rc,
-                library.rcVersion.name
-            )
-        )
+        libraryItemRobot.clickOnRcVersion()
 
         // Then
         Mockito.verifyNoInteractions(onLibraryVersionClick)
@@ -117,10 +89,13 @@ class LibraryItemTest {
         // Given
         val library: Library = TestData.core
         val onLibraryPinClick: (Library, Boolean) -> Unit = mock()
-        composeLibraryItem(library = library, onLibraryPinClick = onLibraryPinClick)
+        libraryItemRobot.composeLibraryItem(
+            library = library,
+            onLibraryPinClick = onLibraryPinClick
+        )
 
         // When
-        composeTestRule.clickOnNodeWithTag(LibraryItemTags.PIN_BUTTON + library.name)
+        libraryItemRobot.clickOnPin()
 
         // Then
         Mockito.verify(onLibraryPinClick).invoke(library, false)
@@ -133,33 +108,17 @@ class LibraryItemTest {
         // Given
         val library: Library = TestData.room
         val onLibraryPinClick: (Library, Boolean) -> Unit = mock()
-        composeLibraryItem(
+        libraryItemRobot.composeLibraryItem(
             library = library,
             onLibraryPinClick = onLibraryPinClick
         )
 
         // When
-        composeTestRule.clickOnNodeWithTag(LibraryItemTags.PIN_BUTTON + library.name)
+        libraryItemRobot.clickOnPin()
 
         // Then
         Mockito.verify(onLibraryPinClick).invoke(library, true)
 
-    }
-
-    private fun composeLibraryItem(
-        library: Library,
-        onLibraryClick: (Library) -> Unit = {},
-        onLibraryVersionClick: (Version) -> Unit = {},
-        onLibraryPinClick: (Library, Boolean) -> Unit = { _, _ -> }
-    ) {
-        composeTestRule.setContent {
-            LibraryItem(
-                library = library,
-                onLibraryClick = onLibraryClick,
-                onLibraryVersionClick = onLibraryVersionClick,
-                onLibraryPinClick = onLibraryPinClick
-            )
-        }
     }
 
 }
