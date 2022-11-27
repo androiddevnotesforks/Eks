@@ -3,7 +3,11 @@ package ir.fallahpoor.eks.libraries.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
@@ -27,9 +31,9 @@ private enum class ToolbarMode {
 @Composable
 fun Toolbar(
     modifier: Modifier = Modifier,
-    sortOrder: SortOrder,
+    sortOrderProvider: () -> SortOrder,
     onSortOrderChange: (SortOrder) -> Unit,
-    searchQuery: String,
+    searchQueryProvider: () -> String,
     onSearchQueryChange: (String) -> Unit,
     onSearchQuerySubmit: (String) -> Unit
 ) {
@@ -46,7 +50,7 @@ fun Toolbar(
                     style = MaterialTheme.typography.h6
                 )
                 SortOrderButton(
-                    currentSortOrder = sortOrder,
+                    currentSortOrderProvider = sortOrderProvider,
                     onSortOrderChange = onSortOrderChange
                 )
                 SearchButton(onClick = { toolbarMode = ToolbarMode.Search })
@@ -55,19 +59,19 @@ fun Toolbar(
                 SearchBar(
                     modifier = Modifier.fillMaxWidth(),
                     hint = stringResource(R.string.search),
-                    query = searchQuery,
+                    query = searchQueryProvider(),
                     onQueryChange = {
                         onSearchQueryChange(it)
                     },
                     onQuerySubmit = onSearchQuerySubmit,
                     onClearClick = {
-                        if (searchQuery.isNotBlank()) {
+                        if (searchQueryProvider().isNotBlank()) {
                             onSearchQueryChange("")
                         }
                     },
                     onCloseClick = {
                         toolbarMode = ToolbarMode.Normal
-                        if (searchQuery.isNotBlank()) {
+                        if (searchQueryProvider().isNotBlank()) {
                             onSearchQueryChange("")
                         }
                     }
@@ -78,7 +82,10 @@ fun Toolbar(
 }
 
 @Composable
-private fun SortOrderButton(currentSortOrder: SortOrder, onSortOrderChange: (SortOrder) -> Unit) {
+private fun SortOrderButton(
+    currentSortOrderProvider: () -> SortOrder,
+    onSortOrderChange: (SortOrder) -> Unit
+) {
     var showSortOrderDialog by rememberSaveable { mutableStateOf(false) }
     IconButton(onClick = { showSortOrderDialog = true }) {
         Icon(
@@ -88,7 +95,7 @@ private fun SortOrderButton(currentSortOrder: SortOrder, onSortOrderChange: (Sor
     }
     if (showSortOrderDialog) {
         SortOrderDialog(
-            sortOrder = currentSortOrder,
+            sortOrderProvider = currentSortOrderProvider,
             onSortOrderClick = { sortOrder: SortOrder ->
                 showSortOrderDialog = false
                 onSortOrderChange(sortOrder)
@@ -112,9 +119,9 @@ private fun SearchButton(onClick: () -> Unit) {
 @Composable
 private fun ToolbarPreview() {
     Toolbar(
-        sortOrder = SortOrder.A_TO_Z,
+        sortOrderProvider = { SortOrder.A_TO_Z },
         onSortOrderChange = {},
-        searchQuery = "",
+        searchQueryProvider = { "" },
         onSearchQueryChange = {},
         onSearchQuerySubmit = {}
     )

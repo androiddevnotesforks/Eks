@@ -41,9 +41,9 @@ class ToolbarRobot(
     ) {
         composeTestRule.setContent {
             Toolbar(
-                sortOrder = sortOrder,
+                sortOrderProvider = { sortOrder },
                 onSortOrderChange = onSortOrderChange,
-                searchQuery = searchQuery,
+                searchQueryProvider = { searchQuery },
                 onSearchQueryChange = onSearchQueryChange,
                 onSearchQuerySubmit = onSearchQuerySubmit
             )

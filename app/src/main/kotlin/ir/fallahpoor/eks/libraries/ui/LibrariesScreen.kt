@@ -42,13 +42,13 @@ fun LibrariesScreen(
             topBar = {
                 Toolbar(
                     modifier = Modifier.testTag(LibrariesScreenTags.TOOLBAR),
-                    sortOrder = uiState.sortOrder,
+                    sortOrderProvider = { uiState.sortOrder },
                     onSortOrderChange = { sortOrder: SortOrder ->
                         librariesViewModel.handleEvent(
                             LibrariesViewModel.Event.ChangeSortOrder(sortOrder)
                         )
                     },
-                    searchQuery = uiState.searchQuery,
+                    searchQueryProvider = { uiState.searchQuery },
                     onSearchQueryChange = { searchQuery: String ->
                         librariesViewModel.handleEvent(
                             LibrariesViewModel.Event.ChangeSearchQuery(searchQuery)

@@ -83,7 +83,7 @@ class SortOrderDialogTest {
     ) {
         composeTestRule.setContent {
             SortOrderDialog(
-                sortOrder = sortOrder,
+                sortOrderProvider = { sortOrder },
                 onSortOrderClick = onSortOrderClick,
                 onDismiss = onDismiss
             )

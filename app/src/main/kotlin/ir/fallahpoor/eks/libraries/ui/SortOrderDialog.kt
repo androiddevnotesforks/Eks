@@ -20,7 +20,7 @@ import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
 
 @Composable
 fun SortOrderDialog(
-    sortOrder: SortOrder,
+    sortOrderProvider: () -> SortOrder,
     onSortOrderClick: (SortOrder) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -31,7 +31,7 @@ fun SortOrderDialog(
         },
         text = {
             SortOrderDialogContent(
-                sortOrder = sortOrder,
+                sortOrderProvider = sortOrderProvider,
                 onSortOrderClick = onSortOrderClick
             )
         },
@@ -41,7 +41,7 @@ fun SortOrderDialog(
 
 @Composable
 private fun SortOrderDialogContent(
-    sortOrder: SortOrder,
+    sortOrderProvider: () -> SortOrder,
     onSortOrderClick: (SortOrder) -> Unit
 ) {
     Column {
@@ -49,7 +49,7 @@ private fun SortOrderDialogContent(
             SortOrderItem(
                 text = stringResource(it.stringResId),
                 onClick = { onSortOrderClick(it) },
-                isSelected = sortOrder == it
+                isSelected = sortOrderProvider() == it
             )
         }
     }
@@ -82,7 +82,7 @@ private fun DialogPreview() {
     ReleaseTrackerTheme(darkTheme = false) {
         Surface {
             SortOrderDialog(
-                sortOrder = SortOrder.PINNED_FIRST,
+                sortOrderProvider = { SortOrder.PINNED_FIRST },
                 onSortOrderClick = {},
                 onDismiss = {}
             )
