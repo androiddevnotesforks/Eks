@@ -7,7 +7,9 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,7 +25,7 @@ object LibrariesScreenTags {
     const val CONTENT = "librariesScreenContent"
 }
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LibrariesScreen(
     librariesViewModel: LibrariesViewModel = viewModel(),
@@ -40,6 +42,7 @@ fun LibrariesScreen(
     ReleaseTrackerTheme {
         Scaffold(
             topBar = {
+                val keyboardController = LocalSoftwareKeyboardController.current
                 Toolbar(
                     modifier = Modifier.testTag(LibrariesScreenTags.TOOLBAR),
                     sortOrderProvider = { uiState.sortOrder },
@@ -55,6 +58,7 @@ fun LibrariesScreen(
                         )
                     },
                     onSearchQuerySubmit = { searchQuery: String ->
+                        keyboardController?.hide()
                         librariesViewModel.handleEvent(
                             LibrariesViewModel.Event.ChangeSearchQuery(searchQuery)
                         )
