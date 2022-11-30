@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.eks.commontest.TestData
-import ir.fallahpoor.eks.data.entity.Library
-import ir.fallahpoor.eks.data.entity.Version
+import ir.fallahpoor.eks.data.model.Library
+import ir.fallahpoor.eks.data.model.Version
 import ir.fallahpoor.eks.libraries.ui.robots.LibrariesContentRobot
 import org.junit.Rule
 import org.junit.Test

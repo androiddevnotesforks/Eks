@@ -9,7 +9,7 @@ import dagger.assisted.AssistedInject
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.common.NotificationManager
 import ir.fallahpoor.eks.data.ConnectivityChecker
-import ir.fallahpoor.eks.data.entity.Library
+import ir.fallahpoor.eks.data.model.Library
 import ir.fallahpoor.eks.data.repository.LibraryRepository
 
 @HiltWorker
@@ -38,7 +38,10 @@ class RefreshLibrariesWorker
             }
         }
 
-    private fun showNotification(oldLibraries: List<Library>, refreshedLibraries: List<Library>) {
+    private fun showNotification(
+        oldLibraries: List<Library>,
+        refreshedLibraries: List<Library>
+    ) {
         val body: String? = notificationBodyMaker.makeBody(oldLibraries, refreshedLibraries)
         body?.let {
             notificationManager.showNotification(

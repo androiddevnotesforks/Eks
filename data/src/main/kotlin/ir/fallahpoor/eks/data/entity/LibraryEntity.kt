@@ -6,9 +6,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ir.fallahpoor.eks.data.Constants.NOT_AVAILABLE
 import ir.fallahpoor.eks.data.database.DatabaseContract
+import ir.fallahpoor.eks.data.model.Library
 
 @Entity(tableName = DatabaseContract.TABLE_NAME)
-data class Library(
+data class LibraryEntity(
     @PrimaryKey
     @ColumnInfo(name = DatabaseContract.FIELD_NAME, collate = ColumnInfo.NOCASE)
     val name: String = NOT_AVAILABLE,
@@ -19,24 +20,25 @@ data class Library(
     @ColumnInfo(name = DatabaseContract.FIELD_RELEASE_DATE)
     val releaseDate: String = NOT_AVAILABLE,
     @Embedded(prefix = DatabaseContract.PREFIX_STABLE_VERSION)
-    val stableVersion: Version = Version(),
+    val stableVersion: VersionEntity = VersionEntity(),
     @Embedded(prefix = DatabaseContract.PREFIX_RC_VERSION)
-    val rcVersion: Version = Version(),
+    val rcVersion: VersionEntity = VersionEntity(),
     @Embedded(prefix = DatabaseContract.PREFIX_BETA_VERSION)
-    val betaVersion: Version = Version(),
+    val betaVersion: VersionEntity = VersionEntity(),
     @Embedded(prefix = DatabaseContract.PREFIX_ALPHA_VERSION)
-    val alphaVersion: Version = Version(),
+    val alphaVersion: VersionEntity = VersionEntity(),
     @ColumnInfo(name = DatabaseContract.FIELD_PINNED)
     val pinned: Int = 0
-) {
+)
 
-    fun isUpdatedComparedTo(library: Library) =
-        isVersionUpdated(stableVersion.name, library.stableVersion.name) ||
-                isVersionUpdated(rcVersion.name, library.rcVersion.name) ||
-                isVersionUpdated(betaVersion.name, library.betaVersion.name) ||
-                isVersionUpdated(alphaVersion.name, library.alphaVersion.name)
-
-    private fun isVersionUpdated(oldVersionName: String, newVersionName: String): Boolean =
-        newVersionName != NOT_AVAILABLE && oldVersionName != newVersionName
-
-}
+fun LibraryEntity.toLibrary() = Library(
+    name = this.name,
+    description = this.description,
+    url = this.url,
+    releaseDate = this.releaseDate,
+    stableVersion = this.stableVersion.toVersion(),
+    rcVersion = this.rcVersion.toVersion(),
+    betaVersion = this.betaVersion.toVersion(),
+    alphaVersion = this.alphaVersion.toVersion(),
+    isPinned = pinned == 1
+)

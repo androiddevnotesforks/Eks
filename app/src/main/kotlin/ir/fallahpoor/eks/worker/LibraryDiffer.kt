@@ -1,6 +1,6 @@
 package ir.fallahpoor.eks.worker
 
-import ir.fallahpoor.eks.data.entity.Library
+import ir.fallahpoor.eks.data.model.Library
 import javax.inject.Inject
 
 class LibraryDiffer @Inject constructor() {
@@ -18,13 +18,15 @@ class LibraryDiffer @Inject constructor() {
     ): Map<Type, List<Library>> {
 
         val newLibraries: List<Library> = getNewLibraries(oldLibraries, refreshedLibraries)
-        val removedLibraries: List<Library> = getRemovedLibraries(oldLibraries, refreshedLibraries)
+        val removedLibraries: List<Library> =
+            getRemovedLibraries(oldLibraries, refreshedLibraries)
         val oldLibrariesMinusRemovedOnes: List<Library> =
             getOldLibrariesMinusRemoveOnes(oldLibraries, removedLibraries).sortedBy { it.name }
-        val refreshedLibrariesMinusNewOnes: List<Library> = getRefreshedLibrariesMinusRemoveOnes(
-            refreshedLibraries,
-            removedLibraries
-        ).sortedBy { it.name }
+        val refreshedLibrariesMinusNewOnes: List<Library> =
+            getRefreshedLibrariesMinusRemoveOnes(
+                refreshedLibraries,
+                removedLibraries
+            ).sortedBy { it.name }
         val updatedLibraries = mutableListOf<Library>()
         val unchangedLibraries = mutableListOf<Library>()
 

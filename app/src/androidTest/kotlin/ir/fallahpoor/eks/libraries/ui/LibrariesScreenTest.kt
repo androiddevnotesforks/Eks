@@ -8,8 +8,8 @@ import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.commontest.FakeLibraryRepository
 import ir.fallahpoor.eks.commontest.TestData
-import ir.fallahpoor.eks.data.entity.Library
-import ir.fallahpoor.eks.data.entity.Version
+import ir.fallahpoor.eks.data.model.Library
+import ir.fallahpoor.eks.data.model.Version
 import ir.fallahpoor.eks.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParserImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi

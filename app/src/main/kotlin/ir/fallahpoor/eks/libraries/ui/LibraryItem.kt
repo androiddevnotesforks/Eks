@@ -1,8 +1,16 @@
 package ir.fallahpoor.eks.libraries.ui
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
+import androidx.compose.material.IconToggleButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -13,8 +21,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.Constants
-import ir.fallahpoor.eks.data.entity.Library
-import ir.fallahpoor.eks.data.entity.Version
+import ir.fallahpoor.eks.data.model.Library
+import ir.fallahpoor.eks.data.model.Version
 import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
 import ir.fallahpoor.eks.theme.spacing
 
@@ -39,7 +47,7 @@ fun LibraryItem(
     ) {
         LibraryPinButton(
             modifier = Modifier.testTag(LibraryItemTags.PIN_BUTTON + library.name),
-            isPinned = library.pinned == 1,
+            isPinned = library.isPinned,
             onPinChange = { onLibraryPinClick(library, it) }
         )
         LibraryInformation(
@@ -124,7 +132,10 @@ private fun LibraryDescription(description: String) {
 }
 
 @Composable
-private fun LibraryVersions(library: Library, onLibraryVersionClick: (Version) -> Unit) {
+private fun LibraryVersions(
+    library: Library,
+    onLibraryVersionClick: (Version) -> Unit
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row {
             LibraryVersion(

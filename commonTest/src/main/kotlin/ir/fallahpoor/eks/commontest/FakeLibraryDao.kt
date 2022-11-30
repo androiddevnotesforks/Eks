@@ -2,28 +2,31 @@ package ir.fallahpoor.eks.commontest
 
 import androidx.lifecycle.MutableLiveData
 import ir.fallahpoor.eks.data.database.LibraryDao
-import ir.fallahpoor.eks.data.entity.Library
+import ir.fallahpoor.eks.data.entity.LibraryEntity
 
 class FakeLibraryDao : LibraryDao {
 
-    private val librariesLiveData = MutableLiveData<List<Library>>()
-    private val libraries = mutableListOf<Library>()
+    private val librariesLiveData = MutableLiveData<List<LibraryEntity>>()
+    private val libraries = mutableListOf<LibraryEntity>()
 
     override suspend fun getLibrariesCount(): Int = libraries.size
 
-    override suspend fun getLibraries(searchQuery: String): List<Library> =
+    override suspend fun getLibraries(searchQuery: String): List<LibraryEntity> =
         libraries.filter { it.name.contains(searchQuery, ignoreCase = true) }
             .sortedBy { it.name }
 
-    override suspend fun insertLibraries(libraries: List<Library>) {
+    override suspend fun insertLibraries(libraries: List<LibraryEntity>) {
         val libraryNames = libraries.map { it.name }
         removeElementsIf(this.libraries) { library -> library.name in libraryNames }
         this.libraries += libraries
         updatedLibrariesLiveData(this.libraries)
     }
 
-    private fun removeElementsIf(libraries: MutableList<Library>, filter: (Library) -> Boolean) {
-        val iterator: MutableIterator<Library> = libraries.iterator()
+    private fun removeElementsIf(
+        libraries: MutableList<LibraryEntity>,
+        filter: (LibraryEntity) -> Boolean
+    ) {
+        val iterator: MutableIterator<LibraryEntity> = libraries.iterator()
         while (iterator.hasNext()) {
             if (filter(iterator.next())) {
                 iterator.remove()
@@ -36,7 +39,7 @@ class FakeLibraryDao : LibraryDao {
         updatedLibrariesLiveData(libraries)
     }
 
-    override suspend fun updateLibrary(library: Library) {
+    override suspend fun updateLibrary(library: LibraryEntity) {
         val removed = libraries.remove(getLibrary(library.name))
         if (removed) {
             libraries += library
@@ -44,10 +47,10 @@ class FakeLibraryDao : LibraryDao {
         }
     }
 
-    private fun getLibrary(libraryName: String): Library? =
+    private fun getLibrary(libraryName: String): LibraryEntity? =
         libraries.find { it.name.contentEquals(libraryName, ignoreCase = true) }
 
-    private fun updatedLibrariesLiveData(libraries: List<Library>) {
+    private fun updatedLibrariesLiveData(libraries: List<LibraryEntity>) {
         librariesLiveData.value = libraries
     }
 

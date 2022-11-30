@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.annotation.StringRes
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.Constants
-import ir.fallahpoor.eks.data.entity.Library
+import ir.fallahpoor.eks.data.model.Library
 import javax.inject.Inject
 
 class NotificationBodyMaker
@@ -13,7 +13,10 @@ class NotificationBodyMaker
     private val libraryDiffer: LibraryDiffer
 ) {
 
-    fun makeBody(oldLibraries: List<Library>, refreshedLibraries: List<Library>): String? {
+    fun makeBody(
+        oldLibraries: List<Library>,
+        refreshedLibraries: List<Library>
+    ): String? {
 
         val libraryNames = mutableListOf<String>()
         val librariesMap = libraryDiffer.diffLibraries(oldLibraries, refreshedLibraries)

@@ -1,8 +1,8 @@
 package ir.fallahpoor.eks.data.repository
 
 import ir.fallahpoor.eks.data.Constants.NOT_AVAILABLE
-import ir.fallahpoor.eks.data.entity.Library
-import ir.fallahpoor.eks.data.entity.Version
+import ir.fallahpoor.eks.data.entity.LibraryEntity
+import ir.fallahpoor.eks.data.entity.VersionEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
@@ -40,17 +40,17 @@ class LibrariesFetcher @Inject constructor() {
 
     }
 
-    suspend fun fetchLibraries(): List<Library> = withContext(Dispatchers.IO) {
+    suspend fun fetchLibraries(): List<LibraryEntity> = withContext(Dispatchers.IO) {
         val url = "https://developer.android.com/jetpack/androidx/versions"
         val document: Document = Jsoup.connect(url).get()
         fetchLibraries(document)
     }
 
-    private fun fetchLibraries(document: Document): List<Library> {
+    private fun fetchLibraries(document: Document): List<LibraryEntity> {
 
         val tableRows: Elements = document.getElementsByTag(HtmlTags.TR)
 
-        val libraries: List<Library> =
+        val libraries: List<LibraryEntity> =
             tableRows.mapNotNull { element: Element ->
                 val rowData: Elements = element.getElementsByTag(HtmlTags.TD)
                 if (rowData.size == TABLE_COLUMN_COUNT) {
@@ -64,7 +64,7 @@ class LibrariesFetcher @Inject constructor() {
 
     }
 
-    private fun extractLibraryInfo(rowData: Elements): Library {
+    private fun extractLibraryInfo(rowData: Elements): LibraryEntity {
 
         val generalInfoCell = rowData[TableColumnIndex.INFO]
 
@@ -87,7 +87,7 @@ class LibrariesFetcher @Inject constructor() {
         val alphaVersionCell = rowData[TableColumnIndex.ALPHA_VERSION]
         val alphaVersion = getLibraryVersion(alphaVersionCell)
 
-        return Library(
+        return LibraryEntity(
             name = name,
             description = description,
             url = url,
@@ -161,15 +161,15 @@ class LibrariesFetcher @Inject constructor() {
         }
     }
 
-    private fun getLibraryVersion(tdTag: Element): Version {
+    private fun getLibraryVersion(tdTag: Element): VersionEntity {
 
         if (tdTag.tagName() != HtmlTags.TD || tdTag.text() == "-") {
-            return Version()
+            return VersionEntity()
         }
 
         val aTag = tdTag.getElementsByTag(HtmlTags.A.NAME)
         if (aTag.isEmpty()) {
-            return Version()
+            return VersionEntity()
         }
 
         val releaseNotesUrlSuffix = aTag.attr(HtmlTags.A.ATTR_HREF)
@@ -180,7 +180,7 @@ class LibrariesFetcher @Inject constructor() {
         }
         val version = aTag.text()
 
-        return Version(version, releaseNotesUrl)
+        return VersionEntity(version, releaseNotesUrl)
 
     }
 

@@ -224,7 +224,7 @@ class LibrariesViewModelTest {
         }
         val libraries = libraryRepository.getLibraries().map {
             if (it.name.equals(TestData.preference.name, ignoreCase = true)) {
-                it.copy(pinned = 1)
+                it.copy(isPinned = true)
             } else {
                 it
             }
@@ -286,7 +286,7 @@ class LibrariesViewModelTest {
         }
         val libraries = libraryRepository.getLibraries().map {
             if (it.name.equals(TestData.core.name, ignoreCase = true)) {
-                it.copy(pinned = 0)
+                it.copy(isPinned = false)
             } else {
                 it
             }

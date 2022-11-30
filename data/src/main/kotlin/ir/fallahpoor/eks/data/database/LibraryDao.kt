@@ -1,7 +1,7 @@
 package ir.fallahpoor.eks.data.database
 
 import androidx.room.*
-import ir.fallahpoor.eks.data.entity.Library
+import ir.fallahpoor.eks.data.entity.LibraryEntity
 
 @Dao
 interface LibraryDao {
@@ -10,15 +10,15 @@ interface LibraryDao {
     suspend fun getLibrariesCount(): Int
 
     @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} LIKE '%' || :searchQuery || '%' ORDER BY ${DatabaseContract.FIELD_NAME} ASC")
-    suspend fun getLibraries(searchQuery: String = ""): List<Library>
+    suspend fun getLibraries(searchQuery: String = ""): List<LibraryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLibraries(libraries: List<Library>)
+    suspend fun insertLibraries(libraries: List<LibraryEntity>)
 
     @Query("DELETE FROM ${DatabaseContract.TABLE_NAME}")
     suspend fun deleteLibraries()
 
     @Update
-    suspend fun updateLibrary(library: Library)
+    suspend fun updateLibrary(library: LibraryEntity)
 
 }

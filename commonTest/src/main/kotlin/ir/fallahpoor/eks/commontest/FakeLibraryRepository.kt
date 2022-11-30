@@ -3,7 +3,7 @@ package ir.fallahpoor.eks.commontest
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import ir.fallahpoor.eks.data.SortOrder
-import ir.fallahpoor.eks.data.entity.Library
+import ir.fallahpoor.eks.data.model.Library
 import ir.fallahpoor.eks.data.repository.LibraryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -34,18 +34,22 @@ class FakeLibraryRepository : LibraryRepository {
     private val sortOrderLiveData = MutableLiveData(SortOrder.A_TO_Z)
     private val librariesLiveData = MutableLiveData<List<Library>>(initialLibraries)
 
-    override suspend fun getLibraries(sortOrder: SortOrder, searchQuery: String): List<Library> =
+    override suspend fun getLibraries(
+        sortOrder: SortOrder,
+        searchQuery: String
+    ): List<Library> =
         throwExceptionOrRun {
             initialLibraries.filter {
                 it.name.contains(searchQuery, ignoreCase = true)
             }.sort(sortOrder)
         }
 
-    private fun List<Library>.sort(sortOrder: SortOrder): List<Library> = when (sortOrder) {
-        SortOrder.A_TO_Z -> sortedBy { it.name }
-        SortOrder.Z_TO_A -> sortedByDescending { it.name }
-        SortOrder.PINNED_FIRST -> sortedByDescending { it.pinned }
-    }
+    private fun List<Library>.sort(sortOrder: SortOrder): List<Library> =
+        when (sortOrder) {
+            SortOrder.A_TO_Z -> sortedBy { it.name }
+            SortOrder.Z_TO_A -> sortedByDescending { it.name }
+            SortOrder.PINNED_FIRST -> sortedByDescending { it.isPinned }
+        }
 
     override suspend fun refreshLibraries() = throwExceptionOrRun {
         if (updateIsAvailable) {
@@ -56,7 +60,7 @@ class FakeLibraryRepository : LibraryRepository {
     }
 
     override suspend fun pinLibrary(library: Library, pinned: Boolean) = throwExceptionOrRun {
-        updateLibrary(library.copy(pinned = if (pinned) 1 else 0))
+        updateLibrary(library.copy(isPinned = pinned))
     }
 
     private fun updateLibrary(library: Library) {

@@ -1,7 +1,7 @@
 package ir.fallahpoor.eks.commontest
 
-import ir.fallahpoor.eks.data.entity.Library
-import ir.fallahpoor.eks.data.entity.Version
+import ir.fallahpoor.eks.data.model.Library
+import ir.fallahpoor.eks.data.model.Version
 
 object TestData {
 
@@ -80,7 +80,7 @@ object TestData {
             name = "1.7.0-beta01",
             releaseNotesUrl = "${URL_PREFIX}core#core-1.7.0-beta01"
         ),
-        pinned = 1
+        isPinned = true
     )
 
     val preference = Library(

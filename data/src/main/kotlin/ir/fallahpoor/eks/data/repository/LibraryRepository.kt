@@ -1,7 +1,7 @@
 package ir.fallahpoor.eks.data.repository
 
 import ir.fallahpoor.eks.data.SortOrder
-import ir.fallahpoor.eks.data.entity.Library
+import ir.fallahpoor.eks.data.model.Library
 import kotlinx.coroutines.flow.Flow
 
 interface LibraryRepository {

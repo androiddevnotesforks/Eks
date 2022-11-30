@@ -2,11 +2,14 @@ package ir.fallahpoor.eks.data.repository
 
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.database.LibraryDao
-import ir.fallahpoor.eks.data.entity.Library
+import ir.fallahpoor.eks.data.entity.LibraryEntity
+import ir.fallahpoor.eks.data.entity.toLibrary
+import ir.fallahpoor.eks.data.model.Library
+import ir.fallahpoor.eks.data.model.toLibraryEntity
 import ir.fallahpoor.eks.data.storage.Storage
 import kotlinx.coroutines.flow.Flow
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 class LibraryRepositoryImpl
@@ -17,9 +20,14 @@ class LibraryRepositoryImpl
     private val dateProvider: DateProvider
 ) : LibraryRepository {
 
-    override suspend fun getLibraries(sortOrder: SortOrder, searchQuery: String): List<Library> {
+    override suspend fun getLibraries(
+        sortOrder: SortOrder,
+        searchQuery: String
+    ): List<Library> {
         fetchLibrariesIfCacheIsEmpty()
-        return libraryDao.getLibraries(searchQuery).sort(sortOrder)
+        return libraryDao.getLibraries(searchQuery)
+            .map(LibraryEntity::toLibrary)
+            .sort(sortOrder)
     }
 
     private suspend fun fetchLibrariesIfCacheIsEmpty() {
@@ -29,15 +37,14 @@ class LibraryRepositoryImpl
         }
     }
 
-    private fun List<Library>.sort(sortOrder: SortOrder): List<Library> =
-        when (sortOrder) {
-            SortOrder.A_TO_Z -> sortedBy { it.name }
-            SortOrder.Z_TO_A -> sortedByDescending { it.name }
-            SortOrder.PINNED_FIRST -> sortedByDescending { it.pinned }
-        }
+    private fun List<Library>.sort(sortOrder: SortOrder): List<Library> = when (sortOrder) {
+        SortOrder.A_TO_Z -> sortedBy { it.name }
+        SortOrder.Z_TO_A -> sortedByDescending { it.name }
+        SortOrder.PINNED_FIRST -> sortedByDescending { it.isPinned }
+    }
 
     override suspend fun refreshLibraries() {
-        var newLibraries: List<Library> = librariesFetcher.fetchLibraries()
+        var newLibraries: List<LibraryEntity> = librariesFetcher.fetchLibraries()
         storage.setRefreshDate(
             dateProvider.getCurrentDate(
                 SimpleDateFormat(
@@ -62,7 +69,7 @@ class LibraryRepositoryImpl
     }
 
     override suspend fun pinLibrary(library: Library, pinned: Boolean) {
-        val newLibrary = library.copy(pinned = if (pinned) 1 else 0)
+        val newLibrary = library.toLibraryEntity().copy(pinned = if (pinned) 1 else 0)
         libraryDao.updateLibrary(newLibrary)
     }
 
