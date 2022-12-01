@@ -5,15 +5,14 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
-import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.commontest.FakeLibraryRepository
 import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.Version
-import ir.fallahpoor.eks.libraries.viewmodel.LibrariesViewModel
-import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParserImpl
+import ir.fallahpoor.eks.libraries.ui.robots.LibrariesScreenRobot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -30,15 +29,23 @@ class LibrariesScreenTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val context: Context = ApplicationProvider.getApplicationContext()
-    private val searchText = context.getString(R.string.search)
+    private val librariesScreenRobot = LibrariesScreenRobot(
+        context = context,
+        composeTestRule = composeTestRule
+    )
 
-    private lateinit var fakeLibraryRepository: FakeLibraryRepository
+    private lateinit var libraryRepository: FakeLibraryRepository
+
+    @Before
+    fun runBeforeEachTest() {
+        libraryRepository = FakeLibraryRepository()
+    }
 
     @Test
     fun screen_is_initialized_correctly() {
 
         // Given
-        composeLibrariesScreen()
+        librariesScreenRobot.composeLibrariesScreen(libraryRepository)
 
         // Then
         composeTestRule.assertIsDisplayedNodeWithTag(LibrariesScreenTags.TOOLBAR)
@@ -64,18 +71,14 @@ class LibrariesScreenTest {
     fun search() = runTest {
 
         // Given
-        composeLibrariesScreen()
+        librariesScreenRobot.composeLibrariesScreen(libraryRepository)
 
         // When
-        with(composeTestRule) {
-            clickOnNodeWithContentDescription(searchText)
-            onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
-                .performTextInput("co")
-        }
+        librariesScreenRobot.enterSearchQuery("co")
 
         // Then
         with(composeTestRule) {
-            fakeLibraryRepository.getLibraries().forEach {
+            libraryRepository.getLibraries().forEach {
                 if (it.name.contains("co", ignoreCase = true)) {
                     onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
                         .performScrollToKey(it.name)
@@ -92,21 +95,16 @@ class LibrariesScreenTest {
     fun all_libraries_are_displayed_when_search_bar_is_closed() = runTest {
 
         // Given
-        composeLibrariesScreen()
-        with(composeTestRule) {
-            clickOnNodeWithContentDescription(searchText)
-            onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
-                .performTextInput("co")
-        }
+        librariesScreenRobot.composeLibrariesScreen(libraryRepository)
+            .enterSearchQuery("co")
 
         // When
-        composeTestRule.clickOnNodeWithTag(SearchBarTags.CLOSE_BUTTON)
+        librariesScreenRobot.closeSearchBar()
 
         // Then
         with(composeTestRule) {
-            fakeLibraryRepository.getLibraries().forEach {
-                onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
-                    .performScrollToKey(it.name)
+            libraryRepository.getLibraries().forEach {
+                librariesScreenRobot.scrollToLibrary(it)
                 assertIsDisplayedNodeWithTag(LibraryItemTags.ITEM + it.name)
             }
             assertDoesNotExistNodeWithTag(LibrariesListTags.NO_LIBRARY_TEXT)
@@ -119,21 +117,16 @@ class LibrariesScreenTest {
     fun all_libraries_are_displayed_when_search_bar_is_cleared() = runTest {
 
         // Given
-        composeLibrariesScreen()
-        with(composeTestRule) {
-            clickOnNodeWithContentDescription(searchText)
-            onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
-                .performTextInput("co")
-        }
+        librariesScreenRobot.composeLibrariesScreen(libraryRepository)
+            .enterSearchQuery("co")
 
         // When
-        composeTestRule.clickOnNodeWithTag(SearchBarTags.CLEAR_BUTTON)
+        librariesScreenRobot.clearSearchBar()
 
         // Then
         with(composeTestRule) {
-            fakeLibraryRepository.getLibraries().forEach {
-                onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
-                    .performScrollToKey(it.name)
+            libraryRepository.getLibraries().forEach {
+                librariesScreenRobot.scrollToLibrary(it)
                 assertIsDisplayedNodeWithTag(LibraryItemTags.ITEM + it.name)
             }
             assertTextDoesNotExist(LibrariesListTags.NO_LIBRARY_TEXT)
@@ -147,12 +140,14 @@ class LibrariesScreenTest {
 
         // Given
         val onLibraryClick: (Library) -> Unit = mock()
-        composeLibrariesScreen(onLibraryClick = onLibraryClick)
-        composeTestRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
-            .performScrollToKey(TestData.preference.name)
+        librariesScreenRobot.composeLibrariesScreen(
+            libraryRepository = libraryRepository,
+            onLibraryClick = onLibraryClick
+        )
+            .scrollToLibrary(TestData.preference)
 
         // When
-        composeTestRule.clickOnNodeWithTag(LibraryItemTags.ITEM + TestData.preference.name)
+        librariesScreenRobot.clickOnLibrary(TestData.preference)
 
         // Then
         Mockito.verify(onLibraryClick).invoke(TestData.preference)
@@ -164,39 +159,18 @@ class LibrariesScreenTest {
 
         // Given
         val onLibraryVersionClick: (Version) -> Unit = mock()
-        composeLibrariesScreen(onLibraryVersionClick = onLibraryVersionClick)
-        composeTestRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
-            .performScrollToKey(TestData.core.name)
+        librariesScreenRobot.composeLibrariesScreen(
+            libraryRepository = libraryRepository,
+            onLibraryVersionClick = onLibraryVersionClick
+        )
+            .scrollToLibrary(TestData.core)
 
         // When
-        composeTestRule.clickOnNodeWithText(
-            context.getString(
-                R.string.version_beta,
-                TestData.core.betaVersion.name
-            )
-        )
+        librariesScreenRobot.clickOnLibraryBetaVersion(TestData.core)
 
         // Then
         Mockito.verify(onLibraryVersionClick).invoke(TestData.core.betaVersion)
 
-    }
-
-    private fun composeLibrariesScreen(
-        onLibraryClick: (Library) -> Unit = {},
-        onLibraryVersionClick: (Version) -> Unit = {}
-    ) {
-        fakeLibraryRepository = FakeLibraryRepository()
-        val librariesViewModel = LibrariesViewModel(
-            libraryRepository = fakeLibraryRepository,
-            exceptionParser = ExceptionParserImpl(context)
-        )
-        composeTestRule.setContent {
-            LibrariesScreen(
-                librariesViewModel = librariesViewModel,
-                onLibraryClick = onLibraryClick,
-                onLibraryVersionClick = onLibraryVersionClick
-            )
-        }
     }
 
 }
