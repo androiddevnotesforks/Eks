@@ -8,9 +8,9 @@ import ir.fallahpoor.eks.commontest.MainDispatcherRule
 import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.any
-import ir.fallahpoor.eks.data.model.Library
-import ir.fallahpoor.eks.data.model.toLibraryEntity
 import ir.fallahpoor.eks.data.network.LibrariesFetcher
+import ir.fallahpoor.eks.data.repository.model.Library
+import ir.fallahpoor.eks.data.repository.model.toLibraryEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest

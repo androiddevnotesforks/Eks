@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.annotation.StringRes
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.Constants
-import ir.fallahpoor.eks.data.model.Library
+import ir.fallahpoor.eks.data.repository.model.Library
 import javax.inject.Inject
 
 class NotificationBodyMaker

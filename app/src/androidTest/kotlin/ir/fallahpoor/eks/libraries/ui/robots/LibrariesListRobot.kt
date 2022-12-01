@@ -6,8 +6,8 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollToIndex
 import ir.fallahpoor.eks.R
-import ir.fallahpoor.eks.data.model.Library
-import ir.fallahpoor.eks.data.model.Version
+import ir.fallahpoor.eks.data.repository.model.Library
+import ir.fallahpoor.eks.data.repository.model.Version
 import ir.fallahpoor.eks.libraries.ui.LibrariesList
 import ir.fallahpoor.eks.libraries.ui.LibrariesListTags
 import ir.fallahpoor.eks.libraries.ui.LibraryItemTags

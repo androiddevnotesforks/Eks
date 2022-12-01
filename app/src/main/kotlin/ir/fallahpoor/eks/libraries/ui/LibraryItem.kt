@@ -21,8 +21,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.Constants
-import ir.fallahpoor.eks.data.model.Library
-import ir.fallahpoor.eks.data.model.Version
+import ir.fallahpoor.eks.data.repository.model.Library
+import ir.fallahpoor.eks.data.repository.model.Version
 import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
 import ir.fallahpoor.eks.theme.spacing
 

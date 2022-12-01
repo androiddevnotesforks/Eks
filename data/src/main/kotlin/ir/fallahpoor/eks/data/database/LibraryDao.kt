@@ -1,7 +1,7 @@
 package ir.fallahpoor.eks.data.database
 
 import androidx.room.*
-import ir.fallahpoor.eks.data.entity.LibraryEntity
+import ir.fallahpoor.eks.data.database.entity.LibraryEntity
 
 @Dao
 interface LibraryDao {

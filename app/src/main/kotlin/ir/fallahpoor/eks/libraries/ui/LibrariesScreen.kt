@@ -15,8 +15,8 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ir.fallahpoor.eks.data.SortOrder
-import ir.fallahpoor.eks.data.model.Library
-import ir.fallahpoor.eks.data.model.Version
+import ir.fallahpoor.eks.data.repository.model.Library
+import ir.fallahpoor.eks.data.repository.model.Version
 import ir.fallahpoor.eks.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
 

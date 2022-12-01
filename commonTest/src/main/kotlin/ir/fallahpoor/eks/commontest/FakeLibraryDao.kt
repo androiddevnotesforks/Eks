@@ -2,7 +2,7 @@ package ir.fallahpoor.eks.commontest
 
 import androidx.lifecycle.MutableLiveData
 import ir.fallahpoor.eks.data.database.LibraryDao
-import ir.fallahpoor.eks.data.entity.LibraryEntity
+import ir.fallahpoor.eks.data.database.entity.LibraryEntity
 
 class FakeLibraryDao : LibraryDao {
 

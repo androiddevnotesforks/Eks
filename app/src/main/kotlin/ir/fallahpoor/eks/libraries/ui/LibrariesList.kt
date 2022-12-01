@@ -30,8 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import ir.fallahpoor.eks.R
-import ir.fallahpoor.eks.data.model.Library
-import ir.fallahpoor.eks.data.model.Version
+import ir.fallahpoor.eks.data.repository.model.Library
+import ir.fallahpoor.eks.data.repository.model.Version
 import ir.fallahpoor.eks.theme.spacing
 import kotlinx.coroutines.launch
 

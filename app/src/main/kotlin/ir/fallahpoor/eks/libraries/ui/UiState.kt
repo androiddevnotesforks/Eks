@@ -2,7 +2,7 @@ package ir.fallahpoor.eks.libraries.ui
 
 import ir.fallahpoor.eks.data.Constants
 import ir.fallahpoor.eks.data.SortOrder
-import ir.fallahpoor.eks.data.model.Library
+import ir.fallahpoor.eks.data.repository.model.Library
 
 data class LibrariesScreenUiState(
     val sortOrder: SortOrder = SortOrder.A_TO_Z,

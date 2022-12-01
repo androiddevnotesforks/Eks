@@ -6,8 +6,8 @@ import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import ir.fallahpoor.eks.R
-import ir.fallahpoor.eks.data.model.Library
-import ir.fallahpoor.eks.data.model.Version
+import ir.fallahpoor.eks.data.repository.model.Library
+import ir.fallahpoor.eks.data.repository.model.Version
 import ir.fallahpoor.eks.libraries.ui.LibraryItem
 import ir.fallahpoor.eks.libraries.ui.LibraryItemTags
 import ir.fallahpoor.eks.libraries.ui.assertTextIsDisplayed

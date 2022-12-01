@@ -1,9 +1,9 @@
-package ir.fallahpoor.eks.data.entity
+package ir.fallahpoor.eks.data.database.entity
 
 import androidx.room.ColumnInfo
 import ir.fallahpoor.eks.data.Constants.NOT_AVAILABLE
 import ir.fallahpoor.eks.data.database.DatabaseContract
-import ir.fallahpoor.eks.data.model.Version
+import ir.fallahpoor.eks.data.repository.model.Version
 
 data class VersionEntity(
     @ColumnInfo(name = DatabaseContract.FIELD_VERSION_NAME)

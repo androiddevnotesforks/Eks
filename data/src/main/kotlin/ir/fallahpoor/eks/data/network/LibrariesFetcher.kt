@@ -1,8 +1,8 @@
 package ir.fallahpoor.eks.data.network
 
 import ir.fallahpoor.eks.data.Constants.NOT_AVAILABLE
-import ir.fallahpoor.eks.data.entity.LibraryEntity
-import ir.fallahpoor.eks.data.entity.VersionEntity
+import ir.fallahpoor.eks.data.database.entity.LibraryEntity
+import ir.fallahpoor.eks.data.database.entity.VersionEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup

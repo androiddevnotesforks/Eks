@@ -1,4 +1,4 @@
-package ir.fallahpoor.eks.data.entity
+package ir.fallahpoor.eks.data.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
@@ -6,7 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ir.fallahpoor.eks.data.Constants.NOT_AVAILABLE
 import ir.fallahpoor.eks.data.database.DatabaseContract
-import ir.fallahpoor.eks.data.model.Library
+import ir.fallahpoor.eks.data.repository.model.Library
 
 @Entity(tableName = DatabaseContract.TABLE_NAME)
 data class LibraryEntity(

@@ -1,7 +1,7 @@
-package ir.fallahpoor.eks.data.model
+package ir.fallahpoor.eks.data.repository.model
 
 import ir.fallahpoor.eks.data.Constants
-import ir.fallahpoor.eks.data.entity.LibraryEntity
+import ir.fallahpoor.eks.data.database.entity.LibraryEntity
 
 data class Library(
     val name: String = Constants.NOT_AVAILABLE,

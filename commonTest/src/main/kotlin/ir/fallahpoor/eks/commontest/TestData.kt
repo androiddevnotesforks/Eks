@@ -1,7 +1,7 @@
 package ir.fallahpoor.eks.commontest
 
-import ir.fallahpoor.eks.data.model.Library
-import ir.fallahpoor.eks.data.model.Version
+import ir.fallahpoor.eks.data.repository.model.Library
+import ir.fallahpoor.eks.data.repository.model.Version
 
 object TestData {
 

@@ -1,6 +1,6 @@
 package ir.fallahpoor.eks.worker
 
-import ir.fallahpoor.eks.data.model.Library
+import ir.fallahpoor.eks.data.repository.model.Library
 import javax.inject.Inject
 
 class LibraryDiffer @Inject constructor() {

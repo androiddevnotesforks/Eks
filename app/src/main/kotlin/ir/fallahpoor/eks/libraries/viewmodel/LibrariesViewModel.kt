@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.eks.data.SortOrder
-import ir.fallahpoor.eks.data.model.Library
 import ir.fallahpoor.eks.data.repository.LibraryRepository
+import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
 import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParser
