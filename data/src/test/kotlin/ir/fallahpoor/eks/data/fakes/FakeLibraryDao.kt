@@ -1,10 +1,10 @@
-package ir.fallahpoor.eks.commontest
+package ir.fallahpoor.eks.data.fakes
 
 import androidx.lifecycle.MutableLiveData
 import ir.fallahpoor.eks.data.database.LibraryDao
 import ir.fallahpoor.eks.data.database.entity.LibraryEntity
 
-class FakeLibraryDao : LibraryDao {
+internal class FakeLibraryDao : LibraryDao {
 
     private val librariesLiveData = MutableLiveData<List<LibraryEntity>>()
     private val libraries = mutableListOf<LibraryEntity>()

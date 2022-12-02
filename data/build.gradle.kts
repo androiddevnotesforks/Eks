@@ -1,5 +1,6 @@
 plugins {
     id("com.android.library")
+    id("dagger.hilt.android.plugin")
     kotlin("android")
     kotlin("kapt")
 }
@@ -68,6 +69,10 @@ dependencies {
     implementation(libs.room.runtime)
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    kapt(libs.hilt.compiler)
 
     testImplementation(project(":commonTest"))
     testImplementation(libs.junit)

@@ -9,7 +9,7 @@ import ir.fallahpoor.eks.data.database.DatabaseContract
 import ir.fallahpoor.eks.data.repository.model.Library
 
 @Entity(tableName = DatabaseContract.TABLE_NAME)
-data class LibraryEntity(
+internal data class LibraryEntity(
     @PrimaryKey
     @ColumnInfo(name = DatabaseContract.FIELD_NAME, collate = ColumnInfo.NOCASE)
     val name: String = NOT_AVAILABLE,
@@ -31,7 +31,7 @@ data class LibraryEntity(
     val pinned: Int = 0
 )
 
-fun LibraryEntity.toLibrary() = Library(
+internal fun LibraryEntity.toLibrary() = Library(
     name = this.name,
     description = this.description,
     url = this.url,

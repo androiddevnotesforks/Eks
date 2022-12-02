@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 // TODO all functions except those returning Flow should be suspend functions
 
-interface Storage {
+internal interface Storage {
 
     suspend fun setSortOrder(sortOrder: SortOrder)
 

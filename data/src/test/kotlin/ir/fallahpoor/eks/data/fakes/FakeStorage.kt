@@ -1,4 +1,4 @@
-package ir.fallahpoor.eks.commontest
+package ir.fallahpoor.eks.data.fakes
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow

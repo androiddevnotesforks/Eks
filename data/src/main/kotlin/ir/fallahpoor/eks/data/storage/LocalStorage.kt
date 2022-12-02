@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 // TODO: Remove the remaining "runBlocking" calls.
 
-class LocalStorage @Inject constructor(
+internal class LocalStorage @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) : Storage {
 

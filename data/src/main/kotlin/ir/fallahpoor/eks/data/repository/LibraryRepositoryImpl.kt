@@ -11,7 +11,7 @@ import ir.fallahpoor.eks.data.storage.Storage
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class LibraryRepositoryImpl
+internal class LibraryRepositoryImpl
 @Inject constructor(
     private val storage: Storage,
     private val libraryDao: LibraryDao,

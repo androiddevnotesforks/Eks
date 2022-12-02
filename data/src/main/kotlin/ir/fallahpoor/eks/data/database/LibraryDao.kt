@@ -4,7 +4,7 @@ import androidx.room.*
 import ir.fallahpoor.eks.data.database.entity.LibraryEntity
 
 @Dao
-interface LibraryDao {
+internal interface LibraryDao {
 
     @Query("SELECT COUNT(*) FROM ${DatabaseContract.TABLE_NAME}")
     suspend fun getLibrariesCount(): Int

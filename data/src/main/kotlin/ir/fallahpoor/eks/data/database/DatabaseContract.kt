@@ -1,6 +1,6 @@
 package ir.fallahpoor.eks.data.database
 
-object DatabaseContract {
+internal object DatabaseContract {
     const val DATABASE_NAME = "Eks.db"
     const val TABLE_NAME = "library"
 

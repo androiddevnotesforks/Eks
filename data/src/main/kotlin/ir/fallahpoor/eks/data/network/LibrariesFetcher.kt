@@ -11,7 +11,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import javax.inject.Inject
 
-class LibrariesFetcher @Inject constructor() {
+internal class LibrariesFetcher @Inject constructor() {
 
     private companion object {
         const val TABLE_COLUMN_COUNT = 6

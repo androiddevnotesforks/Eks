@@ -2,11 +2,11 @@ package ir.fallahpoor.eks.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
-import ir.fallahpoor.eks.commontest.FakeLibraryDao
-import ir.fallahpoor.eks.commontest.FakeStorage
 import ir.fallahpoor.eks.commontest.MainDispatcherRule
 import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.SortOrder
+import ir.fallahpoor.eks.data.fakes.FakeLibraryDao
+import ir.fallahpoor.eks.data.fakes.FakeStorage
 import ir.fallahpoor.eks.data.network.LibrariesFetcher
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.toLibraryEntity
