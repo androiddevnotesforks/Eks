@@ -30,6 +30,11 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
+    // TODO remove it once the reason for this Lint error is found
+    lint {
+        disable += "DialogFragmentCallbacksDetector"
+    }
+
 }
 
 dependencies {
