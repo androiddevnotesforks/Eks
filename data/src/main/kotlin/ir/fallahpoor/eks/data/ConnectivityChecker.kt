@@ -9,14 +9,16 @@ import javax.inject.Inject
 class ConnectivityChecker @Inject constructor() {
 
     suspend fun isNetworkReachable(): Boolean = withContext(Dispatchers.IO) {
+        val url = URL("https://www.google.com")
+        val httpURLConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
         try {
-            val url = URL("https://www.google.com")
-            val httpURLConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
             httpURLConnection.connect()
             val code: Int = httpURLConnection.responseCode
             code == 200
         } catch (e: Exception) {
             false
+        } finally {
+            httpURLConnection.disconnect()
         }
     }
 
