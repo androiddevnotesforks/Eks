@@ -7,7 +7,6 @@ import ir.fallahpoor.eks.commontest.FakeStorage
 import ir.fallahpoor.eks.commontest.MainDispatcherRule
 import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.SortOrder
-import ir.fallahpoor.eks.data.any
 import ir.fallahpoor.eks.data.network.LibrariesFetcher
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.toLibraryEntity
@@ -56,7 +55,7 @@ class LibraryRepositoryImplTest {
             librariesFetcher = librariesFetcher,
             dateProvider = dateProvider
         )
-        Mockito.`when`(dateProvider.getCurrentDate(any()))
+        Mockito.`when`(dateProvider.getCurrentDate())
             .thenReturn(REFRESH_DATE)
     }
 

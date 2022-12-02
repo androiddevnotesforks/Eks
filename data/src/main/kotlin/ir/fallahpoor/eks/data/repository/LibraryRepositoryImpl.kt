@@ -9,8 +9,6 @@ import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.toLibraryEntity
 import ir.fallahpoor.eks.data.storage.Storage
 import kotlinx.coroutines.flow.Flow
-import java.text.SimpleDateFormat
-import java.util.Locale
 import javax.inject.Inject
 
 class LibraryRepositoryImpl
@@ -46,14 +44,7 @@ class LibraryRepositoryImpl
 
     override suspend fun refreshLibraries() {
         var newLibraries: List<LibraryEntity> = librariesFetcher.fetchLibraries()
-        storage.setRefreshDate(
-            dateProvider.getCurrentDate(
-                SimpleDateFormat(
-                    "MMM dd HH:mm",
-                    Locale.US
-                )
-            )
-        )
+        storage.setRefreshDate(dateProvider.getCurrentDate())
         val pinnedOldLibraryNames = libraryDao.getLibraries()
             .filter { it.pinned == 1 }
             .map { it.name }

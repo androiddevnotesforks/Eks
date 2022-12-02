@@ -20,14 +20,22 @@ import ir.fallahpoor.eks.data.storage.LocalStorage
 import ir.fallahpoor.eks.data.storage.Storage
 import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParser
 import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParserImpl
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.inject.Singleton
 
+// TODO Move all the data-related classes to the 'data' module
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
     @Provides
     fun provideContext(@ApplicationContext context: Context): Context = context
+
+    @Provides
+    @Singleton
+    fun provideDateFormat(): DateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
 
     @Provides
     @Singleton
