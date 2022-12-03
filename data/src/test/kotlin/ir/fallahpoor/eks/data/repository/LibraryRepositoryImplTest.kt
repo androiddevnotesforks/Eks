@@ -3,11 +3,13 @@ package ir.fallahpoor.eks.data.repository
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.eks.commontest.MainDispatcherRule
-import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.SortOrder
+import ir.fallahpoor.eks.data.TestData
 import ir.fallahpoor.eks.data.fakes.FakeLibraryDao
 import ir.fallahpoor.eks.data.fakes.FakeStorage
 import ir.fallahpoor.eks.data.network.LibrariesFetcher
+import ir.fallahpoor.eks.data.network.dto.LibraryDto
+import ir.fallahpoor.eks.data.network.dto.toLibraryEntity
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.toLibraryEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,8 +57,7 @@ class LibraryRepositoryImplTest {
             librariesFetcher = librariesFetcher,
             dateProvider = dateProvider
         )
-        Mockito.`when`(dateProvider.getCurrentDate())
-            .thenReturn(REFRESH_DATE)
+        Mockito.`when`(dateProvider.getCurrentDate()).thenReturn(REFRESH_DATE)
     }
 
     @Test
@@ -64,37 +65,34 @@ class LibraryRepositoryImplTest {
 
         // Given
         val expectedLibraries = getOldLibraries()
-        Mockito.`when`(librariesFetcher.fetchLibraries())
-            .thenReturn(expectedLibraries.map(Library::toLibraryEntity))
+        Mockito.`when`(librariesFetcher.fetchLibraries()).thenReturn(expectedLibraries)
 
         // When
         val actualLibraries = libraryRepository.getLibraries()
 
         // Then
-        Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
+        Truth.assertThat(actualLibraries.map(Library::toLibraryEntity))
+            .isEqualTo(expectedLibraries.map(LibraryDto::toLibraryEntity))
         Mockito.verify(librariesFetcher).fetchLibraries()
 
     }
 
     private fun getOldLibraries() = listOf(
-        TestData.Activity.old,
-        TestData.Biometric.old,
-        TestData.core,
-        TestData.room
+        TestData.activity, TestData.biometric, TestData.core, TestData.room
     )
 
     @Test
     fun `list of libraries is returned from cache when cache is not empty`() = runTest {
 
         // Given
-        val expectedLibraries = getOldLibraries()
-        libraryDao.insertLibraries(expectedLibraries.map(Library::toLibraryEntity))
+        val expectedLibraries = getOldLibraries().map(LibraryDto::toLibraryEntity)
+        libraryDao.insertLibraries(expectedLibraries)
 
         // When
         val actualLibraries = libraryRepository.getLibraries()
 
         // Then
-        Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
+        Truth.assertThat(actualLibraries.map(Library::toLibraryEntity)).isEqualTo(expectedLibraries)
         Mockito.verifyNoInteractions(librariesFetcher)
 
     }
@@ -103,20 +101,17 @@ class LibraryRepositoryImplTest {
     fun `list of libraries is returned sorted by given sort order`() = runTest {
 
         // Given
-        Mockito.`when`(librariesFetcher.fetchLibraries())
-            .thenReturn(getOldLibraries().map(Library::toLibraryEntity))
+        Mockito.`when`(librariesFetcher.fetchLibraries()).thenReturn(getOldLibraries())
 
         // When
         val actualLibraries = libraryRepository.getLibraries(sortOrder = SortOrder.Z_TO_A)
 
         // Then
         val expectedLibraries = listOf(
-            TestData.room,
-            TestData.core,
-            TestData.Biometric.old,
-            TestData.Activity.old
+            TestData.room, TestData.core, TestData.biometric, TestData.activity
         )
-        Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
+        Truth.assertThat(actualLibraries.map(Library::toLibraryEntity))
+            .isEqualTo(expectedLibraries.map(LibraryDto::toLibraryEntity))
         Mockito.verify(librariesFetcher).fetchLibraries()
 
     }
@@ -125,13 +120,14 @@ class LibraryRepositoryImplTest {
     fun `list of libraries is filtered by given search query`() = runTest {
 
         // Given
-        libraryDao.insertLibraries(getOldLibraries().map(Library::toLibraryEntity))
+        libraryDao.insertLibraries(getOldLibraries().map(LibraryDto::toLibraryEntity))
 
         // When
         val actualLibraries = libraryRepository.getLibraries(searchQuery = "ro")
 
         // Then
-        Truth.assertThat(actualLibraries).isEqualTo(listOf(TestData.room))
+        Truth.assertThat(actualLibraries.map(Library::toLibraryEntity))
+            .isEqualTo(listOf(TestData.room).map(LibraryDto::toLibraryEntity))
 
     }
 
@@ -139,8 +135,8 @@ class LibraryRepositoryImplTest {
     fun `library is pinned`() = runTest {
 
         // Given
-        val library: Library = TestData.Activity.old
-        libraryDao.insertLibraries(listOf(library).map(Library::toLibraryEntity))
+        val library = TestData.activity
+        libraryDao.insertLibraries(listOf(library).map(LibraryDto::toLibraryEntity))
 
         // When
         val libraryToPin: Library =
@@ -157,8 +153,8 @@ class LibraryRepositoryImplTest {
     fun `library is unpinned`() = runTest {
 
         // Given
-        val library: Library = TestData.core
-        libraryDao.insertLibraries(listOf(library).map(Library::toLibraryEntity))
+        val library = TestData.core
+        libraryDao.insertLibraries(listOf(library).map { it.toLibraryEntity(true) })
 
         // When
         val libraryToUnpin: Library =
@@ -176,16 +172,18 @@ class LibraryRepositoryImplTest {
     fun `refreshing libraries replaces old libraries with the latest ones`() = runTest {
 
         // Given
-        libraryDao.insertLibraries(getOldLibraries().map(Library::toLibraryEntity))
-        val expectedLibraries =
-            listOf(TestData.core, TestData.preference, TestData.room).map(Library::toLibraryEntity)
+        libraryDao.insertLibraries(getOldLibraries().map(LibraryDto::toLibraryEntity))
+        val expectedLibraries = listOf(
+            TestData.core, TestData.preference, TestData.room
+        )
         Mockito.`when`(librariesFetcher.fetchLibraries()).thenReturn(expectedLibraries)
 
         // When
         libraryRepository.refreshLibraries()
 
         // Then
-        Truth.assertThat(libraryDao.getLibraries()).isEqualTo(expectedLibraries)
+        Truth.assertThat(libraryDao.getLibraries())
+            .isEqualTo(expectedLibraries.map(LibraryDto::toLibraryEntity))
 
     }
 
@@ -193,10 +191,13 @@ class LibraryRepositoryImplTest {
     fun `refreshing libraries preserves the pin state of libraries`() = runTest {
 
         // Given
-        libraryDao.insertLibraries(getOldLibraries().map(Library::toLibraryEntity))
-        val refreshedLibraries =
-            listOf(TestData.core, TestData.preference, TestData.room).map(Library::toLibraryEntity)
-        val expectedPinStates = refreshedLibraries.map { it.pinned == 1 }
+        val libraryToPin = TestData.core
+        libraryDao.insertLibraries(getOldLibraries().map {
+            it.toLibraryEntity(it.name.equals(libraryToPin.name, ignoreCase = true))
+        })
+        val refreshedLibraries = listOf(
+            TestData.core, TestData.preference, TestData.room
+        )
         Mockito.`when`(librariesFetcher.fetchLibraries()).thenReturn(refreshedLibraries)
 
         // When
@@ -204,7 +205,7 @@ class LibraryRepositoryImplTest {
 
         // Then
         val actualPinStates = libraryDao.getLibraries().map { it.pinned == 1 }
-        Truth.assertThat(actualPinStates).isEqualTo(expectedPinStates)
+        Truth.assertThat(actualPinStates).isEqualTo(listOf(true, false, false))
 
     }
 

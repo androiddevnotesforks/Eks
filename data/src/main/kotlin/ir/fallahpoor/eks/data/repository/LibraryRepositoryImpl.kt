@@ -5,6 +5,8 @@ import ir.fallahpoor.eks.data.database.LibraryDao
 import ir.fallahpoor.eks.data.database.entity.LibraryEntity
 import ir.fallahpoor.eks.data.database.entity.toLibrary
 import ir.fallahpoor.eks.data.network.LibrariesFetcher
+import ir.fallahpoor.eks.data.network.dto.LibraryDto
+import ir.fallahpoor.eks.data.network.dto.toLibraryEntity
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.toLibraryEntity
 import ir.fallahpoor.eks.data.storage.Storage
@@ -43,21 +45,27 @@ internal class LibraryRepositoryImpl
     }
 
     override suspend fun refreshLibraries() {
-        var newLibraries: List<LibraryEntity> = librariesFetcher.fetchLibraries()
+        val refreshedLibraries = getRefreshedLibraries()
         storage.setRefreshDate(dateProvider.getCurrentDate())
+        libraryDao.deleteLibraries()
+        libraryDao.insertLibraries(refreshedLibraries)
+    }
+
+    private suspend fun getRefreshedLibraries(): List<LibraryEntity> {
+        val newLibraries: List<LibraryDto> = librariesFetcher.fetchLibraries()
         val pinnedOldLibraryNames = libraryDao.getLibraries()
             .filter { it.pinned == 1 }
             .map { it.name }
             .toSet()
-        newLibraries = newLibraries.map {
-            if (it.name in pinnedOldLibraryNames) {
-                it.copy(pinned = 1)
-            } else {
-                it
+        return newLibraries
+            .map(LibraryDto::toLibraryEntity)
+            .map {
+                if (it.name in pinnedOldLibraryNames) {
+                    it.copy(pinned = 1)
+                } else {
+                    it
+                }
             }
-        }
-        libraryDao.deleteLibraries()
-        libraryDao.insertLibraries(newLibraries)
     }
 
     override suspend fun pinLibrary(library: Library, pinned: Boolean) {
