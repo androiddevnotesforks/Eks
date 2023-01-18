@@ -11,7 +11,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ir.fallahpoor.eks.data.SortOrder
@@ -25,7 +24,7 @@ object LibrariesScreenTags {
     const val CONTENT = "librariesScreenContent"
 }
 
-@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LibrariesScreen(
     librariesViewModel: LibrariesViewModel = viewModel(),
