@@ -1,5 +1,6 @@
 package ir.fallahpoor.eks.common
 
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -7,8 +8,10 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ir.fallahpoor.eks.MainActivity
@@ -48,10 +51,22 @@ class NotificationManager
     }
 
     fun showNotification(title: String, body: String) {
-        val notification: Notification = createNotification(title, body)
-        NotificationManagerCompat.from(context)
-            .notify(0, notification)
+        if (isPostNotificationsPermissionGranted()) {
+            val notification: Notification = createNotification(title, body)
+            NotificationManagerCompat.from(context)
+                .notify(0, notification)
+        }
     }
+
+    private fun isPostNotificationsPermissionGranted() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
 
     private fun createNotification(title: String, content: String): Notification =
         NotificationCompat.Builder(context, ID_GENERAL_CHANNEL)
