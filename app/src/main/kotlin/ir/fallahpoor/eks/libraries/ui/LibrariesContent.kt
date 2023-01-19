@@ -136,7 +136,7 @@ private fun TryAgain(errorMessage: String, onTryAgainClick: () -> Unit) {
 
 @Composable
 @Preview
-private fun Preview() {
+private fun LibrariesContentPreview() {
     ReleaseTrackerTheme {
         Surface {
             LibrariesContent(
