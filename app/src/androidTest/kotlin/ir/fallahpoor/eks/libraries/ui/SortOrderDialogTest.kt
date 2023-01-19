@@ -1,14 +1,10 @@
 package ir.fallahpoor.eks.libraries.ui
 
 import android.content.Context
-import androidx.compose.ui.test.assertIsNotSelected
-import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
-import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.SortOrder
+import ir.fallahpoor.eks.libraries.ui.robots.SortOrderDialogRobot
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -19,27 +15,16 @@ class SortOrderDialogTest {
     val composeTestRule = createComposeRule()
 
     private val context: Context = ApplicationProvider.getApplicationContext()
+    private val sortOrderDialogRobot = SortOrderDialogRobot(context, composeTestRule)
 
     @Test
     fun dialog_is_initialized_correctly() {
 
         // Given
-        composeSortOrderDialog(sortOrder = SortOrder.PINNED_FIRST)
+        sortOrderDialogRobot.composeSortOrderDialog(sortOrder = SortOrder.PINNED_FIRST)
 
         // Then
-        with(composeTestRule) {
-            assertTextIsDisplayed(context.getString(R.string.select_sort_order))
-            SortOrder.values().forEach {
-                assertTextIsDisplayed(context.getString(it.stringResId))
-                if (it == SortOrder.PINNED_FIRST) {
-                    onNodeWithTag(context.getString(it.stringResId))
-                        .assertIsSelected()
-                } else {
-                    onNodeWithTag(context.getString(it.stringResId))
-                        .assertIsNotSelected()
-                }
-            }
-        }
+        sortOrderDialogRobot.assertElementsAreCorrectlyDisplayedInitially(selectedSortOrder = SortOrder.PINNED_FIRST)
 
     }
 
@@ -48,13 +33,13 @@ class SortOrderDialogTest {
 
         // Given
         val onSortOrderClick: (SortOrder) -> Unit = mock()
-        composeSortOrderDialog(
+        sortOrderDialogRobot.composeSortOrderDialog(
             sortOrder = SortOrder.Z_TO_A,
             onSortOrderClick = onSortOrderClick
         )
 
         // When
-        composeTestRule.clickOnNodeWithText(context.getString(SortOrder.A_TO_Z.stringResId))
+        sortOrderDialogRobot.selectSortOrder(SortOrder.A_TO_Z)
 
         // Then
         Mockito.verify(onSortOrderClick).invoke(SortOrder.A_TO_Z)
@@ -66,28 +51,14 @@ class SortOrderDialogTest {
 
         // Given
         val onDismiss: () -> Unit = mock()
-        composeSortOrderDialog(onDismiss = onDismiss)
+        sortOrderDialogRobot.composeSortOrderDialog(onDismiss = onDismiss)
 
         // When
-        Espresso.pressBack()
+        sortOrderDialogRobot.dismissDialog()
 
         // Then
         Mockito.verify(onDismiss).invoke()
 
-    }
-
-    private fun composeSortOrderDialog(
-        sortOrder: SortOrder = SortOrder.A_TO_Z,
-        onSortOrderClick: (SortOrder) -> Unit = {},
-        onDismiss: () -> Unit = {}
-    ) {
-        composeTestRule.setContent {
-            SortOrderDialog(
-                sortOrderProvider = { sortOrder },
-                onSortOrderClick = onSortOrderClick,
-                onDismiss = onDismiss
-            )
-        }
     }
 
 }
