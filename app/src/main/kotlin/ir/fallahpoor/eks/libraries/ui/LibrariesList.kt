@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package ir.fallahpoor.eks.libraries.ui
 
 import androidx.compose.animation.AnimatedVisibility
@@ -41,6 +39,7 @@ object LibrariesListTags {
     const val SCROLL_TO_TOP_BUTTON = "librariesListScrollToTopButton"
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibrariesList(
     modifier: Modifier = Modifier,
