@@ -9,12 +9,12 @@ import ir.fallahpoor.eks.data.network.dto.LibraryDto
 import ir.fallahpoor.eks.data.network.dto.toLibraryEntity
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.toLibraryEntity
-import ir.fallahpoor.eks.data.storage.Storage
+import ir.fallahpoor.eks.data.repository.storage.StorageRepository
 import javax.inject.Inject
 
 internal class LibraryRepositoryImpl
 @Inject constructor(
-    private val storage: Storage,
+    private val storageRepository: StorageRepository,
     private val libraryDao: LibraryDao,
     private val librariesFetcher: LibrariesFetcher,
     private val dateProvider: DateProvider
@@ -45,7 +45,7 @@ internal class LibraryRepositoryImpl
 
     override suspend fun refreshLibraries() {
         val refreshedLibraries = getRefreshedLibraries()
-        storage.setRefreshDate(dateProvider.getCurrentDate())
+        storageRepository.saveRefreshDate(dateProvider.getCurrentDate())
         libraryDao.deleteLibraries()
         libraryDao.insertLibraries(refreshedLibraries)
     }

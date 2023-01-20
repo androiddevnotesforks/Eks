@@ -2,11 +2,11 @@ package ir.fallahpoor.eks.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
+import ir.fallahpoor.eks.commontest.FakeStorageRepository
 import ir.fallahpoor.eks.commontest.MainDispatcherRule
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.TestData
 import ir.fallahpoor.eks.data.fakes.FakeLibraryDao
-import ir.fallahpoor.eks.data.fakes.FakeStorage
 import ir.fallahpoor.eks.data.network.LibrariesFetcher
 import ir.fallahpoor.eks.data.network.dto.LibraryDto
 import ir.fallahpoor.eks.data.network.dto.toLibraryEntity
@@ -45,14 +45,14 @@ class LibraryRepositoryImplTest {
 
     private lateinit var libraryRepository: LibraryRepositoryImpl
     private lateinit var fakeLibraryDao: FakeLibraryDao
-    private lateinit var fakeStorage: FakeStorage
+    private lateinit var fakeStorageRepository: FakeStorageRepository
 
     @Before
     fun runBeforeEachTest() {
-        fakeStorage = FakeStorage()
+        fakeStorageRepository = FakeStorageRepository()
         fakeLibraryDao = FakeLibraryDao()
         libraryRepository = LibraryRepositoryImpl(
-            storage = fakeStorage,
+            storageRepository = fakeStorageRepository,
             libraryDao = fakeLibraryDao,
             librariesFetcher = librariesFetcher,
             dateProvider = dateProvider
@@ -219,7 +219,8 @@ class LibraryRepositoryImplTest {
         libraryRepository.refreshLibraries()
 
         // Then
-        Truth.assertThat(fakeStorage.getRefreshDateAsFlow().first()).isEqualTo(REFRESH_DATE)
+        Truth.assertThat(fakeStorageRepository.getRefreshDateAsFlow().first())
+            .isEqualTo(REFRESH_DATE)
 
     }
 
