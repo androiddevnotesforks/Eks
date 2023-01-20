@@ -10,7 +10,6 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
 import ir.fallahpoor.eks.commontest.MainDispatcherRule
-import ir.fallahpoor.eks.data.Constants
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.storage.LocalStorage.Companion.KEY_REFRESH_DATE
 import ir.fallahpoor.eks.data.storage.LocalStorage.Companion.KEY_SORT_ORDER
@@ -29,20 +28,19 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
 @OptIn(ExperimentalCoroutinesApi::class)
+@RunWith(RobolectricTestRunner::class)
 class LocalStorageTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
     private lateinit var localStorage: LocalStorage
-    private lateinit var preferencesScope: CoroutineScope
     private lateinit var dataStore: DataStore<Preferences>
-    private val context: Context = ApplicationProvider.getApplicationContext()
 
     @Before
     fun runBeforeEachTest() {
-        preferencesScope = CoroutineScope(mainDispatcherRule.testDispatcher + Job())
+        val context: Context = ApplicationProvider.getApplicationContext()
+        val preferencesScope = CoroutineScope(mainDispatcherRule.testDispatcher + Job())
         dataStore = PreferenceDataStoreFactory.create(scope = preferencesScope) {
             context.preferencesDataStoreFile(
                 "test-preferences-file"
@@ -90,7 +88,32 @@ class LocalStorageTest {
         val actualSortOrder = localStorage.getSortOrder()
 
         // Then
-        Truth.assertThat(actualSortOrder).isEqualTo(SortOrder.A_TO_Z)
+        Truth.assertThat(actualSortOrder).isEqualTo(LocalStorage.DEFAULT_SORT_ORDER)
+
+    }
+
+    @Test
+    fun `sort order flow emits a new value when sort order is updated`() = runTest {
+
+        // Given
+        val expectedSortOrders = listOf(
+            LocalStorage.DEFAULT_SORT_ORDER,
+            SortOrder.PINNED_FIRST,
+            SortOrder.Z_TO_A
+        )
+        val actualSortOrders = mutableListOf<SortOrder>()
+        val job = launch(UnconfinedTestDispatcher()) {
+            localStorage.getSortOrderAsFlow().toList(actualSortOrders)
+        }
+
+        // When
+        saveString(KEY_SORT_ORDER, SortOrder.PINNED_FIRST.name)
+        saveString(KEY_SORT_ORDER, SortOrder.Z_TO_A.name)
+
+        // Then
+        Truth.assertThat(actualSortOrders).isEqualTo(expectedSortOrders)
+
+        job.cancel()
 
     }
 
@@ -104,8 +127,8 @@ class LocalStorageTest {
         localStorage.setRefreshDate(expectedRefreshDate)
 
         // Then
-        val actualLastUpdateCheckDate = getString(KEY_REFRESH_DATE)
-        Truth.assertThat(actualLastUpdateCheckDate).isEqualTo(expectedRefreshDate)
+        val actualRefreshDate = getString(KEY_REFRESH_DATE)
+        Truth.assertThat(actualRefreshDate).isEqualTo(expectedRefreshDate)
 
     }
 
@@ -113,39 +136,24 @@ class LocalStorageTest {
     fun `refresh date flow emits a new value when refresh date is updated`() = runTest {
 
         // Given
-        val expectedRefreshDate = "March 1st, 2022"
+        val refreshDate1 = "March 1st, 2022"
+        val refreshDate2 = "March 3rd, 2022"
+        val expectedRefreshDates = listOf(
+            LocalStorage.DEFAULT_REFRESH_DATE,
+            refreshDate1,
+            refreshDate2
+        )
         val actualRefreshDates = mutableListOf<String>()
         val job = launch(UnconfinedTestDispatcher()) {
             localStorage.getRefreshDateAsFlow().toList(actualRefreshDates)
         }
 
         // When
-        saveString(KEY_REFRESH_DATE, expectedRefreshDate)
+        saveString(KEY_REFRESH_DATE, refreshDate1)
+        saveString(KEY_REFRESH_DATE, refreshDate2)
 
         // Then
-        Truth.assertThat(actualRefreshDates)
-            .isEqualTo(listOf(Constants.NOT_AVAILABLE, expectedRefreshDate))
-
-        job.cancel()
-
-    }
-
-    @Test
-    fun `sort order flow emits a new value when sort order is updated`() = runTest {
-
-        // Given
-        val sortOrder = SortOrder.PINNED_FIRST
-        val actualSortOrders = mutableListOf<SortOrder>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            localStorage.getSortOrderAsFlow().toList(actualSortOrders)
-        }
-
-        // When
-        saveString(KEY_SORT_ORDER, sortOrder.name)
-
-        // Then
-        Truth.assertThat(actualSortOrders)
-            .isEqualTo(listOf(LocalStorage.DEFAULT_SORT_ORDER, sortOrder))
+        Truth.assertThat(actualRefreshDates).isEqualTo(expectedRefreshDates)
 
         job.cancel()
 

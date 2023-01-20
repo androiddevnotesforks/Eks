@@ -24,6 +24,7 @@ internal class LocalStorage @Inject constructor(
     companion object {
         const val KEY_SORT_ORDER = "sort_order"
         const val KEY_REFRESH_DATE = "refresh_date"
+        const val DEFAULT_REFRESH_DATE = Constants.NOT_AVAILABLE
         val DEFAULT_SORT_ORDER = SortOrder.A_TO_Z
     }
 
@@ -53,7 +54,7 @@ internal class LocalStorage @Inject constructor(
     override fun getRefreshDateAsFlow(): Flow<String> {
         val key = stringPreferencesKey(KEY_REFRESH_DATE)
         return getPreferencesFlow { preferences ->
-            preferences[key] ?: Constants.NOT_AVAILABLE
+            preferences[key] ?: DEFAULT_REFRESH_DATE
         }
     }
 
