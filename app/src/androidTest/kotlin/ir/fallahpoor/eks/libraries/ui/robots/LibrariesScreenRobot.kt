@@ -9,6 +9,7 @@ import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.repository.LibraryRepository
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.Version
+import ir.fallahpoor.eks.data.repository.storage.StorageRepository
 import ir.fallahpoor.eks.libraries.ui.LibrariesListTags
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreen
 import ir.fallahpoor.eks.libraries.ui.LibraryItemTags
@@ -26,11 +27,13 @@ class LibrariesScreenRobot(
 
     fun composeLibrariesScreen(
         libraryRepository: LibraryRepository,
+        storageRepository: StorageRepository,
         onLibraryClick: (Library) -> Unit = {},
         onLibraryVersionClick: (Version) -> Unit = {}
     ): LibrariesScreenRobot {
         val librariesViewModel = LibrariesViewModel(
             libraryRepository = libraryRepository,
+            storageRepository = storageRepository,
             exceptionParser = ExceptionParserImpl(context)
         )
         composeTestRule.setContent {

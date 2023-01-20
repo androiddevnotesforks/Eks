@@ -10,7 +10,6 @@ import ir.fallahpoor.eks.data.network.dto.toLibraryEntity
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.toLibraryEntity
 import ir.fallahpoor.eks.data.storage.Storage
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 internal class LibraryRepositoryImpl
@@ -71,16 +70,6 @@ internal class LibraryRepositoryImpl
     override suspend fun pinLibrary(library: Library, pinned: Boolean) {
         val newLibrary = library.toLibraryEntity().copy(pinned = if (pinned) 1 else 0)
         libraryDao.updateLibrary(newLibrary)
-    }
-
-    override fun getRefreshDate(): Flow<String> = storage.getRefreshDateAsFlow()
-
-    override fun getSortOrderAsFlow(): Flow<SortOrder> = storage.getSortOrderAsFlow()
-
-    override fun getSortOrder(): SortOrder = storage.getSortOrder()
-
-    override suspend fun saveSortOrder(sortOrder: SortOrder) {
-        storage.setSortOrder(sortOrder)
     }
 
 }

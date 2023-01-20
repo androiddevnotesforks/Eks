@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.repository.LibraryRepository
 import ir.fallahpoor.eks.data.repository.model.Library
+import ir.fallahpoor.eks.data.repository.storage.StorageRepository
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
 import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParser
@@ -23,7 +24,9 @@ import javax.inject.Inject
 @HiltViewModel
 class LibrariesViewModel
 @Inject constructor(
-    private val libraryRepository: LibraryRepository, private val exceptionParser: ExceptionParser
+    private val libraryRepository: LibraryRepository,
+    private val storageRepository: StorageRepository,
+    private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
     sealed class Event {
@@ -35,16 +38,16 @@ class LibrariesViewModel
 
     private var currentJob: Job? = null
     private val _librariesScreenUiState = MutableStateFlow(
-        LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
+        LibrariesScreenUiState(sortOrder = storageRepository.getSortOrder())
     )
     val librariesScreenUiState: StateFlow<LibrariesScreenUiState> = combine(
-        _librariesScreenUiState, libraryRepository.getRefreshDate()
+        _librariesScreenUiState, storageRepository.getRefreshDateAsFlow()
     ) { libraries, refreshDate ->
         libraries.copy(refreshDate = refreshDate)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = LibrariesScreenUiState(sortOrder = libraryRepository.getSortOrder())
+        initialValue = LibrariesScreenUiState(sortOrder = storageRepository.getSortOrder())
     )
 
     fun handleEvent(event: Event) {
@@ -96,10 +99,10 @@ class LibrariesViewModel
     private fun changeSortOrder(sortOrder: SortOrder) {
         viewModelScope.launch {
             kotlin.runCatching {
-                libraryRepository.saveSortOrder(sortOrder)
+                storageRepository.saveSortOrder(sortOrder)
             }.onSuccess {
                 _librariesScreenUiState.update {
-                    it.copy(sortOrder = libraryRepository.getSortOrder())
+                    it.copy(sortOrder = storageRepository.getSortOrder())
                 }
                 getLibraries()
             }.onFailure { throwable ->

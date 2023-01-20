@@ -16,6 +16,8 @@ import ir.fallahpoor.eks.data.database.LibraryDao
 import ir.fallahpoor.eks.data.database.LibraryDatabase
 import ir.fallahpoor.eks.data.repository.LibraryRepository
 import ir.fallahpoor.eks.data.repository.LibraryRepositoryImpl
+import ir.fallahpoor.eks.data.repository.storage.StorageRepository
+import ir.fallahpoor.eks.data.repository.storage.StorageRepositoryImpl
 import ir.fallahpoor.eks.data.storage.LocalStorage
 import ir.fallahpoor.eks.data.storage.Storage
 import java.text.DateFormat
@@ -50,6 +52,10 @@ internal object Module {
     @Provides
     fun provideLibraryRepository(libraryRepositoryImpl: LibraryRepositoryImpl): LibraryRepository =
         libraryRepositoryImpl
+
+    @Provides
+    fun provideStorageRepository(storageRepositoryImpl: StorageRepositoryImpl): StorageRepository =
+        storageRepositoryImpl
 
     @Provides
     @Singleton

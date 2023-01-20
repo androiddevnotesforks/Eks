@@ -2,7 +2,6 @@ package ir.fallahpoor.eks.data.repository
 
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.repository.model.Library
-import kotlinx.coroutines.flow.Flow
 
 interface LibraryRepository {
 
@@ -14,13 +13,5 @@ interface LibraryRepository {
     suspend fun refreshLibraries()
 
     suspend fun pinLibrary(library: Library, pinned: Boolean)
-
-    fun getRefreshDate(): Flow<String>
-
-    fun getSortOrderAsFlow(): Flow<SortOrder>
-
-    fun getSortOrder(): SortOrder
-
-    suspend fun saveSortOrder(sortOrder: SortOrder)
 
 }

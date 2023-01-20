@@ -1,12 +1,9 @@
 package ir.fallahpoor.eks.commontest
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.repository.LibraryRepository
 import ir.fallahpoor.eks.data.repository.model.Library
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import java.io.IOException
 
 class FakeLibraryRepository : LibraryRepository {
@@ -31,7 +28,7 @@ class FakeLibraryRepository : LibraryRepository {
         TestData.core,
         TestData.room
     )
-    private val sortOrderLiveData = MutableLiveData(SortOrder.A_TO_Z)
+
     private val librariesLiveData = MutableLiveData<List<Library>>(initialLibraries)
 
     override suspend fun getLibraries(
@@ -77,24 +74,10 @@ class FakeLibraryRepository : LibraryRepository {
         librariesLiveData.value = libraries
     }
 
-    override fun getRefreshDate(): Flow<String> = throwExceptionOrRun {
-        flow {
-            emit(REFRESH_DATE)
-        }
-    }
-
     private fun <T> throwExceptionOrRun(block: () -> T): T = if (throwException) {
         throw exception
     } else {
         block()
-    }
-
-    override fun getSortOrderAsFlow(): Flow<SortOrder> = sortOrderLiveData.asFlow()
-
-    override fun getSortOrder(): SortOrder = sortOrderLiveData.value ?: SortOrder.A_TO_Z
-
-    override suspend fun saveSortOrder(sortOrder: SortOrder) {
-        sortOrderLiveData.value = sortOrder
     }
 
 }

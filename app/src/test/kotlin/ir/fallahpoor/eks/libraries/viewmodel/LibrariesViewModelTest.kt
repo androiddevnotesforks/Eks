@@ -3,6 +3,7 @@ package ir.fallahpoor.eks.libraries.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.eks.commontest.FakeLibraryRepository
+import ir.fallahpoor.eks.commontest.FakeStorageRepository
 import ir.fallahpoor.eks.commontest.MainDispatcherRule
 import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.SortOrder
@@ -29,12 +30,15 @@ class LibrariesViewModelTest {
 
     private lateinit var librariesViewModel: LibrariesViewModel
     private lateinit var libraryRepository: FakeLibraryRepository
+    private lateinit var storageRepository: FakeStorageRepository
 
     @Before
     fun runBeforeEachTest() {
         libraryRepository = FakeLibraryRepository()
+        storageRepository = FakeStorageRepository()
         librariesViewModel = LibrariesViewModel(
             libraryRepository = libraryRepository,
+            storageRepository = storageRepository,
             exceptionParser = FakeExceptionParser()
         )
     }
@@ -115,7 +119,7 @@ class LibrariesViewModelTest {
                 )
             )
         )
-        Truth.assertThat(libraryRepository.getSortOrder()).isEqualTo(expectedSortOrder)
+        Truth.assertThat(storageRepository.getSortOrder()).isEqualTo(expectedSortOrder)
 
         job.cancel()
 

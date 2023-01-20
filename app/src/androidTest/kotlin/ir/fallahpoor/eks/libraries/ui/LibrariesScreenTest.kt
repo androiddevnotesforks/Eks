@@ -6,6 +6,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.eks.commontest.FakeLibraryRepository
+import ir.fallahpoor.eks.commontest.FakeStorageRepository
 import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.Version
@@ -35,17 +36,19 @@ class LibrariesScreenTest {
     )
 
     private lateinit var libraryRepository: FakeLibraryRepository
+    private lateinit var storageRepository: FakeStorageRepository
 
     @Before
     fun runBeforeEachTest() {
         libraryRepository = FakeLibraryRepository()
+        storageRepository = FakeStorageRepository()
     }
 
     @Test
     fun screen_is_initialized_correctly() {
 
         // Given
-        librariesScreenRobot.composeLibrariesScreen(libraryRepository)
+        librariesScreenRobot.composeLibrariesScreen(libraryRepository, storageRepository)
 
         // Then
         composeTestRule.assertIsDisplayedNodeWithTag(LibrariesScreenTags.TOOLBAR)
@@ -71,7 +74,7 @@ class LibrariesScreenTest {
     fun search() = runTest {
 
         // Given
-        librariesScreenRobot.composeLibrariesScreen(libraryRepository)
+        librariesScreenRobot.composeLibrariesScreen(libraryRepository, storageRepository)
 
         // When
         librariesScreenRobot.enterSearchQuery("co")
@@ -95,7 +98,7 @@ class LibrariesScreenTest {
     fun all_libraries_are_displayed_when_search_bar_is_closed() = runTest {
 
         // Given
-        librariesScreenRobot.composeLibrariesScreen(libraryRepository)
+        librariesScreenRobot.composeLibrariesScreen(libraryRepository, storageRepository)
             .enterSearchQuery("co")
 
         // When
@@ -117,7 +120,7 @@ class LibrariesScreenTest {
     fun all_libraries_are_displayed_when_search_bar_is_cleared() = runTest {
 
         // Given
-        librariesScreenRobot.composeLibrariesScreen(libraryRepository)
+        librariesScreenRobot.composeLibrariesScreen(libraryRepository, storageRepository)
             .enterSearchQuery("co")
 
         // When
@@ -142,6 +145,7 @@ class LibrariesScreenTest {
         val onLibraryClick: (Library) -> Unit = mock()
         librariesScreenRobot.composeLibrariesScreen(
             libraryRepository = libraryRepository,
+            storageRepository = storageRepository,
             onLibraryClick = onLibraryClick
         )
             .scrollToLibrary(TestData.preference)
@@ -161,6 +165,7 @@ class LibrariesScreenTest {
         val onLibraryVersionClick: (Version) -> Unit = mock()
         librariesScreenRobot.composeLibrariesScreen(
             libraryRepository = libraryRepository,
+            storageRepository = storageRepository,
             onLibraryVersionClick = onLibraryVersionClick
         )
             .scrollToLibrary(TestData.core)
