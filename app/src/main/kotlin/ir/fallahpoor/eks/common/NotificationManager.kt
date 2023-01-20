@@ -1,6 +1,7 @@
 package ir.fallahpoor.eks.common
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -50,6 +51,7 @@ class NotificationManager
         }
     }
 
+    @SuppressLint("MissingPermission")
     fun showNotification(title: String, body: String) {
         if (isPostNotificationsPermissionGranted()) {
             val notification: Notification = createNotification(title, body)
