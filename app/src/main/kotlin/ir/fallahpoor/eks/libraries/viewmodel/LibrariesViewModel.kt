@@ -57,6 +57,9 @@ class LibrariesViewModel
     }
 
     private fun getLibraries() {
+        _librariesScreenUiState.update {
+            it.copy(librariesState = LibrariesState.Loading)
+        }
         performActionAndGetLibraries()
     }
 
@@ -96,10 +99,7 @@ class LibrariesViewModel
                 libraryRepository.saveSortOrder(sortOrder)
             }.onSuccess {
                 _librariesScreenUiState.update {
-                    it.copy(
-                        librariesState = LibrariesState.Loading,
-                        sortOrder = libraryRepository.getSortOrder()
-                    )
+                    it.copy(sortOrder = libraryRepository.getSortOrder())
                 }
                 getLibraries()
             }.onFailure { throwable ->
@@ -110,9 +110,7 @@ class LibrariesViewModel
 
     private fun changeSearchQuery(searchQuery: String) {
         _librariesScreenUiState.update {
-            it.copy(
-                librariesState = LibrariesState.Loading, searchQuery = searchQuery
-            )
+            it.copy(searchQuery = searchQuery)
         }
         getLibraries()
     }
