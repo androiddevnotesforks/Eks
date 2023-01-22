@@ -3,6 +3,7 @@ package ir.fallahpoor.eks.libraries.ui
 import android.content.Context
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.libraries.ui.robots.SortOrderDialogRobot
 import org.junit.Rule
@@ -54,7 +55,7 @@ class SortOrderDialogTest {
         sortOrderDialogRobot.composeSortOrderDialog(onDismiss = onDismiss)
 
         // When
-        sortOrderDialogRobot.dismissDialog()
+        Espresso.pressBack()
 
         // Then
         Mockito.verify(onDismiss).invoke()
