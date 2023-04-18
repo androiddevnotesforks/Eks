@@ -10,10 +10,11 @@ import ir.fallahpoor.eks.data.repository.storage.StorageRepository
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
 import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.ExceptionParser
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -36,7 +37,7 @@ class LibrariesViewModel
         data class ChangeSearchQuery(val searchQuery: String) : Event()
     }
 
-    private var currentJob: Job? = null
+    private val eventsFlow: MutableSharedFlow<Event> = MutableSharedFlow()
     private val _librariesScreenUiState = MutableStateFlow(
         LibrariesScreenUiState(sortOrder = storageRepository.getSortOrder())
     )
@@ -50,12 +51,22 @@ class LibrariesViewModel
         initialValue = LibrariesScreenUiState(sortOrder = storageRepository.getSortOrder())
     )
 
+    init {
+        viewModelScope.launch {
+            eventsFlow.collectLatest { event ->
+                when (event) {
+                    is Event.GetLibraries -> getLibraries()
+                    is Event.PinLibrary -> pinLibrary(event.library, event.pin)
+                    is Event.ChangeSortOrder -> changeSortOrder(event.sortOrder)
+                    is Event.ChangeSearchQuery -> changeSearchQuery(event.searchQuery)
+                }
+            }
+        }
+    }
+
     fun handleEvent(event: Event) {
-        when (event) {
-            is Event.GetLibraries -> getLibraries()
-            is Event.PinLibrary -> pinLibrary(event.library, event.pin)
-            is Event.ChangeSortOrder -> changeSortOrder(event.sortOrder)
-            is Event.ChangeSearchQuery -> changeSearchQuery(event.searchQuery)
+        viewModelScope.launch {
+            eventsFlow.emit(event)
         }
     }
 
@@ -73,8 +84,7 @@ class LibrariesViewModel
     }
 
     private fun performActionAndGetLibraries(action: suspend () -> Unit = {}) {
-        currentJob?.cancel()
-        currentJob = viewModelScope.launch {
+        viewModelScope.launch {
             kotlin.runCatching {
                 action()
                 libraryRepository.getLibraries(

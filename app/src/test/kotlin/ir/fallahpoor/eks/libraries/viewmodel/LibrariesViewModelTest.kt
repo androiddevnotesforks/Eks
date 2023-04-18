@@ -1,6 +1,7 @@
 package ir.fallahpoor.eks.libraries.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth
 import ir.fallahpoor.eks.commontest.FakeLibraryRepository
 import ir.fallahpoor.eks.commontest.FakeStorageRepository
@@ -11,9 +12,6 @@ import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
 import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.FakeExceptionParser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -44,188 +42,169 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `state is updated correctly when getting the list of libraries succeeds`() = runTest {
+    fun `Sequence of states is correct when getting the list of libraries succeeds`() = runTest {
+        librariesViewModel.librariesScreenUiState.test {
+            val actualInitialState = awaitItem()
+            val expectedInitialState = LibrariesScreenUiState()
+            Truth.assertThat(actualInitialState).isEqualTo(expectedInitialState)
 
-        // Given
-        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
-        }
+            // When
+            librariesViewModel.handleEvent(LibrariesViewModel.Event.GetLibraries)
 
-        // When
-        librariesViewModel.handleEvent(LibrariesViewModel.Event.GetLibraries)
-
-        // Then
-        assertStateSequence(
-            actualStateSequence = actualStateSequence,
-            expectedStateSequence = listOf(
-                LibrariesScreenUiState(),
-                LibrariesScreenUiState(librariesState = LibrariesState.Success(libraryRepository.getLibraries()))
+            val actualFinalState = awaitItem()
+            val expectedFinalState = LibrariesScreenUiState(
+                librariesState = LibrariesState.Success(libraryRepository.getLibraries())
             )
-        )
-
-        job.cancel()
-
+            Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
+        }
     }
 
     @Test
-    fun `state is updated correctly when getting the list of libraries fails`() = runTest {
-
-        // Given
+    fun `Sequence of states is correct when getting the list of libraries fails`() = runTest {
         libraryRepository.throwException = true
-        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
-        }
+        librariesViewModel.librariesScreenUiState.test {
+            val actualInitialState = awaitItem()
+            val expectedInitialState = LibrariesScreenUiState()
+            Truth.assertThat(actualInitialState).isEqualTo(expectedInitialState)
 
-        // When
-        librariesViewModel.handleEvent(LibrariesViewModel.Event.GetLibraries)
+            // When
+            librariesViewModel.handleEvent(LibrariesViewModel.Event.GetLibraries)
 
-        // Then
-        assertStateSequence(
-            actualStateSequence = actualStateSequence,
-            expectedStateSequence = listOf(
-                LibrariesScreenUiState(),
-                LibrariesScreenUiState(librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE))
+            val actualFinalState = awaitItem()
+            val expectedFinalState = LibrariesScreenUiState(
+                librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
             )
-        )
-
-        job.cancel()
-
+            Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
+        }
     }
 
     @Test
-    fun `state is updated correctly when changing the sort order succeeds`() = runTest {
+    fun `Sequence of states is correct when changing the sort order succeeds`() = runTest {
+        val expectedSortOrder = SortOrder.Z_TO_A
+        librariesViewModel.librariesScreenUiState.test {
+            val actualInitialState = awaitItem()
+            val expectedInitialState = LibrariesScreenUiState()
+            Truth.assertThat(actualInitialState).isEqualTo(expectedInitialState)
+
+            // When
+            librariesViewModel.handleEvent(
+                LibrariesViewModel.Event.ChangeSortOrder(
+                    sortOrder = expectedSortOrder
+                )
+            )
+
+            val actualIntermediateState = awaitItem()
+            val expectedIntermediateState = LibrariesScreenUiState(sortOrder = expectedSortOrder)
+            Truth.assertThat(actualIntermediateState).isEqualTo(expectedIntermediateState)
+
+            val actualFinalState = awaitItem()
+            val expectedFinalState = LibrariesScreenUiState(
+                sortOrder = expectedSortOrder,
+                librariesState = LibrariesState.Success(libraryRepository.getLibraries(sortOrder = expectedSortOrder))
+            )
+            Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
+        }
+    }
+
+    @Test
+    fun `Sequence of states is correct when changing the sort order fails`() = runTest {
+        val expectedSortOrder = SortOrder.Z_TO_A
+        libraryRepository.throwException = true
+        librariesViewModel.librariesScreenUiState.test {
+            val actualInitialState = awaitItem()
+            val expectedInitialState = LibrariesScreenUiState()
+            Truth.assertThat(actualInitialState).isEqualTo(expectedInitialState)
+
+            // When
+            librariesViewModel.handleEvent(
+                LibrariesViewModel.Event.ChangeSortOrder(
+                    sortOrder = expectedSortOrder
+                )
+            )
+
+            val actualIntermediateState = awaitItem()
+            val expectedIntermediateState = LibrariesScreenUiState(sortOrder = expectedSortOrder)
+            Truth.assertThat(actualIntermediateState).isEqualTo(expectedIntermediateState)
+
+            val actualFinalState = awaitItem()
+            val expectedFinalState = LibrariesScreenUiState(
+                sortOrder = expectedSortOrder, librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
+            )
+            Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
+            Truth.assertThat(storageRepository.getSortOrder()).isEqualTo(expectedSortOrder)
+        }
+        // TODO assert that sort order is not persisted
+    }
+
+    @Test
+    fun `Sort order is persisted when changing the sort order succeeds`() {
 
         // Given
         val expectedSortOrder = SortOrder.Z_TO_A
-        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
-        }
 
         // When
-        librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSortOrder(expectedSortOrder))
-
-        // Then
-        assertStateSequence(
-            actualStateSequence = actualStateSequence,
-            expectedStateSequence = listOf(
-                LibrariesScreenUiState(),
-                LibrariesScreenUiState(sortOrder = expectedSortOrder),
-                LibrariesScreenUiState(
-                    sortOrder = expectedSortOrder,
-                    librariesState = LibrariesState.Success(libraryRepository.getLibraries(sortOrder = expectedSortOrder))
-                )
+        librariesViewModel.handleEvent(
+            LibrariesViewModel.Event.ChangeSortOrder(
+                sortOrder = expectedSortOrder
             )
         )
+
+        // Then
         Truth.assertThat(storageRepository.getSortOrder()).isEqualTo(expectedSortOrder)
 
-        job.cancel()
-
     }
 
     @Test
-    fun `state is updated correctly when changing the sort order fails`() = runTest {
-
-        // Given
-        val expectedSortOrder = SortOrder.Z_TO_A
-        libraryRepository.throwException = true
-        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
-        }
-
-        // When
-        librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSortOrder(expectedSortOrder))
-
-        // Then
-        assertStateSequence(
-            actualStateSequence = actualStateSequence,
-            expectedStateSequence = listOf(
-                LibrariesScreenUiState(),
-                LibrariesScreenUiState(sortOrder = expectedSortOrder),
-                LibrariesScreenUiState(
-                    sortOrder = expectedSortOrder,
-                    librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
-                )
-            )
-        )
-
-        job.cancel()
-
-    }
-
-    @Test
-    fun `state is updated correctly when changing the search query succeeds`() = runTest {
-
-        // Given
+    fun `Sequence of states is correct when changing the search query succeeds`() = runTest {
         val searchQuery = "ko"
-        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
-        }
+        librariesViewModel.librariesScreenUiState.test {
+            val actualInitialState = awaitItem()
+            val expectedInitialState = LibrariesScreenUiState()
+            Truth.assertThat(actualInitialState).isEqualTo(expectedInitialState)
 
-        // When
-        librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSearchQuery(searchQuery))
+            // When
+            librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSearchQuery(searchQuery))
 
-        // Then
-        assertStateSequence(
-            actualStateSequence = actualStateSequence,
-            expectedStateSequence = listOf(
-                LibrariesScreenUiState(),
-                LibrariesScreenUiState(searchQuery = searchQuery),
-                LibrariesScreenUiState(
-                    searchQuery = searchQuery, librariesState = LibrariesState.Success(
-                        libraryRepository.getLibraries(searchQuery = searchQuery)
-                    )
+            val actualIntermediateState = awaitItem()
+            val expectedIntermediateState = LibrariesScreenUiState(searchQuery = searchQuery)
+            Truth.assertThat(actualIntermediateState).isEqualTo(expectedIntermediateState)
+
+            val actualFinalState = awaitItem()
+            val expectedFinalState = LibrariesScreenUiState(
+                searchQuery = searchQuery, librariesState = LibrariesState.Success(
+                    libraryRepository.getLibraries(searchQuery = searchQuery)
                 )
             )
-        )
-
-        job.cancel()
-
+            Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
+        }
     }
 
     @Test
-    fun `state is updated correctly when changing the search query fails`() = runTest {
-
-        // Given
+    fun `Sequence of states is correct when changing the search query fails`() = runTest {
         libraryRepository.throwException = true
         val searchQuery = "ko"
-        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
-        }
+        librariesViewModel.librariesScreenUiState.test {
+            val actualInitialState = awaitItem()
+            val expectedInitialState = LibrariesScreenUiState()
+            Truth.assertThat(actualInitialState).isEqualTo(expectedInitialState)
 
-        // When
-        librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSearchQuery(searchQuery))
+            // When
+            librariesViewModel.handleEvent(LibrariesViewModel.Event.ChangeSearchQuery(searchQuery))
 
-        // Then
-        assertStateSequence(
-            actualStateSequence = actualStateSequence,
-            expectedStateSequence = listOf(
-                LibrariesScreenUiState(),
-                LibrariesScreenUiState(searchQuery = searchQuery),
-                LibrariesScreenUiState(
-                    searchQuery = searchQuery,
-                    librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
-                )
+            val actualIntermediateState = awaitItem()
+            val expectedIntermediateState = LibrariesScreenUiState(searchQuery = searchQuery)
+            Truth.assertThat(actualIntermediateState).isEqualTo(expectedIntermediateState)
+
+            val actualFinalState = awaitItem()
+            val expectedFinalState = LibrariesScreenUiState(
+                searchQuery = searchQuery, librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
             )
-        )
-
-        job.cancel()
-
+            Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
+        }
     }
 
     @Test
-    fun `state is updated correctly when pinning a library succeeds`() = runTest {
-
-        // Given
-        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
-        }
+    fun `Sequence of states is correct when pinning a library succeeds`() = runTest {
         val libraries = libraryRepository.getLibraries().map {
             if (it.name.equals(TestData.preference.name, ignoreCase = true)) {
                 it.copy(isPinned = true)
@@ -233,61 +212,45 @@ class LibrariesViewModelTest {
                 it
             }
         }
+        librariesViewModel.librariesScreenUiState.test {
+            val actualInitialState = awaitItem()
+            val expectedInitialState = LibrariesScreenUiState()
+            Truth.assertThat(actualInitialState).isEqualTo(expectedInitialState)
 
-        // When
-        librariesViewModel.handleEvent(
-            LibrariesViewModel.Event.PinLibrary(library = TestData.preference, pin = true)
-        )
-
-        // Then
-        assertStateSequence(
-            actualStateSequence = actualStateSequence,
-            expectedStateSequence = listOf(
-                LibrariesScreenUiState(),
-                LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries))
+            librariesViewModel.handleEvent(
+                LibrariesViewModel.Event.PinLibrary(library = TestData.preference, pin = true)
             )
-        )
 
-        job.cancel()
-
+            val actualFinalState = awaitItem()
+            val expectedFinalState = LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries))
+            Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
+        }
     }
 
     @Test
-    fun `state is updated correctly when pinning a library fails`() = runTest {
-
-        // Given
+    fun `Sequence of states is correct when pinning a library fails`() = runTest {
         libraryRepository.throwException = true
-        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
-        }
+        librariesViewModel.librariesScreenUiState.test {
+            val actualInitialState = awaitItem()
+            val expectedInitialState = LibrariesScreenUiState()
+            Truth.assertThat(actualInitialState).isEqualTo(expectedInitialState)
 
-        // When
-        librariesViewModel.handleEvent(
-            LibrariesViewModel.Event.PinLibrary(library = TestData.preference, pin = true)
-        )
-
-        // Then
-        assertStateSequence(
-            actualStateSequence = actualStateSequence,
-            expectedStateSequence = listOf(
-                LibrariesScreenUiState(),
-                LibrariesScreenUiState(librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE))
+            librariesViewModel.handleEvent(
+                LibrariesViewModel.Event.PinLibrary(library = TestData.preference, pin = true)
             )
-        )
 
-        job.cancel()
-
+            val actualFinalState = awaitItem()
+            val expectedFinalState = LibrariesScreenUiState(
+                librariesState = LibrariesState.Error(
+                    FakeExceptionParser.ERROR_MESSAGE
+                )
+            )
+            Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
+        }
     }
 
     @Test
-    fun `state is updated correctly when unpinning a library succeeds`() = runTest {
-
-        // Given
-        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
-        }
+    fun `Sequence of states is correct when unpinning a library succeeds`() = runTest {
         val libraries = libraryRepository.getLibraries().map {
             if (it.name.equals(TestData.core.name, ignoreCase = true)) {
                 it.copy(isPinned = false)
@@ -295,60 +258,39 @@ class LibrariesViewModelTest {
                 it
             }
         }
+        librariesViewModel.librariesScreenUiState.test {
+            val actualInitialState = awaitItem()
+            val expectedInitialState = LibrariesScreenUiState()
+            Truth.assertThat(actualInitialState).isEqualTo(expectedInitialState)
 
-        // When
-        librariesViewModel.handleEvent(
-            LibrariesViewModel.Event.PinLibrary(library = TestData.core, pin = false)
-        )
-
-        // Then
-        assertStateSequence(
-            actualStateSequence = actualStateSequence,
-            expectedStateSequence = listOf(
-                LibrariesScreenUiState(),
-                LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries))
+            // When
+            librariesViewModel.handleEvent(
+                LibrariesViewModel.Event.PinLibrary(library = TestData.core, pin = false)
             )
-        )
 
-        job.cancel()
-
+            val actualFinalState = awaitItem()
+            val expectedFinalState = LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries))
+            Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
+        }
     }
 
     @Test
-    fun `state is updated correctly when unpinning a library fails`() = runTest {
-
-        // Given
+    fun `Sequence of states is correct when unpinning a library fails`() = runTest {
         libraryRepository.throwException = true
-        val actualStateSequence = mutableListOf<LibrariesScreenUiState>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            librariesViewModel.librariesScreenUiState.toList(actualStateSequence)
-        }
+        librariesViewModel.librariesScreenUiState.test {
+            val actualInitialState = awaitItem()
+            val expectedInitialState = LibrariesScreenUiState()
+            Truth.assertThat(actualInitialState).isEqualTo(expectedInitialState)
 
-        // When
-        librariesViewModel.handleEvent(
-            LibrariesViewModel.Event.PinLibrary(library = TestData.core, pin = false)
-        )
-
-        // Then
-        assertStateSequence(
-            actualStateSequence = actualStateSequence,
-            expectedStateSequence = listOf(
-                LibrariesScreenUiState(),
-                LibrariesScreenUiState(librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE))
+            // When
+            librariesViewModel.handleEvent(
+                LibrariesViewModel.Event.PinLibrary(library = TestData.core, pin = false)
             )
-        )
 
-        job.cancel()
-
-    }
-
-    private fun assertStateSequence(
-        actualStateSequence: List<LibrariesScreenUiState>,
-        expectedStateSequence: List<LibrariesScreenUiState>
-    ) {
-        Truth.assertThat(actualStateSequence.size).isEqualTo(expectedStateSequence.size)
-        actualStateSequence.zip(expectedStateSequence) { actualState, expectedState ->
-            Truth.assertThat(actualState).isEqualTo(expectedState)
+            val actualFinalState = awaitItem()
+            val expectedFinalState =
+                LibrariesScreenUiState(librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE))
+            Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
         }
     }
 

@@ -122,6 +122,7 @@ dependencies {
     testImplementation(libs.test.core)
     testImplementation(libs.robolectric)
     testImplementation(libs.mockito.inline)
+    testImplementation(libs.turbine)
 
     androidTestImplementation(project(":commonTest"))
     androidTestImplementation(platform(libs.compose.bom))
