@@ -1,6 +1,7 @@
 package ir.fallahpoor.eks.data.repository.storage
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth
 import ir.fallahpoor.eks.commontest.MainDispatcherRule
 import ir.fallahpoor.eks.data.SortOrder
@@ -8,9 +9,6 @@ import ir.fallahpoor.eks.data.fakes.FakeStorage
 import ir.fallahpoor.eks.data.storage.LocalStorage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -36,7 +34,6 @@ class StorageRepositoryImplTest {
 
     @Test
     fun `sort order is saved`() = runTest {
-
         // Given
         val expectedSortOrder = SortOrder.PINNED_FIRST
 
@@ -45,12 +42,10 @@ class StorageRepositoryImplTest {
 
         // Then
         Truth.assertThat(fakeStorage.getSortOrder()).isEqualTo(expectedSortOrder)
-
     }
 
     @Test
     fun `saved sort order is returned`() = runTest {
-
         // Given
         val expectedSortOrder = SortOrder.Z_TO_A
         fakeStorage.setSortOrder(expectedSortOrder)
@@ -60,37 +55,24 @@ class StorageRepositoryImplTest {
 
         // Then
         Truth.assertThat(actualSortOrder).isEqualTo(expectedSortOrder)
-
     }
 
     @Test
     fun `sort order flow emits a new value when sort order is updated`() = runTest {
+        storageRepository.getSortOrderAsFlow().test {
+            // When
+            fakeStorage.setSortOrder(SortOrder.PINNED_FIRST)
+            fakeStorage.setSortOrder(SortOrder.Z_TO_A)
 
-        // Given
-        val expectedSortOrders = listOf(
-            LocalStorage.DEFAULT_SORT_ORDER,
-            SortOrder.PINNED_FIRST,
-            SortOrder.Z_TO_A
-        )
-        val actualSortOrders = mutableListOf<SortOrder>()
-        val job = launch(UnconfinedTestDispatcher()) {
-            storageRepository.getSortOrderAsFlow().toList(actualSortOrders)
+            // Then
+            Truth.assertThat(awaitItem()).isEqualTo(LocalStorage.DEFAULT_SORT_ORDER)
+            Truth.assertThat(awaitItem()).isEqualTo(SortOrder.PINNED_FIRST)
+            Truth.assertThat(awaitItem()).isEqualTo(SortOrder.Z_TO_A)
         }
-
-        // When
-        fakeStorage.setSortOrder(SortOrder.PINNED_FIRST)
-        fakeStorage.setSortOrder(SortOrder.Z_TO_A)
-
-        // Then
-        Truth.assertThat(actualSortOrders).isEqualTo(expectedSortOrders)
-
-        job.cancel()
-
     }
 
     @Test
     fun `refresh date is saved`() = runTest {
-
         // Given
         val expectedRefreshDate = "March 1st, 2022"
 
@@ -100,12 +82,10 @@ class StorageRepositoryImplTest {
         // Then
         val actualRefreshDate = fakeStorage.getRefreshDateAsFlow().first()
         Truth.assertThat(actualRefreshDate).isEqualTo(expectedRefreshDate)
-
     }
 
     @Test
     fun `refresh date is returned`() = runTest {
-
         // Given
         val expectedRefreshDate = "September 11, 2001"
         fakeStorage.setRefreshDate(expectedRefreshDate)
@@ -115,7 +95,6 @@ class StorageRepositoryImplTest {
 
         // Then
         Truth.assertThat(actualRefreshDate).isEqualTo(expectedRefreshDate)
-
     }
 
 }

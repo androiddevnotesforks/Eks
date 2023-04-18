@@ -84,4 +84,5 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.mockito.inline)
     testImplementation(libs.reflection)
+    testImplementation(libs.turbine)
 }
