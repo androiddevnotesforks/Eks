@@ -31,6 +31,7 @@ import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.Version
 import ir.fallahpoor.eks.theme.spacing
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
 object LibrariesListTags {
@@ -42,11 +43,11 @@ object LibrariesListTags {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibrariesList(
-    modifier: Modifier = Modifier,
-    libraries: List<Library>,
+    libraries: ImmutableList<Library>,
     onLibraryClick: (Library) -> Unit,
     onLibraryVersionClick: (Version) -> Unit,
-    onLibraryPinClick: (Library, Boolean) -> Unit
+    onLibraryPinClick: (Library, Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         AnimatedVisibility(

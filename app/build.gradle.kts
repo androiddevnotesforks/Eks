@@ -101,6 +101,7 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.workManager)
     implementation(libs.timber)
+    implementation(libs.immutableCollections)
 
     implementation(libs.hilt.android)
     implementation(libs.hilt.workManager)

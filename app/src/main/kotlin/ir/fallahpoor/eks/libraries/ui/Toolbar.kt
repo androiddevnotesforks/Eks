@@ -30,12 +30,12 @@ private enum class ToolbarMode {
 
 @Composable
 fun Toolbar(
-    modifier: Modifier = Modifier,
     sortOrderProvider: () -> SortOrder,
     onSortOrderChange: (SortOrder) -> Unit,
     searchQueryProvider: () -> String,
     onSearchQueryChange: (String) -> Unit,
-    onSearchQuerySubmit: (String) -> Unit
+    onSearchQuerySubmit: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     TopAppBar(modifier = modifier) {
         var toolbarMode by rememberSaveable { mutableStateOf(ToolbarMode.Normal) }

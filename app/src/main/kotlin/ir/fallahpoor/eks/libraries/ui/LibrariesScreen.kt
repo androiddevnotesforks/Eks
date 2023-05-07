@@ -27,9 +27,10 @@ object LibrariesScreenTags {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LibrariesScreen(
-    librariesViewModel: LibrariesViewModel = viewModel(),
     onLibraryClick: (Library) -> Unit,
-    onLibraryVersionClick: (Version) -> Unit
+    onLibraryVersionClick: (Version) -> Unit,
+    modifier: Modifier = Modifier,
+    librariesViewModel: LibrariesViewModel = viewModel()
 ) {
     val uiState: LibrariesScreenUiState by librariesViewModel.librariesScreenUiState
         .collectAsStateWithLifecycle()
@@ -40,6 +41,7 @@ fun LibrariesScreen(
 
     ReleaseTrackerTheme {
         Scaffold(
+            modifier = modifier,
             topBar = {
                 val keyboardController = LocalSoftwareKeyboardController.current
                 Toolbar(

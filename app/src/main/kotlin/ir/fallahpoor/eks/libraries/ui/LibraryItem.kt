@@ -33,11 +33,11 @@ object LibraryItemTags {
 
 @Composable
 fun LibraryItem(
-    modifier: Modifier = Modifier,
     library: Library,
     onLibraryClick: (Library) -> Unit,
     onLibraryVersionClick: (Version) -> Unit,
-    onLibraryPinClick: (Library, Boolean) -> Unit
+    onLibraryPinClick: (Library, Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
@@ -59,9 +59,9 @@ fun LibraryItem(
 
 @Composable
 private fun LibraryPinButton(
-    modifier: Modifier = Modifier,
     isPinned: Boolean,
-    onPinChange: (Boolean) -> Unit
+    onPinChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     IconToggleButton(
         modifier = modifier,
@@ -87,9 +87,9 @@ private fun LibraryPinButton(
 
 @Composable
 private fun LibraryInformation(
-    modifier: Modifier = Modifier,
     library: Library,
-    onLibraryVersionClick: (Version) -> Unit
+    onLibraryVersionClick: (Version) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         LibraryName(name = library.name)

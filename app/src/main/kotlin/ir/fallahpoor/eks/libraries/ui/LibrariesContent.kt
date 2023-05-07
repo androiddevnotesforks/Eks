@@ -25,6 +25,7 @@ import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.Version
 import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
 import ir.fallahpoor.eks.theme.spacing
+import kotlinx.collections.immutable.toImmutableList
 
 object LibrariesContentTags {
     const val PROGRESS_INDICATOR = "librariesContentProgressIndicator"
@@ -36,13 +37,13 @@ object LibrariesContentTags {
 
 @Composable
 fun LibrariesContent(
-    modifier: Modifier = Modifier,
     librariesState: LibrariesState,
     refreshDate: String,
     onLibraryClick: (Library) -> Unit,
     onLibraryVersionClick: (Version) -> Unit,
     onLibraryPinClick: (Library, Boolean) -> Unit,
-    onTryAgainClick: () -> Unit
+    onTryAgainClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
@@ -57,7 +58,7 @@ fun LibrariesContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .testTag(LibrariesContentTags.LIBRARIES_LIST),
-                    libraries = librariesState.libraries,
+                    libraries = librariesState.libraries.toImmutableList(),
                     onLibraryClick = onLibraryClick,
                     onLibraryVersionClick = onLibraryVersionClick,
                     onLibraryPinClick = onLibraryPinClick

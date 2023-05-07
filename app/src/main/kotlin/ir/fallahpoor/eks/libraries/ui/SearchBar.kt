@@ -45,15 +45,15 @@ object SearchBarTags {
 
 @Composable
 fun SearchBar(
-    modifier: Modifier = Modifier,
-    shape: Shape = MaterialTheme.shapes.small,
-    elevation: Dp = MaterialTheme.spacing.small,
     hint: String,
     query: String,
     onQueryChange: (String) -> Unit,
     onQuerySubmit: (String) -> Unit,
     onClearClick: () -> Unit,
-    onCloseClick: () -> Unit
+    onCloseClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    shape: Shape = MaterialTheme.shapes.small,
+    elevation: Dp = MaterialTheme.spacing.small
 ) {
     Surface(
         modifier = modifier.testTag(SearchBarTags.SEARCH_BAR),
