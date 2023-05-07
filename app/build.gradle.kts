@@ -114,6 +114,8 @@ dependencies {
     implementation(libs.compose.runtime)
     implementation(libs.compose.runtime.liveData)
 
+    lintChecks(libs.composeLintChecks)
+
     testImplementation(project(":commonTest"))
     testImplementation(libs.junit)
     testImplementation(libs.truth)
