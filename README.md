@@ -1,7 +1,7 @@
 # Eks
 
-![Build status](https://github.com/masoodfallahpoor/Eks/actions/workflows/build.yml/badge.svg?branch=dev)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/masoodfallahpoor/Eks?label=Latest%20version)
+![Build status](https://github.com/masoudfallahpour/Eks/actions/workflows/build.yml/badge.svg?branch=dev)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/masoudfallahpour/Eks?label=Latest%20version)
 
 Eks is an Android app that displays the latest version of official AndroidX libraries and
 notifies you when there are updates available.
@@ -39,7 +39,7 @@ feature request or bug report, please open a new issue so it could be tracked.
 License
 =======
 
-    Copyright 2022 Masoud Fallahpour.
+    Copyright 2023 Masoud Fallahpour.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
