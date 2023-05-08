@@ -7,7 +7,7 @@
     <string name="new_libraries">[NEW]</string>
     <string name="removed_libraries">[REMOVED]</string>
     <string name="updated_libraries">[UPDATED]</string>
-    <string name="worker_tag">REFRESH_LIBRARIES_WORKER</string>
+    <string name="worker_tag" translatable="false">REFRESH_LIBRARIES_WORKER</string>
     <string name="sort">Sort</string>
     <string name="select_sort_order">Select sort order</string>
     <string name="refresh_date">Refresh date: %s</string>
