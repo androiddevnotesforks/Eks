@@ -35,6 +35,9 @@ jobs:
           echo storePassword=$storePassword >> ./local.properties
           echo keyPassword=$keyPassword >> ./local.properties
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+
       - name: Run unit tests
         run: ./gradlew test
 
