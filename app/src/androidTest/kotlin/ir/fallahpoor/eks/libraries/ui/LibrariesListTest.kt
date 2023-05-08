@@ -8,6 +8,9 @@ import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.Version
 import ir.fallahpoor.eks.libraries.ui.robots.LibrariesListRobot
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -34,10 +37,13 @@ class LibrariesListTest {
 
     }
 
-    private fun getLibraries(): List<Library> = mutableListOf<Library>().apply {
-        repeat(30) {
-            this += TestData.core.copy(name = "core$it")
+    private fun getLibraries(): ImmutableList<Library> {
+        val libraries: List<Library> = buildList {
+            repeat(30) {
+                this += TestData.core.copy(name = "core$it")
+            }
         }
+        return libraries.toImmutableList()
     }
 
     @Test
@@ -87,7 +93,8 @@ class LibrariesListTest {
         // Given
         val libraries = getLibraries().toMutableList()
         libraries.add(0, TestData.room)
-        librariesListRobot.composeLibrariesList(libraries = libraries).scrollToBottom(libraries)
+        librariesListRobot.composeLibrariesList(libraries = libraries.toImmutableList())
+            .scrollToBottom(libraries.toImmutableList())
 
         // When
         librariesListRobot.clickOnScrollToTopButton()
@@ -101,7 +108,7 @@ class LibrariesListTest {
     fun when_there_are_no_libraries_no_libraries_message_is_displayed() {
 
         // Given
-        librariesListRobot.composeLibrariesList(libraries = emptyList())
+        librariesListRobot.composeLibrariesList(libraries = persistentListOf())
 
         // Then
         composeRule.assertTextIsDisplayed(context.getString(R.string.no_library))
@@ -112,7 +119,7 @@ class LibrariesListTest {
     fun when_there_are_no_libraries_list_of_libraries_is_not_displayed() {
 
         // Given
-        librariesListRobot.composeLibrariesList(libraries = emptyList())
+        librariesListRobot.composeLibrariesList(libraries = persistentListOf())
 
         // Then
         composeRule.assertDoesNotExistNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
@@ -123,7 +130,7 @@ class LibrariesListTest {
     fun when_there_are_no_libraries_scroll_to_top_button_is_not_displayed() {
 
         // Given
-        librariesListRobot.composeLibrariesList(libraries = emptyList())
+        librariesListRobot.composeLibrariesList(libraries = persistentListOf())
 
         // Then
         composeRule.assertDoesNotExistNodeWithTag(LibrariesListTags.SCROLL_TO_TOP_BUTTON)
@@ -137,8 +144,7 @@ class LibrariesListTest {
         val library: Library = TestData.room
         val onLibraryClick: (Library) -> Unit = mock()
         librariesListRobot.composeLibrariesList(
-            libraries = listOf(library),
-            onLibraryClick = onLibraryClick
+            libraries = persistentListOf(library), onLibraryClick = onLibraryClick
         )
 
         // When
@@ -156,8 +162,7 @@ class LibrariesListTest {
         val library: Library = TestData.room
         val onLibraryVersionClick: (Version) -> Unit = mock()
         librariesListRobot.composeLibrariesList(
-            libraries = listOf(library),
-            onLibraryVersionClick = onLibraryVersionClick
+            libraries = persistentListOf(library), onLibraryVersionClick = onLibraryVersionClick
         )
 
         // When
@@ -175,8 +180,7 @@ class LibrariesListTest {
         val library: Library = TestData.preference
         val onLibraryPinClick: (Library, Boolean) -> Unit = mock()
         librariesListRobot.composeLibrariesList(
-            libraries = listOf(library),
-            onLibraryPinClick = onLibraryPinClick
+            libraries = persistentListOf(library), onLibraryPinClick = onLibraryPinClick
         )
 
         // When
@@ -194,8 +198,7 @@ class LibrariesListTest {
         val library: Library = TestData.core
         val onLibraryPinClick: (Library, Boolean) -> Unit = mock()
         librariesListRobot.composeLibrariesList(
-            libraries = listOf(library),
-            onLibraryPinClick = onLibraryPinClick
+            libraries = persistentListOf(library), onLibraryPinClick = onLibraryPinClick
         )
 
         // When

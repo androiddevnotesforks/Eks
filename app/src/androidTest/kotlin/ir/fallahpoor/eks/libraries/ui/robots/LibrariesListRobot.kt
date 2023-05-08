@@ -13,6 +13,7 @@ import ir.fallahpoor.eks.libraries.ui.LibrariesListTags
 import ir.fallahpoor.eks.libraries.ui.LibraryItemTags
 import ir.fallahpoor.eks.libraries.ui.clickOnNodeWithTag
 import ir.fallahpoor.eks.libraries.ui.clickOnNodeWithText
+import kotlinx.collections.immutable.ImmutableList
 
 class LibrariesListRobot(
     private val context: Context,
@@ -21,7 +22,7 @@ class LibrariesListRobot(
 
     fun composeLibrariesList(
         modifier: Modifier = Modifier,
-        libraries: List<Library>,
+        libraries: ImmutableList<Library>,
         onLibraryClick: (Library) -> Unit = {},
         onLibraryVersionClick: (Version) -> Unit = {},
         onLibraryPinClick: (Library, Boolean) -> Unit = { _, _ -> }
@@ -42,7 +43,7 @@ class LibrariesListRobot(
         composeTestRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST).performScrollToIndex(0)
     }
 
-    fun scrollToBottom(libraries: List<Library>) {
+    fun scrollToBottom(libraries: ImmutableList<Library>) {
         composeTestRule.onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
             .performScrollToIndex(libraries.lastIndex)
     }
