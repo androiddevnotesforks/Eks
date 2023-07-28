@@ -78,7 +78,7 @@ private fun SortOrderItem(
 
 @Preview
 @Composable
-private fun DialogPreview() {
+private fun SortOrderDialogPreview() {
     ReleaseTrackerTheme(darkTheme = false) {
         Surface {
             SortOrderDialog(
