@@ -1,4 +1,5 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -7,7 +8,8 @@ plugins {
     kotlin("kapt")
 }
 
-val properties: java.util.Properties = gradleLocalProperties(rootDir)
+val properties =
+    Properties().apply { load(FileInputStream(File(rootProject.rootDir, "local.properties"))) }
 val sp: String = properties.getProperty("storePassword")
 val kp: String = properties.getProperty("keyPassword")
 

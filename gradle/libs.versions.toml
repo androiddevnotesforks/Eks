@@ -1,29 +1,29 @@
 [versions]
-compileSdk = "33"
+compileSdk = "34"
 minSdk = "21"
 targetSdk = "33"
 
-kotlin = "1.8.10"
-lifecycle = "2.6.1"
-room = "2.5.2"
+kotlin = "1.9.10"
+lifecycle = "2.6.2"
+room = "2.6.0"
 workManager = "2.8.1"
-composeBom = "2023.06.01"
-composeCompiler = "1.4.2"
+composeBom = "2023.10.01"
+composeCompiler = "1.5.3"
 coroutines = "1.7.1"
-hilt = "2.44.2"
+hilt = "2.48.1"
 hiltJetpack = "1.0.0"
 espresso = "3.5.1"
 mockito = "5.0.0"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
-core = { module = "androidx.core:core-ktx", version = "1.10.1" }
+core = { module = "androidx.core:core-ktx", version = "1.12.0" }
 dataStore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.0.0" }
 appCompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
 
-activity-compose = { module = "androidx.activity:activity-compose", version = "1.7.2" }
+activity-compose = { module = "androidx.activity:activity-compose", version = "1.8.0" }
 constraintLayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version = "1.0.1" }
-material = { module = "com.google.android.material:material", version = "1.9.0" }
+material = { module = "com.google.android.material:material", version = "1.10.0" }
 timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
 inject = { module = "javax.inject:javax.inject", version = "1" }
 junit = { module = "junit:junit", version = "4.13.2" }
@@ -81,11 +81,11 @@ composeLintChecks = { module = "com.slack.lint.compose:compose-lint-checks", ver
 
 immutableCollections = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version = "0.3.5" }
 
-plugin-android = { module = "com.android.tools.build:gradle", version = "8.2.0-alpha14" }
+plugin-android = { module = "com.android.tools.build:gradle", version = "8.3.0-alpha11" }
 plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-dagger = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
-plugin-googleServices = { module = "com.google.gms:google-services", version = "4.3.15" }
-plugin-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-gradle", version = "2.9.7" }
+plugin-googleServices = { module = "com.google.gms:google-services", version = "4.4.0" }
+plugin-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-gradle", version = "2.9.9" }
 
 [bundles]
 lifecycle = ["lifecycle-liveData", "lifecycle-viewModel", "lifecycle-viewModel-compose", "lifecycle-runtime-compose"]
