@@ -53,20 +53,23 @@ class EksApp : Application(), Configuration.Provider {
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .setRequiresBatteryNotLow(true)
             .build()
-        return PeriodicWorkRequestBuilder<RefreshLibrariesWorker>(1, TimeUnit.DAYS)
+        return PeriodicWorkRequestBuilder<RefreshLibrariesWorker>(
+            repeatInterval = 1,
+            repeatIntervalTimeUnit = TimeUnit.DAYS
+        )
             .setConstraints(constraints)
             .setBackoffCriteria(
-                BackoffPolicy.LINEAR,
-                1,
-                TimeUnit.HOURS
+                backoffPolicy = BackoffPolicy.LINEAR,
+                backoffDelay = 1,
+                timeUnit = TimeUnit.HOURS
             )
-            .setInitialDelay(10, TimeUnit.MINUTES)
+            .setInitialDelay(duration = 10, timeUnit = TimeUnit.MINUTES)
             .addTag(getString(R.string.worker_tag))
             .build()
     }
 
-    override fun getWorkManagerConfiguration(): Configuration =
-        Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
 
