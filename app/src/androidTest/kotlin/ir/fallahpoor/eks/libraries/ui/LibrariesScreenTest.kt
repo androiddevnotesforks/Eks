@@ -2,27 +2,26 @@ package ir.fallahpoor.eks.libraries.ui
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performScrollToKey
 import androidx.test.core.app.ApplicationProvider
+import io.mockk.mockk
+import io.mockk.verify
 import ir.fallahpoor.eks.commontest.FakeLibraryRepository
 import ir.fallahpoor.eks.commontest.FakeStorageRepository
 import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.Version
 import ir.fallahpoor.eks.libraries.ui.robots.LibrariesScreenRobot
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito
 
 // TODO Add tests for checking the functionality of sort order
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class LibrariesScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -46,14 +45,12 @@ class LibrariesScreenTest {
 
     @Test
     fun screen_is_initialized_correctly() {
-
         // Given
         librariesScreenRobot.composeLibrariesScreen(libraryRepository, storageRepository)
 
         // Then
         composeTestRule.assertIsDisplayedNodeWithTag(LibrariesScreenTags.TOOLBAR)
         composeTestRule.assertIsDisplayedNodeWithTag(LibrariesScreenTags.CONTENT)
-
     }
 
 //    @Test
@@ -72,7 +69,6 @@ class LibrariesScreenTest {
 
     @Test
     fun search() = runTest {
-
         // Given
         librariesScreenRobot.composeLibrariesScreen(libraryRepository, storageRepository)
 
@@ -91,12 +87,10 @@ class LibrariesScreenTest {
                 }
             }
         }
-
     }
 
     @Test
     fun all_libraries_are_displayed_when_search_bar_is_closed() = runTest {
-
         // Given
         librariesScreenRobot.composeLibrariesScreen(libraryRepository, storageRepository)
             .enterSearchQuery("co")
@@ -113,12 +107,10 @@ class LibrariesScreenTest {
             assertDoesNotExistNodeWithTag(LibrariesListTags.NO_LIBRARY_TEXT)
             assertDoesNotExistNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
         }
-
     }
 
     @Test
     fun all_libraries_are_displayed_when_search_bar_is_cleared() = runTest {
-
         // Given
         librariesScreenRobot.composeLibrariesScreen(libraryRepository, storageRepository)
             .enterSearchQuery("co")
@@ -135,14 +127,12 @@ class LibrariesScreenTest {
             assertTextDoesNotExist(LibrariesListTags.NO_LIBRARY_TEXT)
             assertDoesNotExistNodeWithTag(LibrariesContentTags.PROGRESS_INDICATOR)
         }
-
     }
 
     @Test
     fun correct_callback_is_called_when_a_library_is_clicked() {
-
         // Given
-        val onLibraryClick: (Library) -> Unit = mock()
+        val onLibraryClick: (Library) -> Unit = mockk()
         librariesScreenRobot.composeLibrariesScreen(
             libraryRepository = libraryRepository,
             storageRepository = storageRepository,
@@ -154,15 +144,13 @@ class LibrariesScreenTest {
         librariesScreenRobot.clickOnLibrary(TestData.preference)
 
         // Then
-        Mockito.verify(onLibraryClick).invoke(TestData.preference)
-
+        verify { onLibraryClick.invoke(TestData.preference) }
     }
 
     @Test
     fun correct_callback_is_called_when_a_library_version_is_clicked() {
-
         // Given
-        val onLibraryVersionClick: (Version) -> Unit = mock()
+        val onLibraryVersionClick: (Version) -> Unit = mockk()
         librariesScreenRobot.composeLibrariesScreen(
             libraryRepository = libraryRepository,
             storageRepository = storageRepository,
@@ -174,8 +162,6 @@ class LibrariesScreenTest {
         librariesScreenRobot.clickOnLibraryBetaVersion(TestData.core)
 
         // Then
-        Mockito.verify(onLibraryVersionClick).invoke(TestData.core.betaVersion)
-
+        verify { onLibraryVersionClick.invoke(TestData.core.betaVersion) }
     }
-
 }

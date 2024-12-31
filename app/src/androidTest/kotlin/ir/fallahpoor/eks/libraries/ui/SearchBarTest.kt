@@ -5,13 +5,13 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import io.mockk.mockk
+import io.mockk.verify
 import ir.fallahpoor.eks.libraries.ui.robots.SearchBarRobot
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito
 
 class SearchBarTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -19,7 +19,6 @@ class SearchBarTest {
 
     @Test
     fun search_bar_is_initialized_correctly() {
-
         // Given
         val hint = "hint"
         searchBarRobot.composeSearchBar(hint = "hint")
@@ -33,12 +32,10 @@ class SearchBarTest {
             assertIsDisplayedNodeWithTag(SearchBarTags.CLOSE_BUTTON)
             assertIsDisplayedNodeWithTag(SearchBarTags.CLEAR_BUTTON)
         }
-
     }
 
     @Test
     fun when_search_query_is_not_empty_hint_is_not_displayed() {
-
         // Given
         val hint = "Enter library name"
         val query = "Coil"
@@ -48,54 +45,46 @@ class SearchBarTest {
 
         // Then
         composeTestRule.assertTextDoesNotExist(hint)
-
     }
 
     @Test
     fun when_clear_button_is_clicked_correct_callback_is_called() {
-
         // Given
-        val onClearClick: () -> Unit = mock()
+        val onClearClick: () -> Unit = mockk()
         searchBarRobot.composeSearchBar(onClearClick = onClearClick)
 
         // When
         searchBarRobot.clickClearButton()
 
         // Then
-        Mockito.verify(onClearClick).invoke()
-
+        verify { onClearClick.invoke() }
     }
 
     @Test
     fun when_close_button_is_clicked_correct_callback_is_called() {
-
         // Given
-        val onCloseClick: () -> Unit = mock()
+        val onCloseClick: () -> Unit = mockk()
         searchBarRobot.composeSearchBar(onCloseClick = onCloseClick)
 
         // When
         searchBarRobot.clickCloseButton()
 
         // Then
-        Mockito.verify(onCloseClick).invoke()
-
+        verify { onCloseClick.invoke() }
     }
 
     @Test
     fun when_query_is_changed_correct_callback_is_called() {
-
         // Given
-        val onQueryChange: (String) -> Unit = mock()
+        val onQueryChange: (String) -> Unit = mockk()
         searchBarRobot.composeSearchBar(onQueryChange = onQueryChange)
 
         // When
         searchBarRobot.enterSearchQuery("Coroutines")
 
         // Then
-        Mockito.verify(onQueryChange).invoke("Coroutines")
-
+        verify { onQueryChange.invoke("Coroutines") }
     }
 
     // TODO Test if the correct callback is called when query is submitted
-
 }

@@ -10,17 +10,15 @@ import java.io.IOException
 
 @RunWith(RobolectricTestRunner::class)
 class ExceptionParserImplTest {
-
     private lateinit var exceptionParser: ExceptionParserImpl
 
     @Before
-    fun setup() {
+    fun runBeforeEachTest() {
         exceptionParser = ExceptionParserImpl(ApplicationProvider.getApplicationContext())
     }
 
     @Test
     fun `correct message is returned when the exception is a IOException`() {
-
         // Given
         val throwable: Throwable = IOException()
 
@@ -29,12 +27,10 @@ class ExceptionParserImplTest {
 
         // Then
         Truth.assertThat(message).isEqualTo(exceptionParser.INTERNET_NOT_CONNECTED)
-
     }
 
     @Test
     fun `correct message is returned when the exception is anything but IOException`() {
-
         // Given any exception other than than HttpException and IOException
         val throwable: Throwable = ArithmeticException()
 
@@ -43,7 +39,5 @@ class ExceptionParserImplTest {
 
         // Then
         Truth.assertThat(message).isEqualTo(exceptionParser.SOMETHING_WENT_WRONG)
-
     }
-
 }

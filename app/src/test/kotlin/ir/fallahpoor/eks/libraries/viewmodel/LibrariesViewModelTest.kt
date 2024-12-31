@@ -11,13 +11,11 @@ import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreenUiState
 import ir.fallahpoor.eks.libraries.ui.LibrariesState
 import ir.fallahpoor.eks.libraries.viewmodel.exceptionparser.FakeExceptionParser
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class LibrariesViewModelTest {
 
     @get:Rule
@@ -128,7 +126,8 @@ class LibrariesViewModelTest {
 
             val actualFinalState = awaitItem()
             val expectedFinalState = LibrariesScreenUiState(
-                sortOrder = expectedSortOrder, librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
+                sortOrder = expectedSortOrder,
+                librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
             )
             Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
             Truth.assertThat(storageRepository.getSortOrder()).isEqualTo(expectedSortOrder)
@@ -197,7 +196,8 @@ class LibrariesViewModelTest {
 
             val actualFinalState = awaitItem()
             val expectedFinalState = LibrariesScreenUiState(
-                searchQuery = searchQuery, librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
+                searchQuery = searchQuery,
+                librariesState = LibrariesState.Error(FakeExceptionParser.ERROR_MESSAGE)
             )
             Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
         }
@@ -222,7 +222,8 @@ class LibrariesViewModelTest {
             )
 
             val actualFinalState = awaitItem()
-            val expectedFinalState = LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries))
+            val expectedFinalState =
+                LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries))
             Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
         }
     }
@@ -269,7 +270,8 @@ class LibrariesViewModelTest {
             )
 
             val actualFinalState = awaitItem()
-            val expectedFinalState = LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries))
+            val expectedFinalState =
+                LibrariesScreenUiState(librariesState = LibrariesState.Success(libraries))
             Truth.assertThat(actualFinalState).isEqualTo(expectedFinalState)
         }
     }

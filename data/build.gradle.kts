@@ -77,7 +77,7 @@ dependencies {
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.test.junit)
     testImplementation(libs.robolectric)
-    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockk)
     testImplementation(libs.kotlin.reflection)
     testImplementation(libs.turbine)
 }

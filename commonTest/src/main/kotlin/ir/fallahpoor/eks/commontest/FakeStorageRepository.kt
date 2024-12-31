@@ -8,7 +8,6 @@ import ir.fallahpoor.eks.data.repository.storage.StorageRepository
 import kotlinx.coroutines.flow.Flow
 
 class FakeStorageRepository : StorageRepository {
-
     private val sortOrderLiveData = MutableLiveData(SortOrder.A_TO_Z)
     private val refreshDateLiveData = MutableLiveData(Constants.NOT_AVAILABLE)
 
@@ -25,5 +24,4 @@ class FakeStorageRepository : StorageRepository {
     }
 
     override fun getRefreshDateAsFlow(): Flow<String> = refreshDateLiveData.asFlow()
-
 }

@@ -6,9 +6,6 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import org.mockito.Mockito
-
-inline fun <reified T : Any> mock(): T = Mockito.mock(T::class.java)
 
 fun ComposeContentTestRule.clickOnNodeWithText(text: String) {
     onNodeWithText(text, useUnmergedTree = true).performClick()

@@ -7,14 +7,12 @@ import ir.fallahpoor.eks.commontest.MainDispatcherRule
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.data.fakes.FakeStorage
 import ir.fallahpoor.eks.data.storage.LocalStorage
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class StorageRepositoryImplTest {
 
     @get:Rule

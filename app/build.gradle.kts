@@ -123,7 +123,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.robolectric)
-    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockk)
     testImplementation(libs.turbine)
 
     androidTestImplementation(project(":commonTest"))
@@ -133,8 +133,7 @@ dependencies {
     androidTestImplementation(libs.truth)
     androidTestImplementation(libs.androidx.compose.uiTest.junit)
     debugImplementation(libs.androidx.compose.uiTest.manifest)
-    androidTestImplementation(libs.mockito.core)
-    androidTestImplementation(libs.dexMaker)
+    androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.bundles.espresso)
     androidTestImplementation(libs.hilt.android.testing)
