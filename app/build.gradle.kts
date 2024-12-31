@@ -4,7 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
 }
@@ -79,10 +79,6 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions.freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
 }
@@ -104,8 +100,8 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.hilt.workManager)
-    kapt(libs.hilt.android.compiler)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.hilt.compiler)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -138,5 +134,5 @@ dependencies {
     androidTestImplementation(libs.bundles.espresso)
     androidTestImplementation(libs.hilt.android.testing)
     androidTestImplementation(libs.androidx.workManager.test)
-    kaptAndroidTest(libs.hilt.android.compiler)
+    kspAndroidTest(libs.hilt.android.compiler)
 }

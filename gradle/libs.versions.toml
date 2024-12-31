@@ -4,6 +4,7 @@ minSdk = "21"
 targetSdk = "35"
 
 kotlin = "2.0.20"
+ksp = "2.0.20-1.0.25"
 lifecycle = "2.8.7"
 room = "2.6.1"
 workManager = "2.10.0"
@@ -80,9 +81,9 @@ jsoup = { module = "org.jsoup:jsoup", version = "1.16.1" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
 lifecycle = ["androidx-lifecycle-liveData", "androidx-lifecycle-viewModel", "androidx-lifecycle-viewModel-compose", "androidx-lifecycle-runtime-compose"]
