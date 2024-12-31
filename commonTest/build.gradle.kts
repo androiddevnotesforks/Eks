@@ -33,10 +33,10 @@ android {
 
 dependencies {
     implementation(project(":data"))
-    implementation(libs.lifecycle.liveData)
-    implementation(libs.coroutines.test)
+    implementation(libs.androidx.lifecycle.liveData)
+    implementation(libs.kotlinx.coroutines.test)
     implementation(libs.junit)
-    implementation(libs.core.testing)
-    implementation(libs.test.core)
-    implementation(libs.test.junit)
+    implementation(libs.androidx.core.testing)
+    implementation(libs.androidx.test.core)
+    implementation(libs.androidx.test.junit)
 }

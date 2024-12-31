@@ -17,45 +17,46 @@ agp = "8.7.3"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
-core = { module = "androidx.core:core-ktx", version = "1.15.0" }
-dataStore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.1.1" }
-appCompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
+kotlin-reflection = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 
-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.3" }
-constraintLayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version = "1.1.0" }
-material = { module = "com.google.android.material:material", version = "1.12.0" }
-timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
-inject = { module = "javax.inject:javax.inject", version = "1" }
-junit = { module = "junit:junit", version = "4.13.2" }
-truth = { module = "com.google.truth:truth", version = "1.1.3" }
-core-testing = { module = "androidx.arch.core:core-testing", version = "2.2.0" }
-robolectric = { module = "org.robolectric:robolectric", version = "4.9.2" }
-jsoup = { module = "org.jsoup:jsoup", version = "1.16.1" }
-reflection = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
-lifecycle-liveData = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
-lifecycle-viewModel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
-lifecycle-viewModel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-core = { module = "androidx.core:core-ktx", version = "1.15.0" }
+androidx-dataStore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.1.1" }
+androidx-appCompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.3" }
+androidx-constraintLayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version = "1.1.0" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version = "2.2.0" }
 
-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-lifecycle-liveData = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-viewModel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
+androidx-lifecycle-viewModel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 
-workManager = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
-workManager-test = { module = "androidx.work:work-testing", version.ref = "workManager" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
-compose-ui = { module = "androidx.compose.ui:ui" }
-compose-tooling = { module = "androidx.compose.ui:ui-tooling" }
-compose-material3 = { module = "androidx.compose.material3:material3" }
-compose-runtime = { module = "androidx.compose.runtime:runtime" }
-compose-runtime-liveData = { module = "androidx.compose.runtime:runtime-livedata" }
-compose-uiTest-Junit = { module = "androidx.compose.ui:ui-test-junit4" }
-compose-uiTest-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
+androidx-compose-runtime-liveData = { module = "androidx.compose.runtime:runtime-livedata" }
+androidx-compose-uiTest-Junit = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-uiTest-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 
-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+androidx-workManager = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
+androidx-workManager-test = { module = "androidx.work:work-testing", version.ref = "workManager" }
+
+androidx-test-core = { module = "androidx.test:core", version = "1.6.1" }
+androidx-test-runner = { module = "androidx.test:runner", version = "1.6.2" }
+androidx-test-rules = { module = "androidx.test:rules", version = "1.6.1" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version = "1.2.1" }
+
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+androidx-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espresso" }
 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
@@ -63,23 +64,20 @@ hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", vers
 hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltJetpack" }
 hilt-workManager = { module = "androidx.hilt:hilt-work", version.ref = "hiltJetpack" }
 
-test-core = { module = "androidx.test:core", version = "1.6.1" }
-test-runner = { module = "androidx.test:runner", version = "1.6.2" }
-test-rules = { module = "androidx.test:rules", version = "1.6.1" }
-test-junit = { module = "androidx.test.ext:junit", version = "1.2.1" }
-
-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espresso" }
-
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
 dexMaker = { module = "com.linkedin.dexmaker:dexmaker-mockito-inline", version = "2.28.3" }
 
+material = { module = "com.google.android.material:material", version = "1.12.0" }
+timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
+inject = { module = "javax.inject:javax.inject", version = "1" }
+junit = { module = "junit:junit", version = "4.13.2" }
+truth = { module = "com.google.truth:truth", version = "1.1.3" }
 turbine = { module = "app.cash.turbine:turbine", version = "0.12.3" }
-
 composeLintChecks = { module = "com.slack.lint.compose:compose-lint-checks", version = "1.2.0" }
-
 immutableCollections = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version = "0.3.5" }
+robolectric = { module = "org.robolectric:robolectric", version = "4.14.1" }
+jsoup = { module = "org.jsoup:jsoup", version = "1.16.1" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -90,5 +88,5 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 [bundles]
-lifecycle = ["lifecycle-liveData", "lifecycle-viewModel", "lifecycle-viewModel-compose", "lifecycle-runtime-compose"]
-espresso = ["espresso-core", "espresso-intents"]
+lifecycle = ["androidx-lifecycle-liveData", "androidx-lifecycle-viewModel", "androidx-lifecycle-viewModel-compose", "androidx-lifecycle-runtime-compose"]
+espresso = ["androidx-espresso-core", "androidx-espresso-intents"]
