@@ -6,10 +6,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
+import ir.fallahpoor.eks.theme.EksTheme
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -33,8 +35,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
-            Eks()
+            EksTheme {
+                Eks()
+            }
         }
         if (isPostNotificationsPermissionNotGranted()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&

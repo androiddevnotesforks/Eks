@@ -2,16 +2,22 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
-    id("dagger.hilt.android.plugin")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.compose.compiler)
 }
 
-val properties =
-    Properties().apply { load(FileInputStream(File(rootProject.rootDir, "local.properties"))) }
-val sp: String = properties.getProperty("storePassword")
-val kp: String = properties.getProperty("keyPassword")
+val props = Properties()
+val localPropertiesFile = File(rootProject.rootDir, "local.properties")
+if (localPropertiesFile.exists()) {
+    props.load(FileInputStream(localPropertiesFile))
+} else {
+    throw GradleException("local.properties file not found.")
+}
+val sp: String = props.getProperty("storePassword")
+val kp: String = props.getProperty("keyPassword")
 
 android {
     namespace = "ir.fallahpoor.eks"
@@ -60,10 +66,6 @@ android {
         buildConfig = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
-    }
-
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
@@ -75,11 +77,6 @@ android {
             isIncludeAndroidResources = true
         }
     }
-
-    // TODO remove it once the reason for this Lint error is found
-    lint {
-        disable += "DialogFragmentCallbacksDetector"
-    }
 }
 
 kapt {
@@ -87,7 +84,7 @@ kapt {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+    compilerOptions.freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
 }
 
 dependencies {
@@ -113,7 +110,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.tooling)
-    implementation(libs.compose.material)
+    implementation(libs.compose.material3)
     implementation(libs.compose.runtime)
     implementation(libs.compose.runtime.liveData)
 

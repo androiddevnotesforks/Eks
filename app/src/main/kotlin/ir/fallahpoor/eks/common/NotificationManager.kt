@@ -19,8 +19,7 @@ import ir.fallahpoor.eks.MainActivity
 import ir.fallahpoor.eks.R
 import javax.inject.Inject
 
-class NotificationManager
-@Inject constructor(private val context: Context) {
+class NotificationManager @Inject constructor(private val context: Context) {
 
     companion object {
         const val ID_GENERAL_CHANNEL = "general_channel"

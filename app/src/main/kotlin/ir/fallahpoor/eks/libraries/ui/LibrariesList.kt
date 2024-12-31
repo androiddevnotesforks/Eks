@@ -3,7 +3,6 @@ package ir.fallahpoor.eks.libraries.ui
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,13 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Divider
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -27,11 +27,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.Version
+import ir.fallahpoor.eks.theme.EksTheme
 import ir.fallahpoor.eks.theme.spacing
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 
 object LibrariesListTags {
@@ -40,7 +43,6 @@ object LibrariesListTags {
     const val SCROLL_TO_TOP_BUTTON = "librariesListScrollToTopButton"
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibrariesList(
     libraries: ImmutableList<Library>,
@@ -55,7 +57,7 @@ fun LibrariesList(
             enter = fadeIn(),
             exit = fadeOut()
         ) {
-            NoLibrary()
+            NoLibraryText()
         }
         AnimatedVisibility(
             visible = libraries.isNotEmpty(),
@@ -80,13 +82,13 @@ fun LibrariesList(
                         LibraryItem(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .animateItemPlacement(),
+                                .animateItem(),
                             library = library,
                             onLibraryClick = onLibraryClick,
                             onLibraryVersionClick = onLibraryVersionClick,
                             onLibraryPinClick = onLibraryPinClick
                         )
-                        Divider()
+                        HorizontalDivider()
                     }
                 }
                 val coroutineScope = rememberCoroutineScope()
@@ -106,7 +108,7 @@ fun LibrariesList(
 }
 
 @Composable
-private fun NoLibrary() {
+private fun NoLibraryText() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -136,6 +138,48 @@ private fun ScrollToTopButton(show: Boolean, onClick: () -> Unit) {
             Icon(
                 imageVector = Icons.Filled.KeyboardArrowUp,
                 contentDescription = stringResource(R.string.scroll_to_top)
+            )
+        }
+    }
+}
+
+@Composable
+@Preview(name = "List of libraries is not empty")
+private fun LibrariesListNonEmptyListPreview() {
+    LibrariesListPreview(
+        libraries = listOf(
+            Library(
+                name = "Library 1",
+                description = "Description 1",
+            ),
+            Library(
+                name = "Library 2",
+                description = "Description 2",
+                isPinned = true,
+                stableVersion = Version("1.0.0"),
+                betaVersion = Version("2.0.0"),
+                rcVersion = Version("3.0.0"),
+                alphaVersion = Version("4.0.0")
+            )
+        ).toImmutableList()
+    )
+}
+
+@Composable
+@Preview(name = "List of libraries is empty")
+private fun LibrariesListEmptyListPreview() {
+    LibrariesListPreview(libraries = emptyList<Library>().toImmutableList())
+}
+
+@Composable
+private fun LibrariesListPreview(libraries: ImmutableList<Library>) {
+    EksTheme {
+        Surface {
+            LibrariesList(
+                libraries = libraries,
+                onLibraryClick = {},
+                onLibraryVersionClick = {},
+                onLibraryPinClick = { _, _ -> },
             )
         }
     }

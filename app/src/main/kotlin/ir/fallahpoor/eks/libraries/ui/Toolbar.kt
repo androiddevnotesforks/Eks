@@ -1,15 +1,18 @@
 package ir.fallahpoor.eks.libraries.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,15 +22,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.SortOrder
+import ir.fallahpoor.eks.theme.EksTheme
 
 private enum class ToolbarMode {
     Normal,
     Search
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Toolbar(
     sortOrderProvider: () -> SortOrder,
@@ -37,48 +42,51 @@ fun Toolbar(
     onSearchQuerySubmit: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    TopAppBar(modifier = modifier) {
-        var toolbarMode by rememberSaveable { mutableStateOf(ToolbarMode.Normal) }
-        Box(contentAlignment = Alignment.BottomCenter) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.app_name),
-                    style = MaterialTheme.typography.h6
-                )
-                SortOrderButton(
-                    currentSortOrderProvider = sortOrderProvider,
-                    onSortOrderChange = onSortOrderChange
-                )
-                SearchButton(onClick = { toolbarMode = ToolbarMode.Search })
-            }
-            androidx.compose.animation.AnimatedVisibility(visible = toolbarMode == ToolbarMode.Search) {
-                SearchBar(
+    TopAppBar(
+        modifier = modifier,
+        title = {
+            var toolbarMode by rememberSaveable { mutableStateOf(ToolbarMode.Normal) }
+            Box(contentAlignment = Alignment.BottomCenter) {
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    hint = stringResource(R.string.search),
-                    query = searchQueryProvider(),
-                    onQueryChange = {
-                        onSearchQueryChange(it)
-                    },
-                    onQuerySubmit = onSearchQuerySubmit,
-                    onClearClick = {
-                        if (searchQueryProvider().isNotBlank()) {
-                            onSearchQueryChange("")
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.app_name),
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                    SortOrderButton(
+                        currentSortOrderProvider = sortOrderProvider,
+                        onSortOrderChange = onSortOrderChange
+                    )
+                    SearchButton(onClick = { toolbarMode = ToolbarMode.Search })
+                }
+                AnimatedVisibility(visible = toolbarMode == ToolbarMode.Search) {
+                    SearchBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        hint = stringResource(R.string.search),
+                        query = searchQueryProvider(),
+                        onQueryChange = {
+                            onSearchQueryChange(it)
+                        },
+                        onQuerySubmit = onSearchQuerySubmit,
+                        onClearClick = {
+                            if (searchQueryProvider().isNotBlank()) {
+                                onSearchQueryChange("")
+                            }
+                        },
+                        onCloseClick = {
+                            toolbarMode = ToolbarMode.Normal
+                            if (searchQueryProvider().isNotBlank()) {
+                                onSearchQueryChange("")
+                            }
                         }
-                    },
-                    onCloseClick = {
-                        toolbarMode = ToolbarMode.Normal
-                        if (searchQueryProvider().isNotBlank()) {
-                            onSearchQueryChange("")
-                        }
-                    }
-                )
+                    )
+                }
             }
         }
-    }
+    )
 }
 
 @Composable
@@ -115,14 +123,18 @@ private fun SearchButton(onClick: () -> Unit) {
     }
 }
 
-@Preview
 @Composable
+@PreviewLightDark
 private fun ToolbarPreview() {
-    Toolbar(
-        sortOrderProvider = { SortOrder.A_TO_Z },
-        onSortOrderChange = {},
-        searchQueryProvider = { "" },
-        onSearchQueryChange = {},
-        onSearchQuerySubmit = {}
-    )
+    EksTheme {
+        Surface {
+            Toolbar(
+                sortOrderProvider = { SortOrder.A_TO_Z },
+                onSortOrderChange = {},
+                searchQueryProvider = { "" },
+                onSearchQueryChange = {},
+                onSearchQuerySubmit = {}
+            )
+        }
+    }
 }

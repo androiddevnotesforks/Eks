@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.android.library)
 }
 
 android {
@@ -29,12 +29,6 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
-
-    // TODO remove it once the reason for this Lint error is found
-    lint {
-        disable += "DialogFragmentCallbacksDetector"
-    }
-
 }
 
 dependencies {

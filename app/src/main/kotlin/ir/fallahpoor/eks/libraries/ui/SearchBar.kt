@@ -6,18 +6,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,12 +26,9 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import ir.fallahpoor.eks.R
-import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
-import ir.fallahpoor.eks.theme.spacing
+import ir.fallahpoor.eks.theme.EksTheme
 
 object SearchBarTags {
     const val CLOSE_BUTTON = "searchBarCloseButton"
@@ -52,13 +46,11 @@ fun SearchBar(
     onClearClick: () -> Unit,
     onCloseClick: () -> Unit,
     modifier: Modifier = Modifier,
-    shape: Shape = MaterialTheme.shapes.small,
-    elevation: Dp = MaterialTheme.spacing.small
+    shape: Shape = MaterialTheme.shapes.small
 ) {
     Surface(
         modifier = modifier.testTag(SearchBarTags.SEARCH_BAR),
-        shape = shape,
-        elevation = elevation
+        shape = shape
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -91,7 +83,7 @@ private fun CloseButton(onCloseClick: () -> Unit) {
         onClick = onCloseClick
     ) {
         Icon(
-            imageVector = Icons.Filled.ArrowBack,
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = stringResource(R.string.close_search_bar)
         )
     }
@@ -118,8 +110,8 @@ private fun SearchTextField(
                 onQuerySubmit(query)
             }
         ),
-        textStyle = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSurface),
-        cursorBrush = SolidColor(MaterialTheme.colors.onSurface)
+        textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface)
     )
     DisposableEffect(Unit) {
         focusRequester.requestFocus()
@@ -129,12 +121,10 @@ private fun SearchTextField(
 
 @Composable
 private fun HintText(hint: String) {
-    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = hint
-        )
-    }
+    Text(
+        modifier = Modifier.fillMaxWidth(),
+        text = hint
+    )
 }
 
 @Composable
@@ -151,15 +141,25 @@ private fun ClearButton(onClearClick: () -> Unit) {
 }
 
 @Composable
-@Preview
-private fun SearchBarPreview() {
-    ReleaseTrackerTheme(darkTheme = false) {
+@PreviewLightDark
+private fun SearchBarNonEmptyQueryPreview() {
+    SearchBarPreview("Coil")
+}
+
+@Composable
+@PreviewLightDark
+private fun SearchBarEmptyQueryPreview() {
+    SearchBarPreview("")
+}
+
+@Composable
+private fun SearchBarPreview(query: String) {
+    EksTheme {
         Surface {
             SearchBar(
                 shape = MaterialTheme.shapes.small,
-                elevation = 8.dp,
                 hint = "Search",
-                query = "Coil",
+                query = query,
                 onQueryChange = {},
                 onClearClick = {},
                 onCloseClick = {},

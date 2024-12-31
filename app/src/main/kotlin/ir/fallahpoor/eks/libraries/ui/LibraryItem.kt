@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.IconToggleButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -18,12 +18,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.Constants
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.Version
-import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
+import ir.fallahpoor.eks.theme.EksTheme
 import ir.fallahpoor.eks.theme.spacing
 
 object LibraryItemTags {
@@ -79,7 +79,7 @@ private fun LibraryPinButton(
         }
         Icon(
             painter = pinImage,
-            tint = MaterialTheme.colors.secondary,
+            tint = MaterialTheme.colorScheme.secondary,
             contentDescription = contentDescription
         )
     }
@@ -104,8 +104,8 @@ private fun LibraryInformation(
 @Composable
 private fun LibraryName(name: String) {
     Surface(
-        color = MaterialTheme.colors.onBackground,
-        contentColor = MaterialTheme.colors.background,
+        color = MaterialTheme.colorScheme.onBackground,
+        contentColor = MaterialTheme.colorScheme.background,
         shape = MaterialTheme.shapes.small
     ) {
         Text(
@@ -114,7 +114,7 @@ private fun LibraryName(name: String) {
             text = name,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.titleLarge
         )
     }
 }
@@ -127,7 +127,7 @@ private fun LibraryDescription(description: String) {
         text = description,
         maxLines = 3,
         overflow = TextOverflow.Ellipsis,
-        style = MaterialTheme.typography.body1
+        style = MaterialTheme.typography.bodyLarge
     )
 }
 
@@ -183,31 +183,20 @@ private fun RowScope.LibraryVersion(
             .padding(vertical = MaterialTheme.spacing.small),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        text = text
+        text = text,
+        style = MaterialTheme.typography.bodyMedium,
     )
 }
 
 @Composable
-@Preview
-private fun LibraryItemPreviewLight() {
-    LibraryItemPreview()
-}
-
-@Composable
-@Preview
-private fun LibraryItemPreviewDark() {
-    LibraryItemPreview(isDark = true)
-}
-
-@Composable
-private fun LibraryItemPreview(isDark: Boolean = false) {
-    ReleaseTrackerTheme(darkTheme = isDark) {
+@PreviewLightDark
+private fun LibraryItemPreview() {
+    EksTheme {
         Surface {
             LibraryItem(
                 library = Library(
                     name = "Room",
                     description = "Create, store, and manage persistent data backed by a SQLite database.",
-                    releaseDate = "September 21, 2021",
                     stableVersion = Version("1.3.1"),
                     rcVersion = Version(),
                     betaVersion = Version("1.5.0-beta05"),

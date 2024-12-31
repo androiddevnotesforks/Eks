@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +23,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.Version
-import ir.fallahpoor.eks.theme.ReleaseTrackerTheme
+import ir.fallahpoor.eks.theme.EksTheme
 import ir.fallahpoor.eks.theme.spacing
 import kotlinx.collections.immutable.toImmutableList
 
@@ -53,7 +53,7 @@ fun LibrariesContent(
             is LibrariesState.Loading -> ProgressIndicator()
             is LibrariesState.Success -> {
                 RefreshDate(refreshDate)
-                Divider()
+                HorizontalDivider()
                 LibrariesList(
                     modifier = Modifier
                         .fillMaxSize()
@@ -136,18 +136,64 @@ private fun TryAgain(errorMessage: String, onTryAgainClick: () -> Unit) {
 }
 
 @Composable
-@Preview
-private fun LibrariesContentPreview() {
-    ReleaseTrackerTheme {
+private fun LibrariesContentPreview(
+    librariesState: LibrariesState,
+    refreshDate: String = "December 31, 2021",
+    onLibraryClick: (Library) -> Unit = {},
+    onLibraryVersionClick: (Version) -> Unit = {},
+    onLibraryPinClick: (Library, Boolean) -> Unit = { _, _ -> },
+    onTryAgainClick: () -> Unit = {}
+) {
+    EksTheme {
         Surface {
             LibrariesContent(
-                librariesState = LibrariesState.Error("An error has occurred."),
-                refreshDate = "N/A",
-                onLibraryClick = {},
-                onLibraryVersionClick = {},
-                onLibraryPinClick = { _, _ -> },
-                onTryAgainClick = {}
+                librariesState = librariesState,
+                refreshDate = refreshDate,
+                onLibraryClick = onLibraryClick,
+                onLibraryVersionClick = onLibraryVersionClick,
+                onLibraryPinClick = onLibraryPinClick,
+                onTryAgainClick = onTryAgainClick
             )
         }
     }
+}
+
+@Composable
+@Preview(name = "Success State")
+private fun LibrariesContentSuccessStatePreview() {
+    LibrariesContentPreview(
+        librariesState = LibrariesState.Success(
+            libraries = listOf(
+                Library(
+                    name = "Library 1",
+                    description = "Description 1",
+                ),
+                Library(
+                    name = "Library 2",
+                    description = "Description 2",
+                    isPinned = true,
+                    stableVersion = Version("1.0.0"),
+                    betaVersion = Version("2.0.0"),
+                    rcVersion = Version("3.0.0"),
+                    alphaVersion = Version("4.0.0")
+                )
+            )
+        )
+    )
+}
+
+@Composable
+@Preview(name = "Error State")
+private fun LibrariesContentErrorStatePreview() {
+    LibrariesContentPreview(
+        librariesState = LibrariesState.Error("An error has occurred.")
+    )
+}
+
+@Composable
+@Preview(name = "Loading State")
+private fun LibrariesContentLoadingStatePreview() {
+    LibrariesContentPreview(
+        librariesState = LibrariesState.Loading
+    )
 }

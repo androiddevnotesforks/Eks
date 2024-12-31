@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.library")
-    id("dagger.hilt.android.plugin")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -44,11 +44,6 @@ android {
         unitTests {
             isIncludeAndroidResources = true
         }
-    }
-
-    // TODO remove it once the reason for this Lint error is found
-    lint {
-        disable += "DialogFragmentCallbacksDetector"
     }
 }
 
