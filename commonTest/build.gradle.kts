@@ -32,11 +32,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":data"))
-    implementation(libs.androidx.lifecycle.liveData)
-    implementation(libs.kotlinx.coroutines.test)
-    implementation(libs.junit)
-    implementation(libs.androidx.core.testing)
-    implementation(libs.androidx.test.core)
-    implementation(libs.androidx.test.junit)
+    api(project(":data"))
+    api(libs.androidx.lifecycle.liveData)
+    api(libs.kotlinx.coroutines.test)
+    api(libs.junit)
+    api(libs.androidx.core.testing)
+    api(libs.androidx.test.core)
+    api(libs.androidx.test.junit)
 }
