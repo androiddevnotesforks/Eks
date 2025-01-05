@@ -6,8 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollToKey
 import androidx.test.core.app.ApplicationProvider
-import io.mockk.mockk
-import io.mockk.verify
+import com.google.common.truth.Truth
 import ir.fallahpoor.eks.commontest.FakeLibraryRepository
 import ir.fallahpoor.eks.commontest.FakeStorageRepository
 import ir.fallahpoor.eks.commontest.TestData
@@ -132,36 +131,50 @@ class LibrariesScreenTest {
     @Test
     fun correct_callback_is_called_when_a_library_is_clicked() {
         // Given
-        val onLibraryClick: (Library) -> Unit = mockk()
+        val library: Library = TestData.preference
+        var callbackCalled = false
+        var clickedLibrary: Library? = null
+        val onLibraryClick: (Library) -> Unit = { library ->
+            callbackCalled = true
+            clickedLibrary = library
+        }
         librariesScreenRobot.composeLibrariesScreen(
             libraryRepository = libraryRepository,
             storageRepository = storageRepository,
             onLibraryClick = onLibraryClick
         )
-            .scrollToLibrary(TestData.preference)
+            .scrollToLibrary(library)
 
         // When
-        librariesScreenRobot.clickOnLibrary(TestData.preference)
+        librariesScreenRobot.clickOnLibrary(library)
 
         // Then
-        verify { onLibraryClick.invoke(TestData.preference) }
+        Truth.assertThat(callbackCalled).isTrue()
+        Truth.assertThat(clickedLibrary).isEqualTo(library)
     }
 
     @Test
     fun correct_callback_is_called_when_a_library_version_is_clicked() {
         // Given
-        val onLibraryVersionClick: (Version) -> Unit = mockk()
+        val library: Library = TestData.core
+        var callbackCalled = false
+        var clickedVersion: Version? = null
+        val onLibraryVersionClick: (Version) -> Unit = { version ->
+            callbackCalled = true
+            clickedVersion = version
+        }
         librariesScreenRobot.composeLibrariesScreen(
             libraryRepository = libraryRepository,
             storageRepository = storageRepository,
             onLibraryVersionClick = onLibraryVersionClick
         )
-            .scrollToLibrary(TestData.core)
+            .scrollToLibrary(library)
 
         // When
-        librariesScreenRobot.clickOnLibraryBetaVersion(TestData.core)
+        librariesScreenRobot.clickOnLibraryBetaVersion(library)
 
         // Then
-        verify { onLibraryVersionClick.invoke(TestData.core.betaVersion) }
+        Truth.assertThat(callbackCalled).isTrue()
+        Truth.assertThat(clickedVersion).isEqualTo(library.betaVersion)
     }
 }

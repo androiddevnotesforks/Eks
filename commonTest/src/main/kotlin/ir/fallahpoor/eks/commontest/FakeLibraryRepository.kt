@@ -7,15 +7,9 @@ import ir.fallahpoor.eks.data.repository.model.Library
 import java.io.IOException
 
 class FakeLibraryRepository : LibraryRepository {
-
-    companion object {
-        const val REFRESH_DATE = "N/A"
-    }
-
     var throwException = false
-    var exception = IOException()
     var updateIsAvailable = false
-
+    private val exception = IOException()
     private val initialLibraries = mutableListOf(
         TestData.Activity.old,
         TestData.Biometric.old,
@@ -28,7 +22,6 @@ class FakeLibraryRepository : LibraryRepository {
         TestData.core,
         TestData.room
     )
-
     private val librariesLiveData = MutableLiveData<List<Library>>(initialLibraries)
 
     override suspend fun getLibraries(
@@ -79,5 +72,4 @@ class FakeLibraryRepository : LibraryRepository {
     } else {
         block()
     }
-
 }

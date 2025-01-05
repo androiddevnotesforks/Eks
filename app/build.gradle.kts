@@ -77,6 +77,8 @@ android {
             isIncludeAndroidResources = true
         }
     }
+
+    packaging { resources { excludes += "/META-INF/*" } }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
@@ -129,7 +131,7 @@ dependencies {
     androidTestImplementation(libs.truth)
     androidTestImplementation(libs.androidx.compose.uiTest.junit)
     debugImplementation(libs.androidx.compose.uiTest.manifest)
-    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.bundles.espresso)
     androidTestImplementation(libs.hilt.android.testing)

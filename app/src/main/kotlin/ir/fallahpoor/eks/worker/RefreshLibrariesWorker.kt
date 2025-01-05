@@ -33,7 +33,7 @@ class RefreshLibrariesWorker
                 val refreshedLibraries = libraryRepository.getLibraries()
                 showNotification(oldLibraries, refreshedLibraries)
                 Result.success()
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 Result.retry()
             }
         }

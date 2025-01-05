@@ -65,6 +65,7 @@ hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltJet
 hilt-workManager = { module = "androidx.hilt:hilt-work", version.ref = "hiltJetpack" }
 
 mockk = { module = "io.mockk:mockk", version = "1.13.4" }
+mockk-android = { module = "io.mockk:mockk-android", version = "1.13.4" }
 
 material = { module = "com.google.android.material:material", version = "1.12.0" }
 timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }

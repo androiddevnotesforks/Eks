@@ -3,8 +3,7 @@ package ir.fallahpoor.eks.libraries.ui
 import android.content.Context
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
-import io.mockk.mockk
-import io.mockk.verify
+import com.google.common.truth.Truth
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.data.SortOrder
 import ir.fallahpoor.eks.libraries.ui.robots.ToolbarRobot
@@ -56,14 +55,20 @@ class ToolbarTest {
     @Test
     fun when_sort_order_is_selected_correct_callback_is_called() {
         // Given
-        val onSortOrderChange: (SortOrder) -> Unit = mockk()
+        var callbackCalled = false
+        var selectedSortOrder: SortOrder = SortOrder.A_TO_Z
+        val onSortOrderChange: (SortOrder) -> Unit = {
+            callbackCalled = true
+            selectedSortOrder = it
+        }
         toolbarRobot.composeToolbar(onSortOrderChange = onSortOrderChange)
 
         // When
         toolbarRobot.selectSortOrder(SortOrder.Z_TO_A)
 
         // Then
-        verify { onSortOrderChange.invoke(SortOrder.Z_TO_A) }
+        Truth.assertThat(callbackCalled).isTrue()
+        Truth.assertThat(selectedSortOrder).isEqualTo(SortOrder.Z_TO_A)
     }
 
     @Test
@@ -81,27 +86,39 @@ class ToolbarTest {
     @Test
     fun when_search_query_is_changed_correct_callback_is_called() {
         // Given
-        val onSearchQueryChange: (String) -> Unit = mockk()
+        var callbackCalled = false
+        var searchQuery = ""
+        val onSearchQueryChange: (String) -> Unit = {
+            callbackCalled = true
+            searchQuery = it
+        }
         toolbarRobot.composeToolbar(onSearchQueryChange = onSearchQueryChange)
 
         // When
         toolbarRobot.enterSearchQuery("Coil")
 
         // Then
-        verify { onSearchQueryChange.invoke("Coil") }
+        Truth.assertThat(callbackCalled).isTrue()
+        Truth.assertThat(searchQuery).isEqualTo("Coil")
     }
 
     @Test
     fun when_search_query_is_cleared_correct_callback_is_called() {
         // Given
-        val onSearchQueryChange: (String) -> Unit = mockk()
+        var callbackCalled = false
+        var searchQuery = "Coil"
+        val onSearchQueryChange: (String) -> Unit = {
+            callbackCalled = true
+            searchQuery = it
+        }
         toolbarRobot.composeToolbar(searchQuery = "Koin", onSearchQueryChange = onSearchQueryChange)
 
         // When
         toolbarRobot.clearSearchQuery()
 
         // Then
-        verify { onSearchQueryChange.invoke("") }
+        Truth.assertThat(callbackCalled).isTrue()
+        Truth.assertThat(searchQuery).isEmpty()
     }
 
     @Test

@@ -9,9 +9,11 @@ import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import com.google.common.truth.Truth
 import io.mockk.Called
+import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import ir.fallahpoor.eks.common.NotificationManager
@@ -87,14 +89,16 @@ class RefreshLibrariesWorkerTest {
     fun no_notification_is_displayed_when_there_is_no_update() = runTest {
         // Given
         coEvery { connectivityChecker.isNetworkReachable() } returns true
+        every { notificationBodyMaker.makeBody(any(), any()) } returns null
+        every { notificationManager.showNotification(any(), any()) } just Runs
         libraryRepository.updateIsAvailable = false
 
         // When
         val result = worker.doWork()
 
         // Then
-        verify { notificationManager wasNot Called }
         Truth.assertThat(result).isInstanceOf(ListenableWorker.Result.Success::class.java)
+        verify { notificationManager wasNot Called }
     }
 
     @Test
@@ -102,6 +106,7 @@ class RefreshLibrariesWorkerTest {
         // Given
         coEvery { connectivityChecker.isNetworkReachable() } returns true
         every { notificationBodyMaker.makeBody(any(), any()) } returns "X"
+        every { notificationManager.showNotification(any(), any()) } just Runs
         libraryRepository.updateIsAvailable = true
 
         // When

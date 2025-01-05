@@ -3,8 +3,7 @@ package ir.fallahpoor.eks.libraries.ui
 import android.content.Context
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
-import io.mockk.mockk
-import io.mockk.verify
+import com.google.common.truth.Truth
 import ir.fallahpoor.eks.R
 import ir.fallahpoor.eks.commontest.TestData
 import ir.fallahpoor.eks.data.repository.model.Library
@@ -125,7 +124,12 @@ class LibrariesListTest {
     fun when_a_library_is_clicked_correct_callback_is_called() {
         // Given
         val library: Library = TestData.room
-        val onLibraryClick: (Library) -> Unit = mockk()
+        var callbackCalled = false
+        var clickedLibrary: Library? = null
+        val onLibraryClick: (Library) -> Unit = { library ->
+            callbackCalled = true
+            clickedLibrary = library
+        }
         librariesListRobot.composeLibrariesList(
             libraries = persistentListOf(library), onLibraryClick = onLibraryClick
         )
@@ -134,30 +138,45 @@ class LibrariesListTest {
         librariesListRobot.clickOnLibrary(library)
 
         // Then
-        verify { onLibraryClick.invoke(library) }
+        Truth.assertThat(callbackCalled).isTrue()
+        Truth.assertThat(clickedLibrary).isEqualTo(library)
     }
 
     @Test
     fun when_a_library_version_is_clicked_correct_callback_is_called() {
         // Given
         val library: Library = TestData.room
-        val onLibraryVersionClick: (Version) -> Unit = mockk()
+        var callbackCalled = false
+        var clickedVersion: Version? = null
+        val onLibraryVersionClick: (Version) -> Unit = { version ->
+            callbackCalled = true
+            clickedVersion = version
+        }
         librariesListRobot.composeLibrariesList(
-            libraries = persistentListOf(library), onLibraryVersionClick = onLibraryVersionClick
+            libraries = persistentListOf(library),
+            onLibraryVersionClick = onLibraryVersionClick
         )
 
         // When
         librariesListRobot.clickOnLibraryStableVersion(library)
 
         // Then
-        verify { onLibraryVersionClick.invoke(library.stableVersion) }
+        Truth.assertThat(callbackCalled).isTrue()
+        Truth.assertThat(clickedVersion).isEqualTo(library.stableVersion)
     }
 
     @Test
     fun when_a_library_is_pinned_correct_callback_is_called() {
         // Given
         val library: Library = TestData.preference
-        val onLibraryPinClick: (Library, Boolean) -> Unit = mockk()
+        var callbackCalled = false
+        var isPinned = false
+        var pinnedLibrary: Library? = null
+        val onLibraryPinClick: (Library, Boolean) -> Unit = { library, pinned ->
+            callbackCalled = true
+            isPinned = pinned
+            pinnedLibrary = library
+        }
         librariesListRobot.composeLibrariesList(
             libraries = persistentListOf(library), onLibraryPinClick = onLibraryPinClick
         )
@@ -166,14 +185,23 @@ class LibrariesListTest {
         librariesListRobot.clickOnPin(library)
 
         // Then
-        verify { onLibraryPinClick.invoke(library, true) }
+        Truth.assertThat(callbackCalled).isTrue()
+        Truth.assertThat(pinnedLibrary).isEqualTo(library)
+        Truth.assertThat(isPinned).isTrue()
     }
 
     @Test
     fun when_a_library_is_unpinned_correct_callback_is_called() {
         // Given
         val library: Library = TestData.core
-        val onLibraryPinClick: (Library, Boolean) -> Unit = mockk()
+        var callbackCalled = false
+        var isPinned = false
+        var unpinnedLibrary: Library? = null
+        val onLibraryPinClick: (Library, Boolean) -> Unit = { library, pinned ->
+            callbackCalled = true
+            isPinned = pinned
+            unpinnedLibrary = library
+        }
         librariesListRobot.composeLibrariesList(
             libraries = persistentListOf(library), onLibraryPinClick = onLibraryPinClick
         )
@@ -182,6 +210,8 @@ class LibrariesListTest {
         librariesListRobot.clickOnPin(library)
 
         // Then
-        verify { onLibraryPinClick.invoke(library, false) }
+        Truth.assertThat(callbackCalled).isTrue()
+        Truth.assertThat(unpinnedLibrary).isEqualTo(library)
+        Truth.assertThat(isPinned).isFalse()
     }
 }
