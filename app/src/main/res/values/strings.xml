@@ -28,4 +28,6 @@
     <string name="notification_permission_rationale_message">To notify you when there is a new version for a library, Eks needs your permission to show notifications. If the permission is not granted no notification is shown.</string>
     <string name="notification_permission_denied_message">The permission to display notifications is denied. You will not receive notifications when a library has a new version.</string>
     <string name="grant_access">Grant access</string>
+    <string name="collapse_library_description">Collapse library description</string>
+    <string name="expand_library_description">Expand library description</string>
 </resources>
