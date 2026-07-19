@@ -3,7 +3,6 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
@@ -16,8 +15,8 @@ if (localPropertiesFile.exists()) {
 } else {
     throw GradleException("local.properties file not found.")
 }
-val sp: String = props.getProperty("storePassword")
-val kp: String = props.getProperty("keyPassword")
+val sp: String = props.getProperty("storePassword") ?: ""
+val kp: String = props.getProperty("keyPassword") ?: ""
 
 android {
     namespace = "ir.fallahpoor.eks"
@@ -29,7 +28,6 @@ android {
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 2
         versionName = "1.1"
-        setProperty("archivesBaseName", "Eks")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -48,7 +46,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile(
-                    "proguard-android.txt"
+                    "proguard-android-optimize.txt"
                 ),
                 "proguard-rules.pro"
             )
@@ -66,10 +64,6 @@ android {
         buildConfig = true
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
     testOptions {
         animationsDisabled = true
 
@@ -81,8 +75,8 @@ android {
     packaging { resources { excludes += "/META-INF/*" } }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    compilerOptions.freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+base {
+    archivesName = "Eks"
 }
 
 dependencies {
@@ -109,6 +103,7 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.runtime.liveData)
 
