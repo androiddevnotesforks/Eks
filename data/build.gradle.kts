@@ -10,6 +10,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
@@ -63,4 +64,6 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlin.reflection)
     testImplementation(libs.turbine)
+
+    androidTestImplementation(libs.androidx.test.runner)
 }
