@@ -42,9 +42,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         if (isPostNotificationsPermissionNotGranted()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
-            ) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
                 showPermissionRationaleDialog()
             } else {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)

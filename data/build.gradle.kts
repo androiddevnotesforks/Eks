@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
@@ -11,7 +10,8 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
@@ -19,13 +19,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile(
-                    "proguard-android.txt"
-                ),
-                "proguard-rules.pro"
-            )
+            isMinifyEnabled = false
         }
     }
 
@@ -34,19 +28,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
         }
     }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    compilerOptions.freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
 }
 
 dependencies {
@@ -78,4 +64,6 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlin.reflection)
     testImplementation(libs.turbine)
+
+    androidTestImplementation(libs.androidx.test.runner)
 }
