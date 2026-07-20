@@ -129,14 +129,14 @@ class RefreshLibrariesWorkerTest {
         private val notificationManager: NotificationManager
     ) : WorkerFactory() {
         override fun createWorker(
-            context: Context, workerClassName: String, workerParameters: WorkerParameters
+            appContext: Context, workerClassName: String, workerParameters: WorkerParameters
         ): ListenableWorker = RefreshLibrariesWorker(
-            context,
-            workerParameters,
-            libraryRepository,
-            connectivityChecker,
-            notificationBodyMaker,
-            notificationManager
+            context = appContext,
+            workerParams = workerParameters,
+            libraryRepository = libraryRepository,
+            connectivityChecker = connectivityChecker,
+            notificationBodyMaker = notificationBodyMaker,
+            notificationManager = notificationManager
         )
     }
 }

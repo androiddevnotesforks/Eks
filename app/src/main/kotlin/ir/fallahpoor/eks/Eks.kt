@@ -3,10 +3,10 @@ package ir.fallahpoor.eks
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
 import ir.fallahpoor.eks.data.repository.model.Library
 import ir.fallahpoor.eks.data.repository.model.Version
 import ir.fallahpoor.eks.libraries.ui.LibrariesScreen
@@ -27,9 +27,9 @@ fun Eks() {
 // TODO handle the case when provided URL is not valid
 private fun openWebPage(context: Context, url: String) {
     try {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
         context.startActivity(intent)
-    } catch (e: ActivityNotFoundException) {
+    } catch (_: ActivityNotFoundException) {
         Toast.makeText(
             context,
             context.getString(R.string.no_browser_found),
